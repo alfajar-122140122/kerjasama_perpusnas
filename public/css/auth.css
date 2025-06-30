@@ -1,31 +1,24 @@
-.auth-body {
-    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+/* filepath: d:\Aa\PKL\Project\kerjasama_perpusnas\public\css\auth.css */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
+    display: flex;
+    align-items: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.header-section {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    z-index: 1000;
+.auth-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .login-card {
-    background: #52c87a;
-    border-radius: 20px;
-    padding: 40px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    color: white;
-}
-
-.login-title {
-    color: white;
-    font-weight: 600;
-    margin-bottom: 30px;
-    font-size: 24px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    padding: 40px 30px;
+    margin: 20px 0;
 }
 
 .logo-container {
@@ -35,95 +28,71 @@
 .logo {
     width: 80px;
     height: 80px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .logo-text {
-    color: #2c5530;
-    font-size: 12px;
+    color: #666;
+    font-size: 14px;
     font-weight: 600;
-    letter-spacing: 1px;
     margin: 0;
 }
 
+.login-title {
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
 .login-input {
-    border: none;
-    border-radius: 25px;
-    padding: 12px 20px;
-    font-size: 14px;
-    background: white;
-    box-shadow: none;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 12px 15px;
+    font-size: 16px;
     transition: all 0.3s ease;
 }
 
 .login-input:focus {
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-    border-color: transparent;
-    outline: none;
-}
-
-.login-input::placeholder {
-    color: #999;
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
 }
 
 .btn-login {
-    background: white;
-    color: #52c87a;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: none;
-    border-radius: 25px;
-    padding: 12px 40px;
+    border-radius: 10px;
+    color: white;
     font-weight: 600;
+    padding: 12px 40px;
     font-size: 16px;
+    width: 100%;
     transition: all 0.3s ease;
-    width: 200px;
 }
 
 .btn-login:hover {
-    background: #f8f9fa;
-    color: #52c87a;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    color: white;
 }
 
 .forgot-password {
-    color: white;
+    color: #667eea;
     text-decoration: none;
     font-size: 14px;
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
 }
 
 .forgot-password:hover {
-    opacity: 1;
-    color: white;
+    color: #764ba2;
     text-decoration: underline;
 }
 
-/* Responsive */
-@media (max-width: 576px) {
-    .login-card {
-        margin: 20px;
-        padding: 30px 25px;
-    }
-    
-    .login-title {
-        font-size: 20px;
-    }
-    
-    .logo {
-        width: 60px;
-        height: 60px;
-    }
-}
-
-/* Alert styling */
 .alert {
     border-radius: 10px;
     border: none;
 }
 
-.alert-danger {
-    background-color: rgba(220, 53, 69, 0.1);
-    color: #dc3545;
-    border-left: 4px solid #dc3545;
+.text-danger {
+    font-size: 12px;
 }

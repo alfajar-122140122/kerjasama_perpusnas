@@ -10,7 +10,7 @@ class Auth extends BaseController
     {
         // Jika sudah login, redirect ke dashboard
         if (session()->get('isLoggedIn')) {
-            return redirect()->to('/dashboard');
+            return redirect()->to('/admin/dashboard');
         }
         
         return view('auth/login');
@@ -38,14 +38,17 @@ class Auth extends BaseController
             $sessionData = [
                 'user_id' => 1,
                 'username' => $username,
+                'role' => 'admin',
                 'isLoggedIn' => true
             ];
             
             session()->set($sessionData);
             
-            return redirect()->to('/dashboard')->with('success', 'Login berhasil!');
+            return redirect()->to('/admin/dashboard')->with('success', 'Login berhasil!');
         } else {
-            return redirect()->back()->with('error', 'Username atau password salah!');
+            return redirect()->back()
+                           ->withInput()
+                           ->with('error', 'Username atau password salah!');
         }
     }
     
