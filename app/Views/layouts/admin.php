@@ -34,15 +34,15 @@
                     <i class="fas fa-users"></i>
                     Manajemen User
                 </a>
-                <a href="<?= base_url('admin/kerjasama') ?>" class="menu-item <?= (strpos(uri_string(), 'admin/kerjasama') !== false) ? 'active' : '' ?>">
+                <a href="<?= base_url('admin/kerjasama') ?>" class="menu-item">
                     <i class="fas fa-handshake"></i>
                     Kerjasama
                 </a>
-                <a href="<?= base_url('admin/berita') ?>" class="menu-item <?= (strpos(uri_string(), 'admin/berita') !== false) ? 'active' : '' ?>">
+                <a href="<?= base_url('admin/berita') ?>" class="menu-item">
                     <i class="fas fa-newspaper"></i>
                     Berita
                 </a>
-                <a href="<?= base_url('admin/pengaturan') ?>" class="menu-item <?= (strpos(uri_string(), 'admin/pengaturan') !== false) ? 'active' : '' ?>">
+                <a href="<?= base_url('admin/pengaturan') ?>" class="menu-item">
                     <i class="fas fa-cog"></i>
                     Pengaturan
                 </a>
@@ -75,8 +75,41 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Custom JS -->
-    <script src="<?= base_url('js/admin.js') ?>"></script>
+    <!-- Inline JavaScript -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-toggle');
+            
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                    sidebar.classList.remove('show');
+                }
+            }
+        });
+
+        // Dashboard Animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const statsCards = document.querySelectorAll('.stats-card');
+            
+            statsCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100 + 200);
+            });
+        });
+    </script>
     
     <?= $this->renderSection('scripts') ?>
 </body>
