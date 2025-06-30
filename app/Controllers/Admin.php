@@ -84,6 +84,124 @@ class Admin extends BaseController
         
         return view('admin/users', $data);
     }
+
+    public function changePassword($userId = null)
+    {
+        // Check if user is logged in and is admin
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'Admin') {
+            return redirect()->to('/auth/login')->with('error', 'Akses ditolak');
+        }
+
+        if ($this->request->getMethod() === 'POST') {
+            return $this->updatePassword($userId);
+        }
+
+        // If it's a GET request, redirect back to users page
+        return redirect()->to('/admin/users');
+    }
+
+    private function updatePassword($userId)
+    {
+        $validation = \Config\Services::validation();
+        
+        $validation->setRules([
+            'new_password' => [
+                'label' => 'Password Baru',
+                'rules' => 'required|min_length[6]',
+                'errors' => [
+                    'required' => '{field} harus diisi',
+                    'min_length' => '{field} minimal 6 karakter'
+                ]
+            ],
+            'confirm_password' => [
+                'label' => 'Konfirmasi Password',
+                'rules' => 'required|matches[new_password]',
+                'errors' => [
+                    'required' => '{field} harus diisi',
+                    'matches' => '{field} tidak sama dengan password baru'
+                ]
+            ]
+        ]);
+
+        if (!$validation->withRequest($this->request)->run()) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validation->getErrors()
+            ]);
+        }
+
+        $newPassword = $this->request->getPost('new_password');
+        
+        // Hash password (in real app, update database)
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        
+        // Simulate database update
+        // In real application:
+        // $userModel = new UserModel();
+        // $result = $userModel->update($userId, ['password' => $hashedPassword]);
+        
+        $result = true; // Simulate success
+        
+        if ($result) {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Password berhasil diubah'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Gagal mengubah password'
+            ]);
+        }
+    }
+
+    public function resetPassword($userId = null)
+    {
+        // Check if user is logged in and is admin
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'Admin') {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Akses ditolak'
+            ]);
+        }
+
+        // Generate random password
+        $newPassword = $this->generateRandomPassword();
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        
+        // Simulate database update
+        // In real application:
+        // $userModel = new UserModel();
+        // $result = $userModel->update($userId, ['password' => $hashedPassword]);
+        
+        $result = true; // Simulate success
+        
+        if ($result) {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Password berhasil direset',
+                'new_password' => $newPassword
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Gagal mereset password'
+            ]);
+        }
+    }
+
+    private function generateRandomPassword($length = 8)
+    {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%';
+        $password = '';
+        
+        for ($i = 0; $i < $length; $i++) {
+            $password .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        
+        return $password;
+    }
     
     public function addUser()
     {

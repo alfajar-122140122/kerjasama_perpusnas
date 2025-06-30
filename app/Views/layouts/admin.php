@@ -24,7 +24,6 @@
                     <span><?= session()->get('username') ?? 'Admin' ?></span>
                 </div>
             </div>
-            
             <div class="sidebar-menu">
                 <a href="<?= base_url('admin/dashboard') ?>" class="menu-item <?= (uri_string() == 'admin/dashboard') ? 'active' : '' ?>">
                     <i class="fas fa-tachometer-alt"></i>
@@ -42,7 +41,7 @@
                     <i class="fas fa-newspaper"></i>
                     Berita
                 </a>
-                <a href="<?= base_url('admin/pengaturan') ?>" class="menu-item">
+                <a href="<?= base_url('admin/pengaturan') ?>" class="menu-item <?= (strpos(uri_string(), 'admin/pengaturan') !== false) ? 'active' : '' ?>">
                     <i class="fas fa-cog"></i>
                     Pengaturan
                 </a>
