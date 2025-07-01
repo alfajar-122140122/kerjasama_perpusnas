@@ -13,6 +13,7 @@ body {
 .admin-container {
     display: flex;
     min-height: 100vh;
+    transition: all 0.3s ease;
 }
 
 .sidebar {
@@ -23,6 +24,7 @@ body {
     height: 100vh;
     overflow-y: auto;
     z-index: 1000;
+    transition: all 0.3s ease;
 }
 
 .sidebar-header {
@@ -81,6 +83,7 @@ body {
     margin-left: var(--sidebar-width);
     display: flex;
     flex-direction: column;
+    transition: all 0.3s ease;
 }
 
 .top-bar {
@@ -91,6 +94,22 @@ body {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.sidebar-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px 8px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.sidebar-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .mobile-toggle {
@@ -162,6 +181,32 @@ body {
     margin: 0;
 }
 
+/* Desktop Sidebar Collapse Styles */
+.admin-container.sidebar-collapsed .sidebar {
+    transform: translateX(-100%);
+}
+
+.admin-container.sidebar-collapsed .main-content {
+    margin-left: 0;
+    width: 100%;
+}
+
+/* Overlay for mobile */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+.sidebar-overlay.show {
+    display: block;
+}
+
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
@@ -174,13 +219,24 @@ body {
     
     .main-content {
         margin-left: 0;
+        width: 100%;
     }
     
-    .mobile-toggle {
+    .sidebar-toggle {
         display: block;
     }
     
     .content-area {
         padding: 20px 15px;
+    }
+    
+    /* Ensure desktop collapsed state works on mobile too */
+    .admin-container.sidebar-collapsed .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .admin-container.sidebar-collapsed .main-content {
+        margin-left: 0;
+        width: 100%;
     }
 }

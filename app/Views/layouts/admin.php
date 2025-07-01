@@ -13,7 +13,7 @@
     <link href="<?= base_url('css/admin.css') ?>" rel="stylesheet">
 </head>
 <body>
-    <div class="admin-container">
+    <div class="admin-container" id="adminContainer">
         <!-- Sidebar -->
         <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
@@ -53,7 +53,7 @@
             <!-- Top Bar -->
             <div class="top-bar">
                 <div class="d-flex align-items-center">
-                    <button class="mobile-toggle" onclick="toggleSidebar()">
+                    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
                         <i class="fas fa-bars"></i>
                     </button>
                     <span class="ms-2"><?= $this->renderSection('page-title', true) ?></span>
@@ -78,18 +78,40 @@
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('show');
+            const adminContainer = document.getElementById('adminContainer');
+            
+            if (window.innerWidth <= 768) {
+                // Mobile behavior - toggle sidebar visibility
+                sidebar.classList.toggle('show');
+            } else {
+                // Desktop behavior - collapse/expand sidebar
+                adminContainer.classList.toggle('sidebar-collapsed');
+            }
         }
 
         // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(e) {
             const sidebar = document.getElementById('sidebar');
-            const toggle = document.querySelector('.mobile-toggle');
+            const toggle = document.getElementById('sidebarToggle');
             
             if (window.innerWidth <= 768) {
                 if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
                     sidebar.classList.remove('show');
                 }
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const sidebar = document.getElementById('sidebar');
+            const adminContainer = document.getElementById('adminContainer');
+            
+            if (window.innerWidth > 768) {
+                // Reset mobile classes when switching to desktop
+                sidebar.classList.remove('show');
+            } else {
+                // Reset desktop classes when switching to mobile
+                adminContainer.classList.remove('sidebar-collapsed');
             }
         });
 
