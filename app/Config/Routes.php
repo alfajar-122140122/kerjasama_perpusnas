@@ -14,21 +14,21 @@ $routes->group('auth', function($routes) {
     $routes->get('login', 'Auth::login');
     $routes->post('login', 'Auth::attemptLogin');
     $routes->get('logout', 'Auth::logout');
+    $routes->post('check-password-strength', 'Auth::checkPasswordStrength');
 });
 
 // Admin routes (dengan prefix admin)
 $routes->group('admin', function($routes) {
     $routes->get('dashboard', 'Admin::dashboard');
-    $routes->get('users', 'Admin::users');
-
-    // Password management routes
-    $routes->post('users/change-password/(:num)', 'Admin::changePassword/$1');
-    $routes->post('users/reset-password/(:num)', 'Admin::resetPassword/$1');
-
+    
     // User management routes
-    $routes->post('users/add', 'Admin::addUser');
-    $routes->post('users/edit/(:num)', 'Admin::editUser/$1');
-    $routes->delete('users/delete/(:num)', 'Admin::deleteUser/$1');
+    $routes->get('users', 'UserController::index');
+    $routes->get('users/create', 'UserController::create');
+    $routes->post('users/store', 'UserController::store');
+    $routes->get('users/edit/(:num)', 'UserController::edit/$1');
+    $routes->post('users/update/(:num)', 'UserController::update/$1');  
+    $routes->post('users/delete/(:num)', 'UserController::delete/$1');
+    $routes->post('users/generate-password', 'UserController::generatePassword');
     
     // Tambahan routes untuk menu lain
     $routes->get('kerjasama', 'Admin::kerjasama');
