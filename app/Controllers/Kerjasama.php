@@ -21,7 +21,7 @@ class Kerjasama extends BaseController
             return redirect()->to('/auth/login')->with('error', 'Silakan login terlebih dahulu');
         }
         
-        if ($this->session->get('role') !== 'Admin') {
+        if ($this->session->get('hak_akses') !== 'admin') {
             return redirect()->to('/auth/login')->with('error', 'Akses ditolak. Hanya admin yang dapat mengakses halaman ini');
         }
         
