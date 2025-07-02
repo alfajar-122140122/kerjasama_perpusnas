@@ -33,7 +33,7 @@
                     <i class="fas fa-users"></i>
                     Manajemen User
                 </a>
-                <a href="<?= base_url('admin/kerjasama') ?>" class="menu-item">
+                <a href="<?= base_url('admin/kerjasama') ?>" class="menu-item <?= (strpos(uri_string(), 'admin/kerjasama') !== false) ? 'active' : '' ?>">
                     <i class="fas fa-handshake"></i>
                     Kerjasama
                 </a>

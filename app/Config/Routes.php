@@ -30,9 +30,20 @@ $routes->group('admin', function($routes) {
     $routes->post('users/delete/(:num)', 'UserController::delete/$1');
     $routes->post('users/generate-password', 'UserController::generatePassword');
     
-    // Tambahan routes untuk menu lain
-    $routes->get('kerjasama', 'Admin::kerjasama');
+    // Kerjasama routes
+    $routes->get('kerjasama', 'Kerjasama::index');
+    $routes->get('kerjasama/dashboard', 'Kerjasama::dashboard');
+    $routes->post('kerjasama/create', 'Kerjasama::create');
+    $routes->post('kerjasama/update/(:num)', 'Kerjasama::update/$1');
+    $routes->delete('kerjasama/delete/(:num)', 'Kerjasama::delete/$1');
+    $routes->get('kerjasama/detail/(:num)', 'Kerjasama::detail/$1');
+    $routes->get('kerjasama/export', 'Kerjasama::export');
+    
+    // Berita routes
     $routes->get('berita', 'Admin::berita');
+    $routes->post('berita/add', 'Admin::addBerita');
+    $routes->post('berita/edit/(:num)', 'Admin::editBerita/$1');
+    $routes->delete('berita/delete/(:num)', 'Admin::deleteBerita/$1');
 
     // Settings routes
     $routes->get('pengaturan', 'Settings::index');
