@@ -25,7 +25,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <div class="text-xs font-weight-bold text-uppercase mb-1">Total Kerjasama</div>
-                            <div class="h5 mb-0"><?= $total_kerjasama ?></div>
+                            <div class="h5 mb-0" id="totalKerjasama">-</div>
                         </div>
                         <div class="text-white-50">
                             <i class="fas fa-handshake fa-2x"></i>
@@ -39,8 +39,8 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Aktif</div>
-                            <div class="h5 mb-0"><?= $aktif ?></div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Progress Aktif</div>
+                            <div class="h5 mb-0" id="progressAktif">-</div>
                         </div>
                         <div class="text-white-50">
                             <i class="fas fa-check-circle fa-2x"></i>
@@ -54,11 +54,11 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Selesai</div>
-                            <div class="h5 mb-0"><?= $selesai ?></div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Implementasi</div>
+                            <div class="h5 mb-0" id="totalImplementasi">-</div>
                         </div>
                         <div class="text-white-50">
-                            <i class="fas fa-flag-checkered fa-2x"></i>
+                            <i class="fas fa-tasks fa-2x"></i>
                         </div>
                     </div>
                 </div>
@@ -69,11 +69,11 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Pending</div>
-                            <div class="h5 mb-0"><?= $pending ?></div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Mitra</div>
+                            <div class="h5 mb-0" id="totalMitra">-</div>
                         </div>
                         <div class="text-white-50">
-                            <i class="fas fa-clock fa-2x"></i>
+                            <i class="fas fa-building fa-2x"></i>
                         </div>
                     </div>
                 </div>
@@ -128,12 +128,12 @@
                     <thead>
                         <tr>
                             <th width="5%">No</th>
-                            <th width="25%">Judul</th>
-                            <th width="20%">Instansi</th>
+                            <th width="25%">Nama Mitra</th>
+                            <th width="20%">Ruang Lingkup</th>
                             <th width="12%">Jenis</th>
-                            <th width="10%">Status</th>
+                            <th width="10%">Progress</th>
                             <th width="12%">Tanggal</th>
-                            <th width="12%">PIC</th>
+                            <th width="12%">Lokasi</th>
                             <th width="4%">Aksi</th>
                         </tr>
                     </thead>
@@ -191,7 +191,7 @@
 
 <!-- Add Kerjasama Modal -->
 <div class="modal fade" id="addKerjasamaModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Tambah Kerjasama Baru</h5>
@@ -200,72 +200,64 @@
             <form id="addKerjasamaForm">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="nama_mitra" class="form-label">Nama Mitra <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="nama_mitra" name="nama_mitra" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="jenis" class="form-label">Jenis Kerjasama <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="jenis" name="jenis" required>
+                                            <option value="">Pilih Jenis</option>
+                                            <option value="Pertukaran Koleksi">Pertukaran Koleksi</option>
+                                            <option value="Penelitian">Penelitian</option>
+                                            <option value="Pelatihan">Pelatihan</option>
+                                            <option value="Digitalisasi">Digitalisasi</option>
+                                            <option value="Konsultasi">Konsultasi</option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="mb-3">
-                                <label for="judul" class="form-label">Judul Kerjasama <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="judul" name="judul" required>
+                                <label for="ruang_lingkup" class="form-label">Ruang Lingkup <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="ruang_lingkup" name="ruang_lingkup" rows="3" required></textarea>
                                 <div class="invalid-feedback"></div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="instansi" class="form-label">Instansi <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="instansi" name="instansi" required>
-                                <div class="invalid-feedback"></div>
+                                <label for="dasar_kerjasama" class="form-label">Dasar Kerjasama</label>
+                                <textarea class="form-control" id="dasar_kerjasama" name="dasar_kerjasama" rows="2"></textarea>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="jenis" class="form-label">Jenis Kerjasama <span class="text-danger">*</span></label>
-                                <select class="form-select" id="jenis" name="jenis" required>
-                                    <option value="">Pilih Jenis</option>
-                                    <option value="Pertukaran Koleksi">Pertukaran Koleksi</option>
-                                    <option value="Penelitian">Penelitian</option>
-                                    <option value="Pelatihan">Pelatihan</option>
-                                    <option value="Digitalisasi">Digitalisasi</option>
-                                    <option value="Konsultasi">Konsultasi</option>
-                                </select>
+                                <label for="tanggal_ttd" class="form-label">Tanggal TTD <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="tanggal_ttd" name="tanggal_ttd" required>
                                 <div class="invalid-feedback"></div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="tanggal_mulai" class="form-label">Tanggal Mulai <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" required>
-                                <div class="invalid-feedback"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="tanggal_berakhir" class="form-label">Tanggal Berakhir <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control" id="tanggal_berakhir" name="tanggal_berakhir" required>
                                 <div class="invalid-feedback"></div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="pic" class="form-label">PIC <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="pic" name="pic" required>
-                                <div class="invalid-feedback"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Status</label>
-                                <select class="form-select" id="status" name="status">
-                                    <option value="pending">Pending</option>
+                                <label for="progress" class="form-label">Progress</label>
+                                <select class="form-select" id="progress" name="progress">
+                                    <option value="draft">Draft</option>
                                     <option value="aktif">Aktif</option>
                                     <option value="selesai">Selesai</option>
+                                    <option value="dibatalkan">Dibatalkan</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="deskripsi" class="form-label">Deskripsi</label>
-                                <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3"></textarea>
+                                <label for="lokasi" class="form-label">Lokasi</label>
+                                <input type="text" class="form-control" id="lokasi" name="lokasi">
                             </div>
-                        </div>
-                        <div class="col-md-12">
                             <div class="mb-3">
                                 <label for="dokumen" class="form-label">Dokumen</label>
                                 <input type="file" class="form-control" id="dokumen" name="dokumen" accept=".pdf,.doc,.docx">
@@ -376,14 +368,14 @@
 </div>
 
 <!-- View Kerjasama Modal -->
-<div class="modal fade" id="viewKerjasamaModal" tabindex="-1">
+<div class="modal fade" id="viewImplementasiModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Detail Kerjasama</h5>
+                <h5 class="modal-title">Detail Implementasi</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body" id="kerjasamaDetail">
+            <div class="modal-body" id="implementasiDetail">
                 <!-- Content will be loaded by JavaScript -->
             </div>
             <div class="modal-footer">

@@ -128,13 +128,12 @@
                     <thead>
                         <tr>
                             <th width="5%">No</th>
-                            <th width="25%">Judul</th>
-                            <th width="15%">Kategori</th>
-                            <th width="10%">Status</th>
-                            <th width="10%">Tanggal</th>
-                            <th width="10%">Penulis</th>
-                            <th width="8%">Views</th>
-                            <th width="12%">Aksi</th>
+                            <th width="30%">Judul</th>
+                            <th width="15%">Tanggal Publikasi</th>
+                            <th width="15%">Dibuat Oleh</th>
+                            <th width="10%">Gambar</th>
+                            <th width="15%">Dibuat</th>
+                            <th width="10%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>

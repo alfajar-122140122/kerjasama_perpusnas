@@ -1,315 +1,281 @@
 <?= $this->extend('layouts/admin') ?>
 
-<?= $this->section('title') ?>Manajemen User<?= $this->endSection() ?>
+<?= $this->section('title') ?>Manajemen Users<?= $this->endSection() ?>
 
-<?= $this->section('page-title') ?>Manajemen User<?= $this->endSection() ?>
+<?= $this->section('page-title') ?>Manajemen Users<?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<div class="row">
-    <div class="col-12">
-        <h2 class="page-title">Manajemen User</h2>
-        <p class="text-muted mb-4">Kelola pengguna sistem Perpustakaan Nasional</p>
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row">
+        <div class="col-12">
+            <h2 class="page-title">Manajemen Users</h2>
+            <p class="text-muted mb-4">Kelola akun pengguna sistem kerjasama Perpustakaan Nasional</p>
+        </div>
     </div>
-</div>
 
-<!-- Alert Container -->
-<div id="alertContainer"></div>
+    <!-- Alert Container -->
+    <div id="alertContainer"></div>
 
-<!-- Statistics Cards -->
-<div class="row mb-4">
-    <div class="col-lg-3 col-md-6">
-        <div class="card stats-card">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="stats-icon bg-primary">
-                        <i class="fas fa-users"></i>
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Users</div>
+                            <div class="h5 mb-0" id="totalUsers">-</div>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
                     </div>
-                    <div class="stats-content">
-                        <h4 class="stats-number"><?= $total_users ?></h4>
-                        <p class="stats-label">Total User</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Admin Users</div>
+                            <div class="h5 mb-0" id="adminUsers">-</div>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-user-shield fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card bg-info text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Regular Users</div>
+                            <div class="h5 mb-0" id="regularUsers">-</div>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-user fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card bg-warning text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Bulan Ini</div>
+                            <div class="h5 mb-0" id="usersBulanIni">-</div>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-calendar-plus fa-2x"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6">
-        <div class="card stats-card">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="stats-icon bg-success">
-                        <i class="fas fa-user-check"></i>
-                    </div>
-                    <div class="stats-content">
-                        <h4 class="stats-number"><?= $active_users ?></h4>
-                        <p class="stats-label">User Aktif</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-6">
-        <div class="card stats-card">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="stats-icon bg-warning">
-                        <i class="fas fa-user-times"></i>
-                    </div>
-                    <div class="stats-content">
-                        <h4 class="stats-number"><?= $inactive_users ?></h4>
-                        <p class="stats-label">User Tidak Aktif</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-6">
-        <div class="card stats-card">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="stats-icon bg-info">
-                        <i class="fas fa-user-shield"></i>
-                    </div>
-                    <div class="stats-content">
-                        <h4 class="stats-number"><?= $admin_users ?></h4>
-                        <p class="stats-label">Administrator</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- User Management Card -->
-<div class="card shadow">
-    <div class="card-header py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-        <div class="d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold">
-                <i class="fas fa-users me-2"></i>
-                Daftar User
-            </h6>
-            <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">
+    <!-- Main Data Table Card -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Data Users</h6>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
                 <i class="fas fa-plus me-2"></i>Tambah User
             </button>
         </div>
-    </div>
-    <div class="card-body">
-        <!-- Search and Filter -->
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="fas fa-search"></i>
-                    </span>
-                    <input type="text" class="form-control" id="searchUser" placeholder="Cari user...">
+        <div class="card-body">
+            <!-- Search and Filter Section -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control" id="searchUser" placeholder="Cari username...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="filterHakAkses">
+                        <option value="">Semua Hak Akses</option>
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-outline-secondary w-100" onclick="resetUserFilters()">
+                        <i class="fas fa-redo me-1"></i>Reset Filter
+                    </button>
                 </div>
             </div>
-            <div class="col-md-3">
-                <select class="form-select" id="filterRole">
-                    <option value="">Semua Role</option>
-                    <option value="Admin">Admin</option>
-                    <option value="User">User</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <select class="form-select" id="filterStatus">
-                    <option value="">Semua Status</option>
-                    <option value="active">Aktif</option>
-                    <option value="inactive">Tidak Aktif</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <button class="btn btn-outline-secondary w-100" onclick="resetFilters()">
-                    <i class="fas fa-redo me-1"></i>Reset
-                </button>
-            </div>
-        </div>
 
-        <!-- Users Table -->
-        <div class="table-responsive">
-            <table class="table table-hover align-middle" id="usersTable">
-                <thead class="table-primary">
-                    <tr>
-                        <th width="5%">#</th>
-                        <th width="25%">
-                            <i class="fas fa-user me-1"></i>User
-                        </th>
-                        <th width="20%">
-                            <i class="fas fa-envelope me-1"></i>Email
-                        </th>
-                        <th width="10%">
-                            <i class="fas fa-user-tag me-1"></i>Role
-                        </th>
-                        <th width="10%">
-                            <i class="fas fa-toggle-on me-1"></i>Status
-                        </th>
-                        <th width="15%">
-                            <i class="fas fa-calendar me-1"></i>Bergabung
-                        </th>
-                        <th width="15%" class="text-center">
-                            <i class="fas fa-cogs me-1"></i>Aksi
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($users as $index => $user): ?>
-                    <tr data-user-id="<?= $user['id'] ?>" class="user-row">
-                        <td>
-                            <span class="fw-bold text-primary"><?= $index + 1 ?></span>
-                        </td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="user-avatar me-3">
-                                    <div class="avatar-circle">
-                                        <?= strtoupper(substr($user['name'], 0, 2)) ?>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="fw-bold text-dark user-name"><?= esc($user['name']) ?></div>
-                                    <small class="text-muted user-username">@<?= esc($user['username']) ?></small>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <a href="mailto:<?= esc($user['email']) ?>" class="text-decoration-none user-email">
-                                <i class="fas fa-envelope text-muted me-1"></i>
-                                <?= esc($user['email']) ?>
-                            </a>
-                        </td>
-                        <td>
-                            <span class="badge bg-<?= $user['role'] === 'Admin' ? 'primary' : 'secondary' ?> user-role">
-                                <i class="fas fa-<?= $user['role'] === 'Admin' ? 'crown' : 'user' ?> me-1"></i>
-                                <?= esc($user['role']) ?>
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge bg-<?= $user['status'] === 'active' ? 'success' : 'danger' ?> user-status">
-                                <i class="fas fa-circle me-1"></i>
-                                <?= ucfirst($user['status']) ?>
-                            </span>
-                        </td>
-                        <td>
-                            <small class="text-muted">
-                                <i class="fas fa-calendar-alt me-1"></i>
-                                <?= date('d/m/Y', strtotime($user['created_at'])) ?>
-                            </small>
-                        </td>
-                        <td class="text-center">
-                            <div class="btn-group" role="group">
-                                <button class="btn btn-sm btn-outline-primary" onclick="viewUser(<?= $user['id'] ?>)" title="Lihat Detail">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-warning" onclick="editUser(<?= $user['id'] ?>)" title="Edit User">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="deleteUser(<?= $user['id'] ?>)" title="Hapus User">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+            <!-- Data Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th width="8%">No</th>
+                            <th width="30%">Username</th>
+                            <th width="20%">Hak Akses</th>
+                            <th width="25%">Tanggal Dibuat</th>
+                            <th width="17%">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Data will be loaded by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="text-center py-4" style="display: none;">
+                <i class="fas fa-spinner fa-spin fa-2x text-primary mb-3"></i>
+                <p class="text-muted">Memuat data...</p>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Add User Modal -->
-<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+<div class="modal fade" id="addUserModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addUserModalLabel">
-                    <i class="fas fa-user-plus me-2"></i>Tambah User Baru
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title">Tambah User Baru</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form id="addUserForm">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Nama Lengkap *</label>
-                                <input type="text" class="form-control" id="name" name="name" required>
-                                <div class="invalid-feedback">Nama lengkap harus diisi</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username *</label>
+                                <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="username" name="username" required>
-                                <div class="invalid-feedback">Username harus diisi</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email *</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                                <div class="invalid-feedback">Email valid harus diisi</div>
+                                <div class="invalid-feedback"></div>
+                                <small class="form-text text-muted">Username minimal 4 karakter, hanya huruf dan angka</small>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="phone" class="form-label">No. Telepon</label>
-                                <input type="tel" class="form-control" id="phone" name="phone">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="role" class="form-label">Role *</label>
-                                <select class="form-select" id="role" name="role" required>
-                                    <option value="">Pilih Role</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="User">User</option>
+                                <label for="hak_akses" class="form-label">Hak Akses <span class="text-danger">*</span></label>
+                                <select class="form-select" id="hak_akses" name="hak_akses" required>
+                                    <option value="">Pilih Hak Akses</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="user">User</option>
                                 </select>
-                                <div class="invalid-feedback">Role harus dipilih</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Status *</label>
-                                <select class="form-select" id="status" name="status" required>
-                                    <option value="active">Aktif</option>
-                                    <option value="inactive">Tidak Aktif</option>
-                                </select>
+                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
                     </div>
-                    
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="password" class="form-label">Password *</label>
+                                <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="password" name="password" required minlength="6">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('password', 'passwordToggle')">
-                                        <i class="fas fa-eye" id="passwordToggle"></i>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password')">
+                                        <i class="fas fa-eye" id="passwordToggleIcon"></i>
+                                    </button>
+                                    <button class="btn btn-outline-info" type="button" onclick="generatePassword()" title="Generate Password">
+                                        <i class="fas fa-key"></i>
                                     </button>
                                 </div>
-                                <div class="invalid-feedback">Password minimal 6 karakter</div>
+                                <div class="invalid-feedback"></div>
+                                <small class="form-text text-muted">Password minimal 8 karakter</small>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="confirm_password" class="form-label">Konfirmasi Password *</label>
+                                <label for="confirm_password" class="form-label">Konfirmasi Password <span class="text-danger">*</span></label>
                                 <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-                                <div class="invalid-feedback">Konfirmasi password harus sama</div>
+                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-2"></i>Batal
-                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>Simpan User
+                        <i class="fas fa-save me-2"></i>Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="editUserForm">
+                <input type="hidden" id="edit_user_id" name="user_id">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_username" class="form-label">Username <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="edit_username" name="username" required>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_hak_akses" class="form-label">Hak Akses <span class="text-danger">*</span></label>
+                                <select class="form-select" id="edit_hak_akses" name="hak_akses" required>
+                                    <option value="admin">Admin</option>
+                                    <option value="user">User</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="edit_change_password" name="change_password">
+                            <label class="form-check-label" for="edit_change_password">
+                                Ubah Password
+                            </label>
+                        </div>
+                    </div>
+                    <div id="passwordFields" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="edit_password" class="form-label">Password Baru</label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="edit_password" name="password">
+                                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('edit_password')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-outline-info" type="button" onclick="generatePassword()" title="Generate Password">
+                                            <i class="fas fa-key"></i>
+                                        </button>
+                                    </div>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="edit_confirm_password" class="form-label">Konfirmasi Password</label>
+                                    <input type="password" class="form-control" id="edit_confirm_password" name="confirm_password">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Perbarui
                     </button>
                 </div>
             </form>
@@ -318,273 +284,395 @@
 </div>
 
 <!-- View User Modal -->
-<div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
+<div class="modal fade" id="viewUserModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewUserModalLabel">
-                    <i class="fas fa-eye me-2"></i>Detail User
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title">Detail User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-                <div id="userDetail">
-                    <!-- Content will be loaded here -->
-                </div>
+            <div class="modal-body" id="userDetail">
+                <!-- Content will be loaded by JavaScript -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-2"></i>Tutup
-                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Edit User Modal -->
-<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editUserModalLabel">
-                    <i class="fas fa-user-edit me-2"></i>Edit User
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="editUserForm">
-                <input type="hidden" id="edit_user_id" name="user_id">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="edit_name" class="form-label">Nama Lengkap *</label>
-                                <input type="text" class="form-control" id="edit_name" name="name" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="edit_username" class="form-label">Username *</label>
-                                <input type="text" class="form-control" id="edit_username" name="username" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="edit_email" class="form-label">Email *</label>
-                                <input type="email" class="form-control" id="edit_email" name="email" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="edit_phone" class="form-label">No. Telepon</label>
-                                <input type="tel" class="form-control" id="edit_phone" name="phone">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="edit_role" class="form-label">Role *</label>
-                                <select class="form-select" id="edit_role" name="role" required>
-                                    <option value="">Pilih Role</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="User">User</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="edit_status" class="form-label">Status *</label>
-                                <select class="form-select" id="edit_status" name="status" required>
-                                    <option value="active">Aktif</option>
-                                    <option value="inactive">Tidak Aktif</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>Catatan:</strong> Password tidak dapat diubah melalui halaman ini. User dapat mengubah password mereka melalui halaman pengaturan.
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-2"></i>Batal
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>Update User
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Styles -->
-<style>
-.stats-card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
-    transition: all 0.3s ease;
-}
-
-.stats-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 2rem 0 rgba(33, 40, 50, 0.25);
-}
-
-.stats-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
-    margin-right: 1rem;
-}
-
-.stats-number {
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 0;
-    color: #5a5c69;
-}
-
-.stats-label {
-    margin: 0;
-    color: #858796;
-    font-size: 0.875rem;
-}
-
-.avatar-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, #4A6CF7, #667eea);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
-}
-
-.card-header {
-    border-radius: 15px 15px 0 0 !important;
-    border-bottom: none;
-}
-
-.table th {
-    background-color: #f8f9fc;
-    border-color: #e3e6f0;
-    font-weight: 600;
-    color: #5a5c69;
-    font-size: 0.875rem;
-}
-
-.table td {
-    border-color: #e3e6f0;
-    vertical-align: middle;
-}
-
-.table-hover tbody tr:hover {
-    background-color: #f8f9fc;
-}
-
-.badge {
-    font-size: 0.75rem;
-    padding: 0.5em 0.75em;
-}
-
-.btn-group .btn {
-    margin: 0 1px;
-}
-
-.modal-content {
-    border-radius: 15px;
-}
-
-.form-control:focus {
-    border-color: #4A6CF7;
-    box-shadow: 0 0 0 0.2rem rgba(74, 108, 247, 0.25);
-}
-</style>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
 <script>
-// Sample data for demo
-const usersData = <?= json_encode($users) ?>;
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    loadUserStatistics();
+    loadUsersTable();
+    setupEventListeners();
+});
 
-// Add User Form Handler
-document.getElementById('addUserForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+// Load user statistics
+async function loadUserStatistics() {
+    try {
+        const response = await fetch('<?= base_url('api/users/statistics') ?>');
+        const data = await response.json();
+        
+        if (data.success) {
+            const stats = data.data;
+            document.getElementById('totalUsers').textContent = stats.total_users || '0';
+            document.getElementById('adminUsers').textContent = stats.admin_users || '0';
+            document.getElementById('regularUsers').textContent = stats.regular_users || '0';
+            document.getElementById('usersBulanIni').textContent = stats.users_bulan_ini || '0';
+        }
+    } catch (error) {
+        console.error('Error loading statistics:', error);
+        // Show placeholder data if stats endpoint doesn't exist
+        document.getElementById('totalUsers').textContent = '0';
+        document.getElementById('adminUsers').textContent = '0';
+        document.getElementById('regularUsers').textContent = '0';
+        document.getElementById('usersBulanIni').textContent = '0';
+    }
+}
+
+// Load users table
+async function loadUsersTable(filters = {}) {
+    const loadingState = document.getElementById('loadingState');
+    const tableBody = document.getElementById('usersTableBody');
     
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirm_password').value;
+    // Show loading
+    loadingState.style.display = 'block';
+    tableBody.style.display = 'none';
     
-    if (password !== confirmPassword) {
-        showAlert('danger', 'Password dan konfirmasi password tidak sama!');
-        document.getElementById('confirm_password').classList.add('is-invalid');
+    try {
+        const response = await fetch('<?= base_url('admin/users/data') ?>');
+        const data = await response.json();
+        
+        if (data.success) {
+            displayUsersTable(data.data, filters);
+        } else {
+            showAlert('danger', 'Gagal memuat data users');
+            showEmptyTable();
+        }
+    } catch (error) {
+        console.error('Error loading users:', error);
+        showAlert('danger', 'Terjadi kesalahan saat memuat data');
+        showEmptyTable();
+    } finally {
+        // Hide loading
+        loadingState.style.display = 'none';
+        tableBody.style.display = '';
+    }
+}
+
+// Display users in table
+function displayUsersTable(users, filters = {}) {
+    let filteredUsers = [...users];
+    
+    // Apply filters
+    if (filters.search) {
+        const searchTerm = filters.search.toLowerCase();
+        filteredUsers = filteredUsers.filter(user => 
+            user.username.toLowerCase().includes(searchTerm)
+        );
+    }
+    
+    if (filters.hak_akses) {
+        filteredUsers = filteredUsers.filter(user => user.hak_akses === filters.hak_akses);
+    }
+    
+    const tbody = document.getElementById('usersTableBody');
+    tbody.innerHTML = '';
+    
+    if (filteredUsers.length === 0) {
+        showEmptyTable();
         return;
     }
+    
+    filteredUsers.forEach((user, index) => {
+        // Format date - handle different formats
+        let formattedDate = '';
+        if (user.created_at) {
+            try {
+                const date = new Date(user.created_at);
+                formattedDate = date.toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: '2-digit', 
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                formattedDate = user.created_at;
+            }
+        }
+        
+        const row = `
+            <tr class="user-row" data-user-id="${user.id_user}">
+                <td>${index + 1}</td>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                            <span class="text-white fw-bold">${user.username.charAt(0).toUpperCase()}</span>
+                        </div>
+                        <strong>${user.username}</strong>
+                    </div>
+                </td>
+                <td>
+                    <span class="badge bg-${user.hak_akses === 'admin' ? 'danger' : 'primary'}">${user.hak_akses.toUpperCase()}</span>
+                </td>
+                <td>
+                    <small>${formattedDate}</small>
+                </td>
+                <td>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button class="btn btn-info" onclick="viewUser(${user.id_user})" title="Lihat Detail">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-warning" onclick="editUser(${user.id_user})" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteUser(${user.id_user})" title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+        tbody.innerHTML += row;
+    });
+    
+    // Update statistics from loaded data
+    updateStatisticsFromData(users);
+}
+
+// Show empty table
+function showEmptyTable() {
+    const tbody = document.getElementById('usersTableBody');
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="5" class="text-center py-4">
+                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Tidak ada data user ditemukan</p>
+            </td>
+        </tr>
+    `;
+}
+
+// Update statistics from data
+function updateStatisticsFromData(users) {
+    const totalUsers = users.length;
+    const adminUsers = users.filter(u => u.hak_akses === 'admin').length;
+    const regularUsers = users.filter(u => u.hak_akses === 'user').length;
+    
+    // Calculate users this month
+    const thisMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
+    const usersBulanIni = users.filter(user => {
+        if (!user.created_at) return false;
+        try {
+            return user.created_at.slice(0, 7) === thisMonth;
+        } catch (e) {
+            return false;
+        }
+    }).length;
+    
+    document.getElementById('totalUsers').textContent = totalUsers;
+    document.getElementById('adminUsers').textContent = adminUsers;
+    document.getElementById('regularUsers').textContent = regularUsers;
+    document.getElementById('usersBulanIni').textContent = usersBulanIni;
+}
+
+// Setup event listeners
+function setupEventListeners() {
+    // Search functionality
+    document.getElementById('searchUser').addEventListener('input', function() {
+        const filters = getActiveFilters();
+        loadUsersTable(filters);
+    });
+    
+    // Filter functionality
+    document.getElementById('filterHakAkses').addEventListener('change', function() {
+        const filters = getActiveFilters();
+        loadUsersTable(filters);
+    });
+    
+    // Form submission
+    document.getElementById('addUserForm').addEventListener('submit', handleAddUser);
+    document.getElementById('editUserForm').addEventListener('submit', handleEditUser);
+    
+    // Password toggle for edit
+    document.getElementById('edit_change_password').addEventListener('change', function() {
+        const passwordFields = document.getElementById('passwordFields');
+        passwordFields.style.display = this.checked ? 'block' : 'none';
+        
+        // Set required attribute based on checkbox
+        const passwordInputs = passwordFields.querySelectorAll('input[type="password"]');
+        passwordInputs.forEach(input => {
+            input.required = this.checked;
+        });
+    });
+    
+    // Password strength checker
+    setupPasswordStrengthChecker();
+}
+
+// Password strength checker
+function setupPasswordStrengthChecker() {
+    const passwordInputs = ['password', 'edit_password'];
+    
+    passwordInputs.forEach(inputId => {
+        const input = document.getElementById(inputId);
+        if (input) {
+            input.addEventListener('input', function() {
+                checkPasswordStrength(this);
+            });
+        }
+    });
+}
+
+// Check password strength
+function checkPasswordStrength(input) {
+    const password = input.value;
+    if (!password) {
+        // Remove strength indicator if password is empty
+        const existingStrength = input.parentNode.parentNode.querySelector('.password-strength');
+        if (existingStrength) {
+            existingStrength.remove();
+        }
+        return;
+    }
+    
+    let score = 0;
+    let feedback = [];
+    
+    // Length check
+    if (password.length >= 8) {
+        score += 25;
+        feedback.push('✓ Minimal 8 karakter');
+    } else {
+        feedback.push('✗ Minimal 8 karakter');
+    }
+    
+    // Lowercase check
+    if (/[a-z]/.test(password)) {
+        score += 25;
+        feedback.push('✓ Huruf kecil');
+    } else {
+        feedback.push('✗ Huruf kecil');
+    }
+    
+    // Uppercase check
+    if (/[A-Z]/.test(password)) {
+        score += 25;
+        feedback.push('✓ Huruf besar');
+    } else {
+        feedback.push('✗ Huruf besar');
+    }
+    
+    // Number check
+    if (/[0-9]/.test(password)) {
+        score += 25;
+        feedback.push('✓ Angka');
+    } else {
+        feedback.push('✗ Angka');
+    }
+    
+    // Symbol check (bonus)
+    if (/[^a-zA-Z0-9]/.test(password)) {
+        score += 25;
+        feedback.push('✓ Simbol (bonus)');
+    }
+    
+    // Display strength
+    let strengthDiv = input.parentNode.parentNode.querySelector('.password-strength');
+    if (!strengthDiv) {
+        strengthDiv = document.createElement('div');
+        strengthDiv.className = 'password-strength mt-2';
+        input.parentNode.parentNode.appendChild(strengthDiv);
+    }
+    
+    let strengthLevel, strengthColor;
+    if (score < 50) {
+        strengthLevel = 'Lemah';
+        strengthColor = 'danger';
+    } else if (score < 75) {
+        strengthLevel = 'Sedang';
+        strengthColor = 'warning';
+    } else if (score < 100) {
+        strengthLevel = 'Kuat';
+        strengthColor = 'info';
+    } else {
+        strengthLevel = 'Sangat Kuat';
+        strengthColor = 'success';
+    }
+    
+    strengthDiv.innerHTML = `
+        <div class="progress mb-2" style="height: 5px;">
+            <div class="progress-bar bg-${strengthColor}" style="width: ${Math.min(100, score)}%"></div>
+        </div>
+        <small class="text-${strengthColor}">
+            Kekuatan: ${strengthLevel} (${Math.min(100, score)}%)
+        </small>
+        <div class="mt-1">
+            ${feedback.map(f => `<small class="d-block text-muted" style="font-size: 0.75rem;">${f}</small>`).join('')}
+        </div>
+    `;
+}
+
+// Handle add user form
+async function handleAddUser(e) {
+    e.preventDefault();
     
     const formData = new FormData(this);
     const submitBtn = this.querySelector('button[type="submit"]');
     const originalContent = submitBtn.innerHTML;
     
+    // Show loading
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
     submitBtn.disabled = true;
     
+    // Clear previous errors
     clearFormErrors(this);
     
-    fetch('<?= base_url('admin/users/add') ?>', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
+    try {
+        const response = await fetch('<?= base_url('admin/users/create') ?>', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        
+        const data = await response.json();
+        
         if (data.success) {
             showAlert('success', data.message);
             const modal = bootstrap.Modal.getInstance(document.getElementById('addUserModal'));
             modal.hide();
             this.reset();
-            setTimeout(() => location.reload(), 1500);
+            
+            // Clear password strength indicators
+            const strengthIndicators = this.querySelectorAll('.password-strength');
+            strengthIndicators.forEach(indicator => indicator.remove());
+            
+            // Reload data
+            loadUsersTable();
         } else {
             showAlert('danger', data.message || 'Gagal menambahkan user');
             if (data.errors) {
                 showFormErrors(this, data.errors);
             }
         }
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('Error:', error);
         showAlert('danger', 'Terjadi kesalahan saat menambahkan user');
-    })
-    .finally(() => {
+    } finally {
         submitBtn.innerHTML = originalContent;
         submitBtn.disabled = false;
-    });
-});
+    }
+}
 
-// Edit User Form Handler
-document.getElementById('editUserForm').addEventListener('submit', function(e) {
+// Handle edit user form
+async function handleEditUser(e) {
     e.preventDefault();
     
     const userId = document.getElementById('edit_user_id').value;
@@ -592,210 +680,256 @@ document.getElementById('editUserForm').addEventListener('submit', function(e) {
     const submitBtn = this.querySelector('button[type="submit"]');
     const originalContent = submitBtn.innerHTML;
     
+    // Show loading
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Memperbarui...';
     submitBtn.disabled = true;
     
+    // Clear previous errors
     clearFormErrors(this);
     
-    fetch(`<?= base_url('admin/users/edit') ?>/${userId}`, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
+    try {
+        const response = await fetch(`<?= base_url('admin/users/update') ?>/${userId}`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        
+        const data = await response.json();
+        
         if (data.success) {
             showAlert('success', data.message);
             const modal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
             modal.hide();
-            setTimeout(() => location.reload(), 1500);
+            
+            // Reload data
+            loadUsersTable();
         } else {
             showAlert('danger', data.message || 'Gagal memperbarui user');
             if (data.errors) {
                 showFormErrors(this, data.errors);
             }
         }
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('Error:', error);
         showAlert('danger', 'Terjadi kesalahan saat memperbarui user');
-    })
-    .finally(() => {
+    } finally {
         submitBtn.innerHTML = originalContent;
         submitBtn.disabled = false;
-    });
-});
+    }
+}
 
-// View User Function
-function viewUser(userId) {
-    const user = usersData.find(u => u.id == userId);
-    if (!user) return;
-    
-    const detailHtml = `
-        <div class="row">
-            <div class="col-md-4 text-center">
-                <div class="user-avatar-large">
-                    <div class="avatar-circle-large">
-                        ${user.name.substring(0, 2).toUpperCase()}
+// View user function
+async function viewUser(userId) {
+    try {
+        const response = await fetch(`<?= base_url('admin/users/show') ?>/${userId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            const user = data.data;
+            
+            // Format dates
+            let createdDate = 'N/A';
+            let updatedDate = 'N/A';
+            
+            if (user.created_at) {
+                try {
+                    const date = new Date(user.created_at);
+                    createdDate = date.toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'long', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                } catch (e) {
+                    createdDate = user.created_at;
+                }
+            }
+            
+            if (user.updated_at) {
+                try {
+                    const date = new Date(user.updated_at);
+                    updatedDate = date.toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'long', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                } catch (e) {
+                    updatedDate = user.updated_at;
+                }
+            }
+            
+            const detailHtml = `
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 150px; height: 150px;">
+                            <span class="text-white display-4 fw-bold">${user.username.charAt(0).toUpperCase()}</span>
+                        </div>
+                        <h5 class="text-primary">${user.username}</h5>
+                        <p class="text-muted">@${user.username}</p>
+                    </div>
+                    <div class="col-md-8">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td width="30%"><strong>Username:</strong></td>
+                                <td>${user.username}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Hak Akses:</strong></td>
+                                <td><span class="badge bg-${user.hak_akses === 'admin' ? 'danger' : 'primary'}">${user.hak_akses.toUpperCase()}</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tanggal Dibuat:</strong></td>
+                                <td>${createdDate}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Terakhir Diupdate:</strong></td>
+                                <td>${updatedDate}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ID User:</strong></td>
+                                <td><code>#${user.id_user}</code></td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
-                <h5 class="mt-3">${user.name}</h5>
-                <p class="text-muted">@${user.username}</p>
-                <span class="badge bg-${user.role === 'Admin' ? 'primary' : 'secondary'} mb-2">${user.role}</span>
-                <br>
-                <span class="badge bg-${user.status === 'active' ? 'success' : 'danger'}">${user.status.toUpperCase()}</span>
-            </div>
-            <div class="col-md-8">
-                <table class="table table-borderless">
-                    <tr>
-                        <td width="30%"><i class="fas fa-envelope text-muted me-2"></i><strong>Email:</strong></td>
-                        <td>${user.email}</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-phone text-muted me-2"></i><strong>Telepon:</strong></td>
-                        <td>${user.phone || '-'}</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-calendar-alt text-muted me-2"></i><strong>Bergabung:</strong></td>
-                        <td>${new Date(user.created_at).toLocaleDateString('id-ID')}</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-clock text-muted me-2"></i><strong>Login Terakhir:</strong></td>
-                        <td>${new Date(user.last_login).toLocaleDateString('id-ID')} ${new Date(user.last_login).toLocaleTimeString('id-ID')}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    `;
-    
-    document.getElementById('userDetail').innerHTML = detailHtml;
-    const modal = new bootstrap.Modal(document.getElementById('viewUserModal'));
-    modal.show();
+            `;
+            
+            document.getElementById('userDetail').innerHTML = detailHtml;
+            const modal = new bootstrap.Modal(document.getElementById('viewUserModal'));
+            modal.show();
+        } else {
+            showAlert('danger', 'User tidak ditemukan');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('danger', 'Terjadi kesalahan saat memuat detail user');
+    }
 }
 
-// Edit User Function
-function editUser(userId) {
-    const user = usersData.find(u => u.id == userId);
-    if (!user) return;
-    
-    document.getElementById('edit_user_id').value = user.id;
-    document.getElementById('edit_name').value = user.name;
-    document.getElementById('edit_username').value = user.username;
-    document.getElementById('edit_email').value = user.email;
-    document.getElementById('edit_phone').value = user.phone || '';
-    document.getElementById('edit_role').value = user.role;
-    document.getElementById('edit_status').value = user.status;
-    
-    clearFormErrors(document.getElementById('editUserForm'));
-    
-    const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
-    modal.show();
+// Edit user function
+async function editUser(userId) {
+    try {
+        const response = await fetch(`<?= base_url('admin/users/show') ?>/${userId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            const user = data.data;
+            
+            // Populate form
+            document.getElementById('edit_user_id').value = user.id_user;
+            document.getElementById('edit_username').value = user.username;
+            document.getElementById('edit_hak_akses').value = user.hak_akses;
+            
+            // Reset password fields
+            document.getElementById('edit_change_password').checked = false;
+            document.getElementById('passwordFields').style.display = 'none';
+            
+            // Clear password inputs
+            document.getElementById('edit_password').value = '';
+            document.getElementById('edit_confirm_password').value = '';
+            
+            // Clear previous errors and strength indicators
+            clearFormErrors(document.getElementById('editUserForm'));
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+            modal.show();
+        } else {
+            showAlert('danger', 'User tidak ditemukan');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('danger', 'Terjadi kesalahan saat memuat data user');
+    }
 }
 
-// Delete User Function
-function deleteUser(userId) {
-    const user = usersData.find(u => u.id == userId);
-    if (!user) return;
+// Delete user function
+async function deleteUser(userId) {
+    if (!confirm('Apakah Anda yakin ingin menghapus user ini?\n\nTindakan ini tidak dapat dibatalkan.')) {
+        return;
+    }
     
-    if (confirm(`Apakah Anda yakin ingin menghapus user "${user.name}"?`)) {
-        fetch(`<?= base_url('admin/users/delete') ?>/${userId}`, {
+    try {
+        const response = await fetch(`<?= base_url('admin/users/delete') ?>/${userId}`, {
             method: 'DELETE',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showAlert('success', data.message);
-                const row = document.querySelector(`[data-user-id="${userId}"]`);
-                if (row) row.remove();
-            } else {
-                showAlert('danger', data.message || 'Gagal menghapus user');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showAlert('danger', 'Terjadi kesalahan saat menghapus user');
         });
-    }
-}
-
-// Toggle Password Visibility
-function togglePasswordVisibility(inputId, toggleId) {
-    const input = document.getElementById(inputId);
-    const toggle = document.getElementById(toggleId);
-    
-    if (input.type === 'password') {
-        input.type = 'text';
-        toggle.classList.remove('fa-eye');
-        toggle.classList.add('fa-eye-slash');
-    } else {
-        input.type = 'password';
-        toggle.classList.remove('fa-eye-slash');
-        toggle.classList.add('fa-eye');
-    }
-}
-
-// Search and Filter Functions
-document.getElementById('searchUser').addEventListener('input', filterUsers);
-document.getElementById('filterRole').addEventListener('change', filterUsers);
-document.getElementById('filterStatus').addEventListener('change', filterUsers);
-
-function filterUsers() {
-    const searchTerm = document.getElementById('searchUser').value.toLowerCase();
-    const roleFilter = document.getElementById('filterRole').value;
-    const statusFilter = document.getElementById('filterStatus').value;
-    
-    const rows = document.querySelectorAll('.user-row');
-    
-    rows.forEach(row => {
-        const name = row.querySelector('.user-name').textContent.toLowerCase();
-        const username = row.querySelector('.user-username').textContent.toLowerCase();
-        const email = row.querySelector('.user-email').textContent.toLowerCase();
-        const role = row.querySelector('.user-role').textContent;
-        const status = row.querySelector('.user-status').textContent.toLowerCase();
         
-        const matchesSearch = name.includes(searchTerm) || username.includes(searchTerm) || email.includes(searchTerm);
-        const matchesRole = !roleFilter || role === roleFilter;
-        const matchesStatus = !statusFilter || status.includes(statusFilter);
+        const data = await response.json();
         
-        if (matchesSearch && matchesRole && matchesStatus) {
-            row.style.display = '';
+        if (data.success) {
+            showAlert('success', data.message);
+            loadUsersTable();
         } else {
-            row.style.display = 'none';
+            showAlert('danger', data.message || 'Gagal menghapus user');
         }
-    });
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('danger', 'Terjadi kesalahan saat menghapus user');
+    }
 }
 
-function resetFilters() {
+// Generate password
+async function generatePassword() {
+    try {
+        const response = await fetch('<?= base_url('admin/users/generate-password') ?>', {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Show password in active modal
+            const activeModal = document.querySelector('.modal.show');
+            if (activeModal) {
+                const passwordInput = activeModal.querySelector('input[name="password"]');
+                const confirmPasswordInput = activeModal.querySelector('input[name="confirm_password"]');
+                
+                if (passwordInput) {
+                    passwordInput.value = data.password;
+                    passwordInput.type = 'text'; // Show generated password
+                    
+                    if (confirmPasswordInput) {
+                        confirmPasswordInput.value = data.password;
+                    }
+                    
+                    // Show password strength
+                    checkPasswordStrength(passwordInput);
+                    
+                    showAlert('success', 'Password berhasil digenerate');
+                }
+            }
+        } else {
+            showAlert('danger', 'Gagal generate password');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('danger', 'Terjadi kesalahan saat generate password');
+    }
+}
+
+// Utility functions
+function getActiveFilters() {
+    return {
+        search: document.getElementById('searchUser').value,
+        hak_akses: document.getElementById('filterHakAkses').value
+    };
+}
+
+function resetUserFilters() {
     document.getElementById('searchUser').value = '';
-    document.getElementById('filterRole').value = '';
-    document.getElementById('filterStatus').value = '';
-    filterUsers();
-}
-
-// Utility Functions
-function showAlert(type, message) {
-    const alertContainer = document.getElementById('alertContainer');
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type} alert-dismissible fade show`;
-    alert.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    
-    alertContainer.appendChild(alert);
-    
-    setTimeout(() => {
-        if (alert.parentNode) {
-            const bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        }
-    }, 5000);
+    document.getElementById('filterHakAkses').value = '';
+    loadUsersTable();
 }
 
 function showFormErrors(form, errors) {
@@ -803,39 +937,68 @@ function showFormErrors(form, errors) {
         const input = form.querySelector(`[name="${field}"]`);
         if (input) {
             input.classList.add('is-invalid');
-            const feedback = input.parentNode.querySelector('.invalid-feedback');
-            if (feedback) {
-                feedback.textContent = errors[field];
+            
+            let feedback = input.parentNode.querySelector('.invalid-feedback');
+            if (!feedback) {
+                feedback = document.createElement('div');
+                feedback.className = 'invalid-feedback';
+                input.parentNode.appendChild(feedback);
             }
+            feedback.textContent = errors[field];
         }
     });
 }
 
 function clearFormErrors(form) {
-    const inputs = form.querySelectorAll('.is-invalid');
+    const inputs = form.querySelectorAll('.is-invalid, .is-valid');
     inputs.forEach(input => {
-        input.classList.remove('is-invalid');
+        input.classList.remove('is-invalid', 'is-valid');
+    });
+    
+    const feedbacks = form.querySelectorAll('.invalid-feedback, .valid-feedback, .password-strength');
+    feedbacks.forEach(feedback => {
+        feedback.remove();
     });
 }
 
-// Additional CSS for avatar
-const additionalStyle = document.createElement('style');
-additionalStyle.textContent = `
-.avatar-circle-large {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, #4A6CF7, #667eea);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 24px;
-    margin: 0 auto;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const icon = field.parentNode.querySelector('i');
+    
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        field.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
 }
-`;
-document.head.appendChild(additionalStyle);
+
+function showAlert(type, message) {
+    const alertContainer = document.getElementById('alertContainer');
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} alert-dismissible fade show`;
+    alert.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    alertContainer.appendChild(alert);
+    
+    // Auto close after 5 seconds
+    setTimeout(() => {
+        if (alert.parentNode) {
+            try {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            } catch (e) {
+                alert.remove();
+            }
+        }
+    }, 5000);
+}
 </script>
 <?= $this->endSection() ?>

@@ -37,6 +37,14 @@
                     <i class="fas fa-handshake"></i>
                     Kerjasama
                 </a>
+                <a href="<?= base_url('admin/implementasi') ?>" class="nav-link <?= (strpos(uri_string(), 'admin/implementasi') !== false) ? 'active' : '' ?>">
+                    <i class="fas fa-tasks"></i>
+                    Implementasi
+                </a>
+                <a href="<?= base_url('admin/permohonan') ?>" class="nav-link <?= (strpos(uri_string(), 'admin/permohonan') !== false) ? 'active' : '' ?>">
+                    <i class="fas fa-file-alt"></i>
+                    Permohonan
+                </a>
                 <a href="<?= base_url('admin/berita') ?>" class="menu-item">
                     <i class="fas fa-newspaper"></i>
                     Berita
