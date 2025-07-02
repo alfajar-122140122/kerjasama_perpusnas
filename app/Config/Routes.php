@@ -39,12 +39,14 @@ $routes->group('admin', function($routes) {
     $routes->get('kerjasama/detail/(:num)', 'Kerjasama::detail/$1');
     $routes->get('kerjasama/export', 'Kerjasama::export');
     
-    // Berita routes
-    $routes->get('berita', 'Admin::berita');
-    $routes->post('berita/add', 'Admin::addBerita');
-    $routes->post('berita/edit/(:num)', 'Admin::editBerita/$1');
-    $routes->delete('berita/delete/(:num)', 'Admin::deleteBerita/$1');
-
+    // Berita routes - TAMBAHKAN INI
+    $routes->get('berita', 'Berita::index');
+    $routes->post('berita/create', 'Berita::create');
+    $routes->post('berita/update/(:num)', 'Berita::update/$1');
+    $routes->delete('berita/delete/(:num)', 'Berita::delete/$1');
+    $routes->get('berita/detail/(:num)', 'Berita::detail/$1');
+    $routes->post('berita/toggle-status/(:num)', 'Berita::toggleStatus/$1');
+    
     // Settings routes
     $routes->get('pengaturan', 'Settings::index');
     $routes->post('pengaturan/update-profile', 'Settings::updateProfile');
