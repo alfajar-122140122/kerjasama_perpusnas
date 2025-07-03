@@ -25,7 +25,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <div class="text-xs font-weight-bold text-uppercase mb-1">Total Kerjasama</div>
-                            <div class="h5 mb-0" id="totalKerjasama">-</div>
+                            <div class="h5 mb-0" id="totalKerjasama"><?= $total_kerjasama ?? 0 ?></div>
                         </div>
                         <div class="text-white-50">
                             <i class="fas fa-handshake fa-2x"></i>
@@ -39,8 +39,8 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Progress Aktif</div>
-                            <div class="h5 mb-0" id="progressAktif">-</div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Kerjasama Aktif</div>
+                            <div class="h5 mb-0" id="progressAktif"><?= $aktif ?? 0 ?></div>
                         </div>
                         <div class="text-white-50">
                             <i class="fas fa-check-circle fa-2x"></i>
@@ -55,7 +55,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <div class="text-xs font-weight-bold text-uppercase mb-1">Implementasi</div>
-                            <div class="h5 mb-0" id="totalImplementasi">-</div>
+                            <div class="h5 mb-0" id="totalImplementasi"><?= $totalImplementasi ?? 0 ?></div>
                         </div>
                         <div class="text-white-50">
                             <i class="fas fa-tasks fa-2x"></i>
@@ -70,7 +70,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <div class="text-xs font-weight-bold text-uppercase mb-1">Mitra</div>
-                            <div class="h5 mb-0" id="totalMitra">-</div>
+                            <div class="h5 mb-0" id="totalMitra"><?= $totalMitra ?? 0 ?></div>
                         </div>
                         <div class="text-white-50">
                             <i class="fas fa-building fa-2x"></i>
@@ -128,26 +128,30 @@
                     <thead>
                         <tr>
                             <th width="5%">No</th>
-                            <th width="25%">Nama Mitra</th>
-                            <th width="20%">Ruang Lingkup</th>
-                            <th width="12%">Jenis</th>
-                            <th width="10%">Progress</th>
+                            <th width="23%">Nama Mitra</th>
+                            <th width="18%">Ruang Lingkup</th>
+                            <th width="10%">Jenis</th>
+                            <th width="8%">Status</th>
                             <th width="12%">Tanggal</th>
-                            <th width="12%">Lokasi</th>
+                            <th width="8%">Dokumen</th>
                             <th width="4%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $no = 1; foreach($kerjasama as $item): ?>
-                        <tr class="kerjasama-row" data-kerjasama-id="<?= $item['id'] ?>">
+                        <tr class="kerjasama-row" data-kerjasama-id="<?= $item['id_kerjasama'] ?>">
                             <td><?= $no++ ?></td>
                             <td class="kerjasama-judul">
-                                <strong><?= esc($item['judul']) ?></strong>
-                                <br><small class="text-muted"><?= esc(substr($item['deskripsi'], 0, 80)) ?>...</small>
+                                <strong><?= esc($item['nama_mitra']) ?></strong>
+                                <br><small class="text-muted"><?= esc(substr($item['ruang_lingkup'], 0, 80)) ?>...</small>
                             </td>
-                            <td class="kerjasama-instansi"><?= esc($item['instansi']) ?></td>
+                            <td class="kerjasama-ruang-lingkup"><?= esc(substr($item['ruang_lingkup'], 0, 100)) ?></td>
                             <td class="kerjasama-jenis">
+                                <?php if(!empty($item['jenis'])): ?>
                                 <span class="badge bg-info"><?= esc($item['jenis']) ?></span>
+                                <?php else: ?>
+                                <span class="badge bg-secondary">Tidak Ada</span>
+                                <?php endif; ?>
                             </td>
                             <td class="kerjasama-status">
                                 <?php 
@@ -156,26 +160,36 @@
                                     case 'aktif': $statusClass = 'success'; break;
                                     case 'selesai': $statusClass = 'primary'; break;
                                     case 'pending': $statusClass = 'warning'; break;
+                                    case 'dibatalkan': $statusClass = 'danger'; break;
+                                    default: $statusClass = 'secondary'; break;
                                 }
                                 ?>
                                 <span class="badge bg-<?= $statusClass ?>"><?= ucfirst($item['status']) ?></span>
                             </td>
                             <td>
                                 <small>
-                                    <strong>Mulai:</strong> <?= date('d/m/Y', strtotime($item['tanggal_mulai'])) ?><br>
-                                    <strong>Berakhir:</strong> <?= date('d/m/Y', strtotime($item['tanggal_berakhir'])) ?>
+                                    <strong>Mulai:</strong> <?= $item['tanggal_mulai_formatted'] ?><br>
+                                    <strong>Berakhir:</strong> <?= $item['tanggal_selesai_formatted'] ?>
                                 </small>
                             </td>
-                            <td><?= esc($item['pic']) ?></td>
+                            <td>
+                                <?php if(!empty($item['dokumen'])): ?>
+                                <a href="<?= base_url('public/uploads/kerjasama') ?>/<?= $item['dokumen'] ?>" class="btn btn-sm btn-outline-info" target="_blank">
+                                    <i class="fas fa-file-download me-1"></i>Lihat
+                                </a>
+                                <?php else: ?>
+                                <span class="badge bg-secondary">Tidak Ada</span>
+                                <?php endif; ?>
+                            </td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <button class="btn btn-info btn-sm" onclick="viewKerjasama(<?= $item['id'] ?>)" title="Lihat Detail">
+                                    <button class="btn btn-info btn-sm" onclick="viewKerjasama(<?= $item['id_kerjasama'] ?>)" title="Lihat Detail">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <button class="btn btn-warning btn-sm" onclick="editKerjasama(<?= $item['id'] ?>)" title="Edit">
+                                    <button class="btn btn-warning btn-sm" onclick="editKerjasama(<?= $item['id_kerjasama'] ?>)" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="btn btn-danger btn-sm" onclick="deleteKerjasama(<?= $item['id'] ?>)" title="Hapus">
+                                    <button class="btn btn-danger btn-sm" onclick="deleteKerjasama(<?= $item['id_kerjasama'] ?>)" title="Hapus">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -197,12 +211,12 @@
                 <h5 class="modal-title">Tambah Kerjasama Baru</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form id="addKerjasamaForm">
+            <form id="addKerjasamaForm" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-8">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="mb-3">
                                         <label for="nama_mitra" class="form-label">Nama Mitra <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="nama_mitra" name="nama_mitra" required>
@@ -211,8 +225,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="jenis" class="form-label">Jenis Kerjasama <span class="text-danger">*</span></label>
-                                        <select class="form-select" id="jenis" name="jenis" required>
+                                        <label for="jenis" class="form-label">Jenis Kerjasama</label>
+                                        <select class="form-select" id="jenis" name="jenis">
                                             <option value="">Pilih Jenis</option>
                                             <option value="Pertukaran Koleksi">Pertukaran Koleksi</option>
                                             <option value="Penelitian">Penelitian</option>
@@ -223,46 +237,42 @@
                                         <div class="invalid-feedback"></div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="progress" class="form-label">Status</label>
+                                        <select class="form-select" id="progress" name="progress">
+                                            <option value="draft">Draft</option>
+                                            <option value="aktif">Aktif</option>
+                                            <option value="selesai">Selesai</option>
+                                            <option value="dibatalkan">Dibatalkan</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="ruang_lingkup" class="form-label">Ruang Lingkup <span class="text-danger">*</span></label>
                                 <textarea class="form-control" id="ruang_lingkup" name="ruang_lingkup" rows="3" required></textarea>
                                 <div class="invalid-feedback"></div>
                             </div>
-                            <div class="mb-3">
-                                <label for="dasar_kerjasama" class="form-label">Dasar Kerjasama</label>
-                                <textarea class="form-control" id="dasar_kerjasama" name="dasar_kerjasama" rows="2"></textarea>
-                            </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="tanggal_ttd" class="form-label">Tanggal TTD <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="tanggal_ttd" name="tanggal_ttd" required>
+                                <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
+                                <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai">
                                 <div class="invalid-feedback"></div>
                             </div>
                             <div class="mb-3">
-                                <label for="tanggal_berakhir" class="form-label">Tanggal Berakhir <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="tanggal_berakhir" name="tanggal_berakhir" required>
+                                <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
+                                <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai">
                                 <div class="invalid-feedback"></div>
                             </div>
-                            <div class="mb-3">
-                                <label for="progress" class="form-label">Progress</label>
-                                <select class="form-select" id="progress" name="progress">
-                                    <option value="draft">Draft</option>
-                                    <option value="aktif">Aktif</option>
-                                    <option value="selesai">Selesai</option>
-                                    <option value="dibatalkan">Dibatalkan</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="lokasi" class="form-label">Lokasi</label>
-                                <input type="text" class="form-control" id="lokasi" name="lokasi">
-                            </div>
+
                             <div class="mb-3">
                                 <label for="dokumen" class="form-label">Dokumen</label>
                                 <input type="file" class="form-control" id="dokumen" name="dokumen" accept=".pdf,.doc,.docx">
                                 <small class="form-text text-muted">Format: PDF, DOC, DOCX (Max: 5MB)</small>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -285,28 +295,21 @@
                 <h5 class="modal-title">Edit Kerjasama</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form id="editKerjasamaForm">
+            <form id="editKerjasamaForm" enctype="multipart/form-data">
                 <input type="hidden" id="edit_kerjasama_id" name="kerjasama_id">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="edit_judul" class="form-label">Judul Kerjasama <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="edit_judul" name="judul" required>
+                                <label for="edit_nama_mitra" class="form-label">Nama Mitra <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="edit_nama_mitra" name="nama_mitra" required>
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="edit_instansi" class="form-label">Instansi <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="edit_instansi" name="instansi" required>
-                                <div class="invalid-feedback"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="edit_jenis" class="form-label">Jenis Kerjasama <span class="text-danger">*</span></label>
-                                <select class="form-select" id="edit_jenis" name="jenis" required>
+                                <label for="edit_jenis" class="form-label">Jenis Kerjasama</label>
+                                <select class="form-select" id="edit_jenis" name="jenis">
                                     <option value="">Pilih Jenis</option>
                                     <option value="Pertukaran Koleksi">Pertukaran Koleksi</option>
                                     <option value="Penelitian">Penelitian</option>
@@ -319,41 +322,46 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="edit_tanggal_mulai" class="form-label">Tanggal Mulai <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="edit_tanggal_mulai" name="tanggal_mulai" required>
+                                <label for="edit_tanggal_mulai" class="form-label">Tanggal Mulai</label>
+                                <input type="date" class="form-control" id="edit_tanggal_mulai" name="tanggal_mulai">
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="edit_tanggal_berakhir" class="form-label">Tanggal Berakhir <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="edit_tanggal_berakhir" name="tanggal_berakhir" required>
+                                <label for="edit_tanggal_selesai" class="form-label">Tanggal Selesai</label>
+                                <input type="date" class="form-control" id="edit_tanggal_selesai" name="tanggal_selesai">
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="edit_pic" class="form-label">PIC <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="edit_pic" name="pic" required>
-                                <div class="invalid-feedback"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="edit_status" class="form-label">Status</label>
-                                <select class="form-select" id="edit_status" name="status">
-                                    <option value="pending">Pending</option>
+                                <label for="edit_progress" class="form-label">Status</label>
+                                <select class="form-select" id="edit_progress" name="progress">
+                                    <option value="draft">Draft</option>
                                     <option value="aktif">Aktif</option>
                                     <option value="selesai">Selesai</option>
+                                    <option value="dibatalkan">Dibatalkan</option>
                                 </select>
+                                <!-- Name is still 'progress' for form compatibility, but will be mapped to 'status' in controller -->
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_dokumen" class="form-label">Dokumen Baru</label>
+                                <input type="file" class="form-control" id="edit_dokumen" name="dokumen" accept=".pdf,.doc,.docx">
+                                <small class="form-text text-muted">Format: PDF, DOC, DOCX (Max: 5MB)</small>
+                                <div id="dokumen_saat_ini"></div>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="edit_deskripsi" class="form-label">Deskripsi</label>
-                                <textarea class="form-control" id="edit_deskripsi" name="deskripsi" rows="3"></textarea>
+                                <label for="edit_ruang_lingkup" class="form-label">Ruang Lingkup <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="edit_ruang_lingkup" name="ruang_lingkup" rows="3" required></textarea>
+                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -368,6 +376,77 @@
 </div>
 
 <!-- View Kerjasama Modal -->
+<div class="modal fade" id="viewKerjasamaModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detail Kerjasama</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="kerjasamaDetail">
+                <div class="row">
+                    <div class="col-md-8">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th width="30%">Nama Mitra</th>
+                                <td width="70%" id="detail_nama_mitra"></td>
+                            </tr>
+                            <tr>
+                                <th>Jenis Kerjasama</th>
+                                <td id="detail_jenis"></td>
+                            </tr>
+                            <tr>
+                                <th>Ruang Lingkup</th>
+                                <td id="detail_ruang_lingkup"></td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td><span id="detail_status" class="badge"></span></td>
+                            </tr>
+                            <tr>
+                                <th>Tanggal Mulai</th>
+                                <td id="detail_tanggal_mulai"></td>
+                            </tr>
+                            <tr>
+                                <th>Tanggal Selesai</th>
+                                <td id="detail_tanggal_selesai"></td>
+                            </tr>
+                            <tr>
+                                <th>Dokumen</th>
+                                <td id="detail_dokumen"></td>
+                            </tr>
+                            <tr>
+                                <th>Tanggal Dibuat</th>
+                                <td id="detail_created_at"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Implementasi</h5>
+                            </div>
+                            <div class="card-body">
+                                <h3 id="detail_implementasi_count" class="text-center mb-3"></h3>
+                                <div id="detail_implementasi_list" class="list-group">
+                                    <!-- Implementasi list will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" id="btnTambahImplementasi" class="btn btn-success">
+                    <i class="fas fa-plus me-2"></i>Tambah Implementasi
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Implementasi Modal -->
 <div class="modal fade" id="viewImplementasiModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -385,264 +464,379 @@
     </div>
 </div>
 
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Hapus</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin menghapus kerjasama ini? Semua data terkait akan ikut terhapus.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
 <script>
 // Data kerjasama dari server
 const kerjasamaData = <?= json_encode($kerjasama) ?>;
+let deleteId = null;
 
-// View Kerjasama Function
-function viewKerjasama(kerjasamaId) {
-    const kerjasama = kerjasamaData.find(k => k.id == kerjasamaId);
-    if (!kerjasama) {
-        alert('Data kerjasama tidak ditemukan');
-        return;
-    }
+// Format date for display
+function formatDate(dateString) {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+// Show success or error alert
+function showAlert(message, type = 'success') {
+    const alertContainer = document.getElementById('alertContainer');
+    const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
     
-    const detailHtml = `
-        <div class="row">
-            <div class="col-md-12">
-                <h5 class="text-primary mb-3">${kerjasama.judul}</h5>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <table class="table table-borderless">
-                    <tr>
-                        <td width="40%"><i class="fas fa-building text-muted me-2"></i><strong>Instansi:</strong></td>
-                        <td>${kerjasama.instansi}</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-tags text-muted me-2"></i><strong>Jenis:</strong></td>
-                        <td><span class="badge bg-info">${kerjasama.jenis}</span></td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-info-circle text-muted me-2"></i><strong>Status:</strong></td>
-                        <td><span class="badge bg-${kerjasama.status === 'aktif' ? 'success' : (kerjasama.status === 'selesai' ? 'primary' : 'warning')}">${kerjasama.status.toUpperCase()}</span></td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-user-tie text-muted me-2"></i><strong>PIC:</strong></td>
-                        <td>${kerjasama.pic}</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-md-6">
-                <table class="table table-borderless">
-                    <tr>
-                        <td width="40%"><i class="fas fa-calendar-alt text-muted me-2"></i><strong>Tanggal Mulai:</strong></td>
-                        <td>${new Date(kerjasama.tanggal_mulai).toLocaleDateString('id-ID')}</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-calendar-check text-muted me-2"></i><strong>Tanggal Berakhir:</strong></td>
-                        <td>${new Date(kerjasama.tanggal_berakhir).toLocaleDateString('id-ID')}</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-file-pdf text-muted me-2"></i><strong>Dokumen:</strong></td>
-                        <td><a href="#" class="text-decoration-none">${kerjasama.dokumen || 'Tidak ada'}</a></td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-clock text-muted me-2"></i><strong>Dibuat:</strong></td>
-                        <td>${new Date(kerjasama.created_at).toLocaleDateString('id-ID')}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <hr>
-                <h6><i class="fas fa-align-left text-muted me-2"></i>Deskripsi:</h6>
-                <p class="text-muted">${kerjasama.deskripsi || 'Tidak ada deskripsi'}</p>
-            </div>
+    alertContainer.innerHTML = `
+        <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     `;
     
-    document.getElementById('kerjasamaDetail').innerHTML = detailHtml;
-    const modal = new bootstrap.Modal(document.getElementById('viewKerjasamaModal'));
-    modal.show();
+    // Auto hide after 5 seconds
+    setTimeout(() => {
+        const alert = alertContainer.querySelector('.alert');
+        if (alert) {
+            alert.classList.remove('show');
+            setTimeout(() => alertContainer.innerHTML = '', 150);
+        }
+    }, 5000);
+}
+
+// Reset filters
+function resetFilters() {
+    document.getElementById('searchKerjasama').value = '';
+    document.getElementById('filterJenis').value = '';
+    document.getElementById('filterStatus').value = '';
+    
+    // Reload page to reset filters
+    window.location.reload();
+}
+
+// View Kerjasama Function
+function viewKerjasama(kerjasamaId) {
+    fetch(`<?= base_url('admin/kerjasama/detail') ?>/${kerjasamaId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const kerjasama = data.data;
+                
+                // Set detail values
+                document.getElementById('detail_nama_mitra').textContent = kerjasama.nama_mitra || '-';
+                document.getElementById('detail_jenis').textContent = kerjasama.jenis || '-';
+                document.getElementById('detail_ruang_lingkup').textContent = kerjasama.ruang_lingkup || '-';
+                
+                // Set status with appropriate badge color
+                const statusBadge = document.getElementById('detail_status');
+                let statusClass = '';
+                switch(kerjasama.status) {
+                    case 'aktif': statusClass = 'bg-success'; break;
+                    case 'selesai': statusClass = 'bg-primary'; break;
+                    case 'pending': statusClass = 'bg-warning'; break;
+                    case 'dibatalkan': statusClass = 'bg-danger'; break;
+                    default: statusClass = 'bg-secondary'; break;
+                }
+                statusBadge.className = `badge ${statusClass}`;
+                statusBadge.textContent = kerjasama.status ? kerjasama.status.charAt(0).toUpperCase() + kerjasama.status.slice(1) : '-';
+                
+                // Format dates
+                document.getElementById('detail_tanggal_mulai').textContent = kerjasama.tanggal_mulai_formatted || '-';
+                document.getElementById('detail_tanggal_selesai').textContent = kerjasama.tanggal_selesai_formatted || '-';
+                
+                // Document download link if exists
+                const detailDokumen = document.getElementById('detail_dokumen');
+                if (kerjasama.dokumen) {
+                    detailDokumen.innerHTML = `<a href="<?= base_url('public/uploads/kerjasama') ?>/${kerjasama.dokumen}" target="_blank">${kerjasama.dokumen} <i class="fas fa-download ms-1"></i></a>`;
+                } else {
+                    detailDokumen.textContent = 'Tidak ada dokumen';
+                }
+                
+                // Format created date
+                document.getElementById('detail_created_at').textContent = kerjasama.created_at ? formatDate(kerjasama.created_at) : '-';
+                
+                // Implementasi list
+                const implementasiCount = document.getElementById('detail_implementasi_count');
+                const implementasiList = document.getElementById('detail_implementasi_list');
+                
+                implementasiCount.textContent = `${data.implementasi_count} Implementasi`;
+                implementasiList.innerHTML = '';
+                
+                if (data.implementasi && data.implementasi.length > 0) {
+                    data.implementasi.forEach(impl => {
+                        implementasiList.innerHTML += `
+                            <a href="#" class="list-group-item list-group-item-action" onclick="viewImplementasi(${impl.id_implementasi})">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">${impl.nama_kegiatan}</h5>
+                                </div>
+                                <small>${impl.tanggal_mulai ? formatDate(impl.tanggal_mulai) : ''} - ${impl.tanggal_selesai ? formatDate(impl.tanggal_selesai) : ''}</small>
+                            </a>
+                        `;
+                    });
+                } else {
+                    implementasiList.innerHTML = '<div class="text-center p-3">Belum ada implementasi</div>';
+                }
+                
+                // Set button for adding implementasi
+                document.getElementById('btnTambahImplementasi').onclick = () => {
+                    // Close current modal
+                    const viewModal = bootstrap.Modal.getInstance(document.getElementById('viewKerjasamaModal'));
+                    viewModal.hide();
+                    
+                    // TODO: Open add implementasi modal
+                    // This can be implemented separately when needed
+                };
+                
+                // Show the modal
+                const viewModal = new bootstrap.Modal(document.getElementById('viewKerjasamaModal'));
+                viewModal.show();
+            } else {
+                showAlert(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching kerjasama details:', error);
+            showAlert('Gagal memuat detail kerjasama', 'error');
+        });
 }
 
 // Edit Kerjasama Function
 function editKerjasama(kerjasamaId) {
-    const kerjasama = kerjasamaData.find(k => k.id == kerjasamaId);
-    if (!kerjasama) {
-        alert('Data kerjasama tidak ditemukan');
-        return;
-    }
-    
-    // Populate form
-    document.getElementById('edit_kerjasama_id').value = kerjasama.id;
-    document.getElementById('edit_judul').value = kerjasama.judul;
-    document.getElementById('edit_instansi').value = kerjasama.instansi;
-    document.getElementById('edit_jenis').value = kerjasama.jenis;
-    document.getElementById('edit_tanggal_mulai').value = kerjasama.tanggal_mulai;
-    document.getElementById('edit_tanggal_berakhir').value = kerjasama.tanggal_berakhir;
-    document.getElementById('edit_pic').value = kerjasama.pic;
-    document.getElementById('edit_status').value = kerjasama.status;
-    document.getElementById('edit_deskripsi').value = kerjasama.deskripsi || '';
-    
-    // Clear previous errors
-    clearFormErrors(document.getElementById('editKerjasamaForm'));
-    
-    // Show modal
-    const modal = new bootstrap.Modal(document.getElementById('editKerjasamaModal'));
-    modal.show();
+    fetch(`<?= base_url('admin/kerjasama/detail') ?>/${kerjasamaId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const kerjasama = data.data;
+                
+                // Populate edit form
+                document.getElementById('edit_kerjasama_id').value = kerjasamaId;
+                document.getElementById('edit_nama_mitra').value = kerjasama.nama_mitra || '';
+                document.getElementById('edit_jenis').value = kerjasama.jenis || '';
+                document.getElementById('edit_tanggal_mulai').value = kerjasama.tanggal_mulai ? kerjasama.tanggal_mulai.split(' ')[0] : '';
+                document.getElementById('edit_tanggal_selesai').value = kerjasama.tanggal_berakhir ? kerjasama.tanggal_berakhir.split(' ')[0] : '';
+                document.getElementById('edit_progress').value = kerjasama.status || 'draft'; // Using status field from database
+                document.getElementById('edit_ruang_lingkup').value = kerjasama.ruang_lingkup || '';
+                
+                // Show current document if exists
+                const dokumenSaatIni = document.getElementById('dokumen_saat_ini');
+                if (kerjasama.dokumen) {
+                    dokumenSaatIni.innerHTML = `
+                        <small class="text-muted mt-2 d-block">
+                            Dokumen saat ini: <a href="<?= base_url('public/uploads/kerjasama') ?>/${kerjasama.dokumen}" target="_blank">${kerjasama.dokumen}</a>
+                        </small>
+                    `;
+                } else {
+                    dokumenSaatIni.innerHTML = '<small class="text-muted mt-2 d-block">Belum ada dokumen</small>';
+                }
+                
+                // Show the edit modal
+                const editModal = new bootstrap.Modal(document.getElementById('editKerjasamaModal'));
+                editModal.show();
+            } else {
+                showAlert(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching kerjasama details:', error);
+            showAlert('Gagal memuat data kerjasama untuk diedit', 'error');
+        });
 }
 
 // Delete Kerjasama Function
 function deleteKerjasama(kerjasamaId) {
-    const kerjasama = kerjasamaData.find(k => k.id == kerjasamaId);
-    if (!kerjasama) return;
-    
-    if (confirm(`Apakah Anda yakin ingin menghapus kerjasama "${kerjasama.judul}"?`)) {
-        fetch(`<?= base_url('admin/kerjasama/delete') ?>/${kerjasamaId}`, {
-            method: 'DELETE',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showAlert('success', data.message);
-                const row = document.querySelector(`[data-kerjasama-id="${kerjasamaId}"]`);
-                if (row) {
-                    row.remove();
-                }
-            } else {
-                showAlert('danger', data.message || 'Gagal menghapus kerjasama');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showAlert('danger', 'Terjadi kesalahan saat menghapus kerjasama');
-        });
-    }
+    deleteId = kerjasamaId;
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    deleteModal.show();
 }
 
-// Add Kerjasama Form Handler
+// Form submission for add kerjasama
 document.getElementById('addKerjasamaForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
     const formData = new FormData(this);
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const originalContent = submitBtn.innerHTML;
     
-    // Show loading
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
-    submitBtn.disabled = true;
-    
-    // Clear previous errors
-    clearFormErrors(this);
-    
-    // Make API call
     fetch('<?= base_url('admin/kerjasama/create') ?>', {
         method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
+        body: formData
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showAlert('success', data.message);
-            const modal = bootstrap.Modal.getInstance(document.getElementById('addKerjasamaModal'));
-            modal.hide();
+            showAlert(data.message);
+            
+            // Hide modal
+            const addModal = bootstrap.Modal.getInstance(document.getElementById('addKerjasamaModal'));
+            addModal.hide();
+            
+            // Reset form
             this.reset();
+            
+            // Reload page to show new data
             setTimeout(() => {
-                location.reload();
+                window.location.reload();
             }, 1500);
         } else {
-            showAlert('danger', data.message || 'Gagal menambahkan kerjasama');
+            showAlert(data.message, 'error');
+            
+            // Show validation errors if any
             if (data.errors) {
-                showFormErrors(this, data.errors);
+                for (const field in data.errors) {
+                    const inputElement = document.querySelector(`[name="${field}"]`);
+                    if (inputElement) {
+                        inputElement.classList.add('is-invalid');
+                        const feedback = inputElement.nextElementSibling;
+                        if (feedback && feedback.classList.contains('invalid-feedback')) {
+                            feedback.textContent = data.errors[field];
+                        }
+                    }
+                }
             }
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        showAlert('danger', 'Terjadi kesalahan saat menambahkan kerjasama');
-    })
-    .finally(() => {
-        submitBtn.innerHTML = originalContent;
-        submitBtn.disabled = false;
+        console.error('Error adding kerjasama:', error);
+        showAlert('Terjadi kesalahan saat menambah kerjasama', 'error');
     });
 });
 
-// Edit Kerjasama Form Handler
+// Form submission for edit kerjasama
 document.getElementById('editKerjasamaForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const kerjasamaId = document.getElementById('edit_kerjasama_id').value;
     const formData = new FormData(this);
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const originalContent = submitBtn.innerHTML;
+    const kerjasamaId = document.getElementById('edit_kerjasama_id').value;
     
-    // Show loading
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Memperbarui...';
-    submitBtn.disabled = true;
-    
-    // Clear previous errors
-    clearFormErrors(this);
-    
-    // Make API call
     fetch(`<?= base_url('admin/kerjasama/update') ?>/${kerjasamaId}`, {
         method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
+        body: formData
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showAlert('success', data.message);
-            const modal = bootstrap.Modal.getInstance(document.getElementById('editKerjasamaModal'));
-            modal.hide();
+            showAlert(data.message);
+            
+            // Hide modal
+            const editModal = bootstrap.Modal.getInstance(document.getElementById('editKerjasamaModal'));
+            editModal.hide();
+            
+            // Reload page to show updated data
             setTimeout(() => {
-                location.reload();
+                window.location.reload();
             }, 1500);
         } else {
-            showAlert('danger', data.message || 'Gagal memperbarui kerjasama');
+            showAlert(data.message, 'error');
+            
+            // Show validation errors if any
             if (data.errors) {
-                showFormErrors(this, data.errors);
+                for (const field in data.errors) {
+                    const inputElement = document.querySelector(`[name="${field}"]`);
+                    if (inputElement) {
+                        inputElement.classList.add('is-invalid');
+                        const feedback = inputElement.nextElementSibling;
+                        if (feedback && feedback.classList.contains('invalid-feedback')) {
+                            feedback.textContent = data.errors[field];
+                        }
+                    }
+                }
             }
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        showAlert('danger', 'Terjadi kesalahan saat memperbarui kerjasama');
-    })
-    .finally(() => {
-        submitBtn.innerHTML = originalContent;
-        submitBtn.disabled = false;
+        console.error('Error updating kerjasama:', error);
+        showAlert('Terjadi kesalahan saat memperbarui kerjasama', 'error');
     });
 });
 
-// Search and Filter Functions
-document.getElementById('searchKerjasama').addEventListener('input', filterTable);
-document.getElementById('filterJenis').addEventListener('change', filterTable);
-document.getElementById('filterStatus').addEventListener('change', filterTable);
+// Confirm delete kerjasama
+document.getElementById('confirmDelete').addEventListener('click', function() {
+    if (!deleteId) return;
+    
+    fetch(`<?= base_url('admin/kerjasama/delete') ?>/${deleteId}`, {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert(data.message);
+            
+            // Hide modal
+            const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+            deleteModal.hide();
+            
+            // Reload page to update data
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        } else {
+            showAlert(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting kerjasama:', error);
+        showAlert('Terjadi kesalahan saat menghapus kerjasama', 'error');
+    });
+});
 
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    // Set statistics cards
+    document.getElementById('totalKerjasama').textContent = <?= $total_kerjasama ?? 0 ?>;
+    document.getElementById('progressAktif').textContent = <?= $aktif ?? 0 ?>;
+    document.getElementById('totalImplementasi').textContent = <?= $totalImplementasi ?? 0 ?>;
+    document.getElementById('totalMitra').textContent = <?= $totalMitra ?? 0 ?>;
+    
+    // Add event listeners for search and filter
+    document.getElementById('searchKerjasama').addEventListener('keyup', function() {
+        const searchValue = this.value.toLowerCase();
+        filterTable(searchValue);
+    });
+    
+    document.getElementById('filterJenis').addEventListener('change', function() {
+        filterTable();
+    });
+    
+    document.getElementById('filterStatus').addEventListener('change', function() {
+        filterTable();
+    });
+    
+});
+
+// Filter table function
 function filterTable() {
-    const searchTerm = document.getElementById('searchKerjasama').value.toLowerCase();
+    const searchValue = document.getElementById('searchKerjasama').value.toLowerCase();
     const jenisFilter = document.getElementById('filterJenis').value;
     const statusFilter = document.getElementById('filterStatus').value;
     
-    const rows = document.querySelectorAll('.kerjasama-row');
+    const rows = document.querySelectorAll('#kerjasamaTable tbody tr');
     
     rows.forEach(row => {
-        const judul = row.querySelector('.kerjasama-judul').textContent.toLowerCase();
-        const instansi = row.querySelector('.kerjasama-instansi').textContent.toLowerCase();
-        const jenis = row.querySelector('.kerjasama-jenis').textContent;
+        const namaMitra = row.querySelector('.kerjasama-judul').textContent.toLowerCase();
+        const jenis = row.querySelector('.kerjasama-jenis').textContent.toLowerCase();
         const status = row.querySelector('.kerjasama-status').textContent.toLowerCase();
         
-        const matchesSearch = judul.includes(searchTerm) || instansi.includes(searchTerm);
-        const matchesJenis = !jenisFilter || jenis === jenisFilter;
-        const matchesStatus = !statusFilter || status.includes(statusFilter);
+        const matchSearch = searchValue === '' || namaMitra.includes(searchValue);
+        const matchJenis = jenisFilter === '' || jenis.includes(jenisFilter.toLowerCase());
+        const matchStatus = statusFilter === '' || status.includes(statusFilter.toLowerCase());
         
-        if (matchesSearch && matchesJenis && matchesStatus) {
+        if (matchSearch && matchJenis && matchStatus) {
             row.style.display = '';
         } else {
             row.style.display = 'none';
@@ -650,73 +844,59 @@ function filterTable() {
     });
 }
 
-function resetFilters() {
-    document.getElementById('searchKerjasama').value = '';
-    document.getElementById('filterJenis').value = '';
-    document.getElementById('filterStatus').value = '';
-    filterTable();
-}
-
-// Utility Functions
-function showAlert(type, message) {
-    const alertContainer = document.getElementById('alertContainer');
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type} alert-dismissible fade show`;
-    alert.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    
-    alertContainer.appendChild(alert);
-    
-    setTimeout(() => {
-        if (alert.parentNode) {
-            const bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        }
-    }, 5000);
-}
-
-function showFormErrors(form, errors) {
-    Object.keys(errors).forEach(field => {
-        const input = form.querySelector(`[name="${field}"]`);
-        if (input) {
-            input.classList.add('is-invalid');
-            const feedback = input.parentNode.querySelector('.invalid-feedback');
-            if (feedback) {
-                feedback.textContent = errors[field];
+// View implementasi function
+function viewImplementasi(implementasiId) {
+    fetch(`<?= base_url('admin/kerjasama/implementasi/detail') ?>/${implementasiId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Display implementasi details in the modal
+                const implementasiModal = document.getElementById('implementasiDetail');
+                const implementasi = data.data;
+                
+                let content = `
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5>${implementasi.nama_kegiatan}</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th width="30%">Tanggal Mulai</th>
+                                    <td>${implementasi.tanggal_mulai_formatted}</td>
+                                </tr>
+                                <tr>
+                                    <th>Tanggal Selesai</th>
+                                    <td>${implementasi.tanggal_selesai_formatted}</td>
+                                </tr>
+                                <tr>
+                                    <th>Lingkup Implementasi</th>
+                                    <td>${implementasi.lingkup_implementasi || '-'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Hasil Kegiatan</th>
+                                    <td>${implementasi.hasil_kegiatan || '-'}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                `;
+                
+                implementasiModal.innerHTML = content;
+                
+                // Show the modal
+                const viewModal = new bootstrap.Modal(document.getElementById('viewImplementasiModal'));
+                viewModal.show();
+            } else {
+                showAlert(data.message, 'error');
             }
-        }
-    });
+        })
+        .catch(error => {
+            console.error('Error fetching implementasi details:', error);
+            showAlert('Gagal memuat detail implementasi', 'error');
+        });
 }
-
-function clearFormErrors(form) {
-    const inputs = form.querySelectorAll('.is-invalid');
-    inputs.forEach(input => {
-        input.classList.remove('is-invalid');
-    });
-}
-
-// Date validation
-document.getElementById('tanggal_berakhir').addEventListener('change', function() {
-    const startDate = document.getElementById('tanggal_mulai').value;
-    const endDate = this.value;
-    
-    if (startDate && endDate && new Date(endDate) <= new Date(startDate)) {
-        alert('Tanggal berakhir harus setelah tanggal mulai');
-        this.value = '';
-    }
-});
-
-document.getElementById('edit_tanggal_berakhir').addEventListener('change', function() {
-    const startDate = document.getElementById('edit_tanggal_mulai').value;
-    const endDate = this.value;
-    
-    if (startDate && endDate && new Date(endDate) <= new Date(startDate)) {
-        alert('Tanggal berakhir harus setelah tanggal mulai');
-        this.value = '';
-    }
-});
 </script>
+
+
 <?= $this->endSection() ?>

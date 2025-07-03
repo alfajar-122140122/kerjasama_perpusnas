@@ -37,15 +37,21 @@ $routes->group('admin', function($routes) {
     $routes->get('users/api/get-users', 'Admin\UserManagement::getUsers');
     $routes->get('users/api/get-statistics', 'Admin\UserManagement::getUserStatistics');
 
-    // Kerjasama routes
+    // Kerjasama routes - Put back inside admin group
     $routes->get('kerjasama', 'Kerjasama::index');
     $routes->get('kerjasama/dashboard', 'Kerjasama::dashboard');
     $routes->post('kerjasama/create', 'Kerjasama::create');
     $routes->post('kerjasama/update/(:num)', 'Kerjasama::update/$1');
-    $routes->delete('kerjasama/delete/(:num)', 'Kerjasama::delete/$1');
+    $routes->post('kerjasama/delete/(:num)', 'Kerjasama::delete/$1'); // Changed from DELETE to POST for better compatibility
     $routes->get('kerjasama/detail/(:num)', 'Kerjasama::detail/$1');
     $routes->get('kerjasama/export', 'Kerjasama::export');
     
+    // Add routes for implementasi
+    $routes->post('kerjasama/implementasi/create', 'Kerjasama::addImplementasi');
+    $routes->get('kerjasama/implementasi/detail/(:num)', 'Kerjasama::implementasiDetail/$1');
+    $routes->post('kerjasama/implementasi/update/(:num)', 'Kerjasama::updateImplementasi/$1');
+    $routes->post('kerjasama/implementasi/delete/(:num)', 'Kerjasama::deleteImplementasi/$1');
+
     // Berita routes
     $routes->get('berita', 'Berita::index');
     $routes->post('berita/create', 'Berita::create');

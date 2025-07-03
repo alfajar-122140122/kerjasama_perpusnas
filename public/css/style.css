@@ -1,0 +1,356 @@
+/* 
+* Custom CSS for Perpusnas Kerjasama Website
+* Version: 1.0
+*/
+
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --info-color: #17a2b8;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --primary-dark: #0b5ed7;
+    --body-bg: #f8f9fa;
+    --body-color: #212529;
+    --heading-color: #343a40;
+}
+
+/* General Styles */
+body {
+    font-family: 'Nunito', sans-serif;
+    color: var(--body-color);
+    background-color: var(--body-bg);
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-dark);
+    text-decoration: none;
+}
+
+.section {
+    padding: 80px 0;
+}
+
+.section-title {
+    margin-bottom: 60px;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background-color: var(--primary-color);
+    margin: 20px auto 0;
+}
+
+/* Header */
+.top-bar {
+    font-size: 0.9rem;
+}
+
+.social-links a {
+    color: white;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    opacity: 0.8;
+}
+
+.navbar {
+    padding: 15px 0;
+}
+
+.navbar-brand img {
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link {
+    font-weight: 600;
+    padding: 8px 16px;
+    position: relative;
+}
+
+.navbar-nav .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 16px;
+    right: 16px;
+    height: 3px;
+    background-color: var(--primary-color);
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(rgba(13, 110, 253, 0.8), rgba(13, 110, 253, 0.9)), url('../images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 100px 0;
+    position: relative;
+}
+
+.hero-content {
+    z-index: 1;
+    position: relative;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    font-weight: 400;
+}
+
+/* Features */
+.features-section {
+    background-color: white;
+}
+
+.feature-box {
+    padding: 30px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    background-color: white;
+    transition: all 0.3s ease;
+    margin-bottom: 30px;
+    height: 100%;
+}
+
+.feature-box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    border-radius: 50%;
+    background-color: rgba(13, 110, 253, 0.1);
+    color: var(--primary-color);
+    font-size: 30px;
+    margin: 0 auto 20px;
+}
+
+/* About Section */
+.about-section .about-img {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Statistics */
+.stats-section {
+    background: linear-gradient(rgba(13, 110, 253, 0.9), rgba(13, 110, 253, 0.8)), url('../images/stats-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 80px 0;
+}
+
+.stat-box {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin-bottom: 30px;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.stat-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* Cooperation Data */
+.cooperation-section {
+    background-color: white;
+}
+
+.filter-btn {
+    margin-bottom: 20px;
+    margin-right: 10px;
+}
+
+.cooperation-card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+
+.cooperation-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.cooperation-card .card-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px 20px;
+}
+
+/* Map Section */
+.map-section {
+    background-color: var(--light-color);
+}
+
+#cooperation-map {
+    height: 600px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.map-legend {
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    margin-top: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Contact Section */
+.contact-info {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+.contact-info i {
+    font-size: 24px;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.contact-form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* Footer */
+footer .text-uppercase {
+    letter-spacing: 1px;
+}
+
+footer a:hover {
+    color: var(--primary-color) !important;
+}
+
+/* Back to Top Button */
+#back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    z-index: 99;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+#back-to-top:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Form Submission */
+.submission-form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+/* Breadcrumbs */
+.breadcrumb-section {
+    background-color: var(--light-color);
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .section {
+        padding: 60px 0;
+    }
+    
+    .section-title {
+        margin-bottom: 40px;
+    }
+    
+    #cooperation-map {
+        height: 400px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .feature-box, .stat-box {
+        margin-bottom: 20px;
+    }
+    
+    .section {
+        padding: 40px 0;
+    }
+}

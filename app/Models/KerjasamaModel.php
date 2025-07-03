@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Kerjasama extends Model
+class KerjasamaModel extends Model
 {
     protected $table            = 'kerjasama';
     protected $primaryKey       = 'id_kerjasama';
@@ -12,16 +12,15 @@ class Kerjasama extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
 
-    // Kolom yang diizinkan untuk diisi, disesuaikan dengan migrasi
+    // Kolom yang diizinkan untuk diisi, disesuaikan dengan tabel aktual
     protected $allowedFields    = [
         'nama_mitra',
         'ruang_lingkup',
         'tanggal_mulai',
-        'tanggal_selesai',
+        'tanggal_berakhir', // Menggunakan nama kolom yang sesuai dengan database
         'jenis',
-        'progress',
-        'latitude',
-        'longitude',
+        'status', // Menggunakan nama kolom yang sesuai dengan database
+        'dokumen', // Menambahkan field dokumen yang ada di database
         'created_by_user_id'
     ];
 
