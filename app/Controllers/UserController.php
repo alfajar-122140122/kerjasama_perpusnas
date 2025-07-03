@@ -63,16 +63,24 @@ class UserController extends BaseController
             $users = $this->userModel->findAll();
             
             // Remove passwords for security
-            foreach ($users as &$user) {
+            $formattedUsers = [];
+            $no = 1;
+            foreach ($users as $user) {
                 unset($user['password']);
                 
-                // Format created_at
-                $user['created_at_formatted'] = date('d/m/Y H:i', strtotime($user['created_at']));
-                
-                // Add profile picture URL
-                $user['profile_picture_url'] = $user['profile_picture'] ? 
-                    base_url('uploads/users/' . $user['profile_picture']) : null;
+                // Format for display
+                $formattedUsers[] = [
+                    'no' => $no++,
+                    'id' => $user['id_user'],
+                    'id_user' => $user['id_user'], // Add id_user explicitly for consistency
+                    'username' => $user['username'],
+                    'hak_akses' => $user['hak_akses'],
+                    'active' => isset($user['active']) ? (int)$user['active'] : 1, // Default to active if not set
+                    'created_at' => $user['created_at'],
+                    'created_at_formatted' => date('d/m/Y H:i', strtotime($user['created_at']))
+                ];
             }
+            $users = $formattedUsers;
             
             return $this->response->setJSON([
                 'success' => true,
@@ -104,8 +112,8 @@ class UserController extends BaseController
                 'total_users' => count($users),
                 'admin_users' => count(array_filter($users, fn($u) => $u['hak_akses'] === 'admin')),
                 'regular_users' => count(array_filter($users, fn($u) => $u['hak_akses'] === 'user')),
-                'active_users' => count(array_filter($users, fn($u) => $u['status'] === 'active')),
-                'inactive_users' => count(array_filter($users, fn($u) => $u['status'] === 'inactive')),
+                'active_users' => count($users),
+                'inactive_users' => 0,
                 'users_bulan_ini' => count(array_filter($users, function($u) {
                     $created = new \DateTime($u['created_at']);
                     $now = new \DateTime();
@@ -141,22 +149,12 @@ class UserController extends BaseController
         $validation->setRules([
             'username' => [
                 'label' => 'Username',
-                'rules' => 'required|min_length[4]|max_length[50]|is_unique[users.username]|alpha_numeric',
+                'rules' => 'required|min_length[3]|max_length[50]|is_unique[users.username]',
                 'errors' => [
                     'required' => 'Username harus diisi',
-                    'min_length' => 'Username minimal 4 karakter',
+                    'min_length' => 'Username minimal 3 karakter',
                     'max_length' => 'Username maksimal 50 karakter',
-                    'is_unique' => 'Username sudah digunakan',
-                    'alpha_numeric' => 'Username hanya boleh berisi huruf dan angka'
-                ]
-            ],
-            'email' => [
-                'label' => 'Email',
-                'rules' => 'required|valid_email|is_unique[users.email]',
-                'errors' => [
-                    'required' => 'Email harus diisi',
-                    'valid_email' => 'Format email tidak valid',
-                    'is_unique' => 'Email sudah digunakan'
+                    'is_unique' => 'Username sudah digunakan'
                 ]
             ],
             'password' => [
@@ -173,15 +171,6 @@ class UserController extends BaseController
                 'errors' => [
                     'required' => 'Konfirmasi password harus diisi',
                     'matches' => 'Konfirmasi password tidak cocok'
-                ]
-            ],
-            'name' => [
-                'label' => 'Nama Lengkap',
-                'rules' => 'required|min_length[3]|max_length[100]',
-                'errors' => [
-                    'required' => 'Nama lengkap harus diisi',
-                    'min_length' => 'Nama minimal 3 karakter',
-                    'max_length' => 'Nama maksimal 100 karakter'
                 ]
             ],
             'hak_akses' => [
@@ -203,44 +192,37 @@ class UserController extends BaseController
         }
         
         try {
-            // Handle file upload if exists
-            $profilePicture = null;
-            $file = $this->request->getFile('profile_picture');
-            
-            if ($file && $file->isValid() && !$file->hasMoved()) {
-                $profilePicture = $this->handleFileUpload($file);
-                if (!$profilePicture) {
-                    return $this->response->setJSON([
-                        'success' => false,
-                        'message' => 'Gagal mengupload foto profil'
-                    ]);
-                }
-            }
-            
+            // Siapkan data user
             $userData = [
                 'username' => $this->request->getPost('username'),
-                'email' => $this->request->getPost('email'),
-                'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-                'name' => $this->request->getPost('name'),
-                'hak_akses' => $this->request->getPost('hak_akses'),
-                'status' => 'active',
-                'profile_picture' => $profilePicture,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
+                'password' => $this->request->getPost('password'), // Model akan hash password secara otomatis
+                'hak_akses' => $this->request->getPost('hak_akses')
             ];
             
+            // Coba insert user
             $userId = $this->userModel->insert($userData);
             
             if ($userId) {
+                // Log aktivitas
+                log_message('info', 'User baru berhasil dibuat: ' . $userData['username']);
+                
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'User berhasil ditambahkan',
                     'user_id' => $userId
                 ]);
             } else {
+                // Log error
+                log_message('error', 'Gagal menambahkan user: ' . $this->userModel->errors());
+                
+                // Log detail error
+                $errors = $this->userModel->errors();
+                log_message('error', 'Validation errors: ' . json_encode($errors));
+                
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => 'Gagal menambahkan user'
+                    'message' => 'Gagal menambahkan user',
+                    'errors' => $errors
                 ]);
             }
             
@@ -312,8 +294,6 @@ class UserController extends BaseController
         
         $rules = [
             'username' => "required|min_length[4]|alpha_numeric|is_unique[users.username,id_user,{$id}]",
-            'email' => "required|valid_email|is_unique[users.email,id_user,{$id}]",
-            'name' => 'required|min_length[3]|max_length[100]',
             'hak_akses' => 'required|in_list[admin,user]'
         ];
         
@@ -337,8 +317,6 @@ class UserController extends BaseController
         try {
             $updateData = [
                 'username' => $this->request->getPost('username'),
-                'email' => $this->request->getPost('email'),
-                'name' => $this->request->getPost('name'),
                 'hak_akses' => $this->request->getPost('hak_akses'),
                 'updated_at' => date('Y-m-d H:i:s')
             ];
@@ -348,21 +326,7 @@ class UserController extends BaseController
                 $updateData['password'] = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
             }
             
-            // Handle file upload if exists
-            $file = $this->request->getFile('profile_picture');
-            if ($file && $file->isValid() && !$file->hasMoved()) {
-                $newProfilePicture = $this->handleFileUpload($file);
-                if ($newProfilePicture) {
-                    // Delete old file if exists
-                    if ($user['profile_picture']) {
-                        $oldFile = WRITEPATH . '../uploads/users/' . $user['profile_picture'];
-                        if (file_exists($oldFile)) {
-                            unlink($oldFile);
-                        }
-                    }
-                    $updateData['profile_picture'] = $newProfilePicture;
-                }
-            }
+            // Profile picture handling removed - no longer exists in model
             
             $result = $this->userModel->update($id, $updateData);
             
@@ -422,13 +386,7 @@ class UserController extends BaseController
         }
         
         try {
-            // Delete profile picture if exists
-            if ($user['profile_picture']) {
-                $filePath = WRITEPATH . '../uploads/users/' . $user['profile_picture'];
-                if (file_exists($filePath)) {
-                    unlink($filePath);
-                }
-            }
+            // Profile picture handling removed - no longer exists in model
             
             $result = $this->userModel->delete($id);
             
@@ -478,20 +436,23 @@ class UserController extends BaseController
             ]);
         }
         
-        $newStatus = $user['status'] === 'active' ? 'inactive' : 'active';
+        // Jika kolom active tidak ada, gunakan default nilai 1 (active)
+        $currentActive = isset($user['active']) ? $user['active'] : 1;
+        $newActive = $currentActive == 1 ? 0 : 1;
         
         try {
+            // Update kolom active saja
             $result = $this->userModel->update($id, [
-                'status' => $newStatus,
+                'active' => $newActive,
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
             
             if ($result) {
-                $statusText = $newStatus === 'active' ? 'diaktifkan' : 'dinonaktifkan';
+                $statusText = $newActive == 1 ? 'diaktifkan' : 'dinonaktifkan';
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => "User berhasil {$statusText}",
-                    'new_status' => $newStatus
+                    'new_active' => $newActive
                 ]);
             } else {
                 return $this->response->setJSON([
@@ -590,6 +551,8 @@ class UserController extends BaseController
     
     /**
      * Handle file upload
+     * Note: This function is currently unused as profile_picture has been removed from the user model
+     * Kept for potential future use
      */
     private function handleFileUpload($file)
     {

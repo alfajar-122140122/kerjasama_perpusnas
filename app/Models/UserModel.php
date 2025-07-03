@@ -13,7 +13,7 @@ class UserModel extends Model
     protected $useSoftDeletes   = false;
 
     // Kolom yang diizinkan untuk diisi
-    protected $allowedFields    = ['username', 'password', 'hak_akses'];
+    protected $allowedFields    = ['username', 'password', 'hak_akses', 'active', 'created_at', 'updated_at'];
 
     // Dates
     protected $useTimestamps = true;
@@ -25,7 +25,8 @@ class UserModel extends Model
     protected $validationRules = [
         'username' => 'required|min_length[3]|max_length[50]|is_unique[users.username,id_user,{id_user}]',
         'password' => 'required|min_length[8]',
-        'hak_akses' => 'required|in_list[admin,user]'
+        'hak_akses' => 'required|in_list[admin,user]',
+        'active' => 'permit_empty|in_list[0,1]'
     ];
 
     protected $validationMessages = [
@@ -42,6 +43,9 @@ class UserModel extends Model
         'hak_akses' => [
             'required' => 'Hak akses harus dipilih',
             'in_list' => 'Hak akses tidak valid'
+        ],
+        'active' => [
+            'in_list' => 'Status hanya boleh aktif (1) atau tidak aktif (0)'
         ]
     ];
 

@@ -380,6 +380,14 @@ function displayUsersTable(users, filters = {}) {
         filteredUsers = filteredUsers.filter(user => user.hak_akses === filters.hak_akses);
     }
     
+    // Ensure active field exists (default to 1 if not set)
+    filteredUsers = filteredUsers.map(user => {
+        if (user.active === undefined) {
+            user.active = 1;
+        }
+        return user;
+    });
+    
     const tbody = document.getElementById('usersTableBody');
     tbody.innerHTML = '';
     
@@ -430,6 +438,9 @@ function displayUsersTable(users, filters = {}) {
                         </button>
                         <button class="btn btn-warning" onclick="editUser(${user.id_user})" title="Edit">
                             <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-${user.active === 0 ? 'success' : 'secondary'}" onclick="toggleStatus(${user.id_user})" title="${user.active === 0 ? 'Aktifkan' : 'Nonaktifkan'}">
+                            <i class="fas fa-${user.active === 0 ? 'check' : 'ban'}"></i>
                         </button>
                         <button class="btn btn-danger" onclick="deleteUser(${user.id_user})" title="Hapus">
                             <i class="fas fa-trash"></i>
@@ -633,8 +644,7 @@ async function handleAddUser(e) {
     // Clear previous errors
     clearFormErrors(this);
     
-    try {
-        const response = await fetch('<?= base_url('admin/users/create') ?>', {
+    try {                const response = await fetch('<?= base_url('admin/users/create') ?>', {
             method: 'POST',
             body: formData,
             headers: {
@@ -783,6 +793,10 @@ async function viewUser(userId) {
                                 <td><span class="badge bg-${user.hak_akses === 'admin' ? 'danger' : 'primary'}">${user.hak_akses.toUpperCase()}</span></td>
                             </tr>
                             <tr>
+                                <td><strong>Status:</strong></td>
+                                <td><span class="badge bg-${user.active == 1 ? 'success' : 'secondary'}">${user.active == 1 ? 'Aktif' : 'Non-aktif'}</span></td>
+                            </tr>
+                            <tr>
                                 <td><strong>Tanggal Dibuat:</strong></td>
                                 <td>${createdDate}</td>
                             </tr>
@@ -850,6 +864,11 @@ async function editUser(userId) {
 
 // Delete user function
 async function deleteUser(userId) {
+    if (!userId || isNaN(userId)) {
+        showAlert('danger', 'ID user tidak valid');
+        return;
+    }
+    
     if (!confirm('Apakah Anda yakin ingin menghapus user ini?\n\nTindakan ini tidak dapat dibatalkan.')) {
         return;
     }
@@ -858,7 +877,8 @@ async function deleteUser(userId) {
         const response = await fetch(`<?= base_url('admin/users/delete') ?>/${userId}`, {
             method: 'DELETE',
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json'
             }
         });
         
@@ -872,7 +892,7 @@ async function deleteUser(userId) {
         }
     } catch (error) {
         console.error('Error:', error);
-        showAlert('danger', 'Terjadi kesalahan saat menghapus user');
+        showAlert('danger', 'Terjadi kesalahan saat menghapus user: ' + error.message);
     }
 }
 
@@ -999,6 +1019,36 @@ function showAlert(type, message) {
             }
         }
     }, 5000);
+}
+
+// Toggle user status function
+async function toggleStatus(userId) {
+    if (!userId || isNaN(userId)) {
+        showAlert('danger', 'ID user tidak valid');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`<?= base_url('admin/users/toggle-status') ?>/${userId}`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showAlert('success', data.message);
+            loadUsersTable();
+        } else {
+            showAlert('danger', data.message || 'Gagal mengubah status user');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('danger', 'Terjadi kesalahan saat mengubah status user: ' + error.message);
+    }
 }
 </script>
 <?= $this->endSection() ?>

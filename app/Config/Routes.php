@@ -33,6 +33,10 @@ $routes->group('admin', function($routes) {
     $routes->post('users/check-username', 'UserController::checkUsername'); // Check username availability
     $routes->post('users/check-email', 'UserController::checkEmail'); // Check email availability
     
+    // Tambahkan rute untuk getUsers di Admin\UserManagement
+    $routes->get('users/api/get-users', 'Admin\UserManagement::getUsers');
+    $routes->get('users/api/get-statistics', 'Admin\UserManagement::getUserStatistics');
+
     // Kerjasama routes
     $routes->get('kerjasama', 'Kerjasama::index');
     $routes->get('kerjasama/dashboard', 'Kerjasama::dashboard');
@@ -60,6 +64,10 @@ $routes->group('admin', function($routes) {
 $routes->group('api', function($routes){
     $routes->get('users/statistics', 'UserController::getStatistics');
     $routes->get('dashboard/stats', 'Admin::getDashboardStats');
+
+    // User Management API routes
+    $routes->get('users/api/get-users', 'Admin\UserManagement::getUsers');
+    $routes->get('users/api/get-statistics', 'Admin\UserManagement::getUserStatistics');
 });
 
 // Redirect dashboard ke admin dashboard untuk backward compatibility
@@ -71,3 +79,14 @@ $routes->get('aktivitas', 'Home::aktivitas');
 $routes->get('kerja-sama', 'Home::kerjaSama');
 $routes->get('peta-kerja-sama', 'Home::petaKerjaSama');
 $routes->get('kontak', 'Home::kontak');
+
+// Tambahkan route untuk admin/users
+$routes->post('admin/users/create', 'UserController::create');
+$routes->post('admin/users/generate-password', 'UserController::generatePassword');
+
+// Lengkapi route untuk CRUD user management
+$routes->get('admin/users/show/(:num)', 'UserController::show/$1');
+$routes->post('admin/users/update/(:num)', 'UserController::update/$1');
+$routes->delete('admin/users/delete/(:num)', 'UserController::delete/$1');
+$routes->post('admin/users/toggle-status/(:num)', 'UserController::toggleStatus/$1');
+$routes->get('admin/users/edit/(:num)', 'UserController::edit/$1');
