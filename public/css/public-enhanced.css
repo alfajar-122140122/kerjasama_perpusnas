@@ -1,0 +1,262 @@
+/* Enhanced Public Styles - Additional animations and interactions */
+
+/* Navbar scroll effects */
+.main-header {
+    transition: all 0.3s ease;
+}
+
+.main-header.scrolled {
+    box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    background: rgba(255,255,255,0.95) !important;
+    backdrop-filter: blur(10px);
+}
+
+/* Animation classes */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+}
+
+.animate-on-scroll.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.stagger-animation .stagger-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+}
+
+.stagger-animation .stagger-item.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Counter animations */
+.counter {
+    font-weight: bold;
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+/* Lazy loading images */
+img.lazy {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+img.lazy:not([src]) {
+    visibility: hidden;
+}
+
+/* File upload styles */
+.file-preview {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.file-preview-item {
+    border: 1px solid #dee2e6;
+}
+
+/* Search highlight */
+mark {
+    background-color: #fff3cd;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+/* Form validation improvements */
+.was-validated .form-control:valid,
+.form-control.is-valid {
+    border-color: #198754;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='m2.3 6.73.04-.04.04-.04L6.77 2.3a.75.75 0 1 1 1.06 1.06L3.42 7.77a.75.75 0 0 1-1.06 0L.72 6.13a.75.75 0 0 1 1.06-1.06L2.3 6.73z'/%3e%3c/svg%3e");
+}
+
+.was-validated .form-control:invalid,
+.form-control.is-invalid {
+    border-color: #dc3545;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 4.6 1.4 1.4 1.4-1.4M8.6 7.4 7.2 6 8.6 4.6'/%3e%3c/svg%3e");
+}
+
+/* Accessibility improvements */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* High contrast mode */
+.high-contrast {
+    filter: contrast(150%);
+}
+
+.high-contrast .btn {
+    border-width: 2px !important;
+}
+
+/* Reduced motion */
+.reduced-motion * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+}
+
+/* Focus improvements */
+*:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.btn:focus {
+    box-shadow: 0 0 0 0.25rem rgba(30, 64, 175, 0.25);
+}
+
+/* Skip to content link */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: var(--primary-color);
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    z-index: 10000;
+    transition: top 0.3s;
+}
+
+.skip-to-content:focus {
+    top: 6px;
+    color: white;
+}
+
+/* Mobile enhancements */
+@media (max-width: 768px) {
+    .animate-on-scroll {
+        transform: translateY(15px);
+    }
+    
+    .counter {
+        font-size: 1.5rem;
+    }
+    
+    /* Touch-friendly buttons */
+    .btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Better mobile forms */
+    .form-control {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+}
+
+/* Print styles */
+@media print {
+    .main-header,
+    .main-navigation,
+    .main-footer,
+    .floating-actions,
+    #btn-back-to-top,
+    .cookie-consent-banner {
+        display: none !important;
+    }
+    
+    body {
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+    
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .bg-light {
+        background-color: #2d3748 !important;
+        color: #e2e8f0;
+    }
+    
+    .text-muted {
+        color: #a0aec0 !important;
+    }
+    
+    .border {
+        border-color: #4a5568 !important;
+    }
+}
+
+/* Performance optimizations */
+.will-change-transform {
+    will-change: transform;
+}
+
+.will-change-opacity {
+    will-change: opacity;
+}
+
+/* Loading states */
+.btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Micro-interactions */
+.btn,
+.card,
+.nav-link {
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.nav-link:hover {
+    color: var(--primary-color) !important;
+}
+
+/* Improved dropdown animations */
+.dropdown-menu {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    pointer-events: none;
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}

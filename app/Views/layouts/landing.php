@@ -20,7 +20,8 @@
                 <img src="<?= base_url('images/LOGO-PERPUSNAS.png') ?>" alt="Perpusnas Logo" class="logo-img me-3" height="80">
                 <div class="logo-text">
                     <h1>KERJASAMA PERPUSTAKAAN</h1>
-                    <p>PERPUSTAKAAN NASIONAL REPUBLIK INDONESIA</p>
+                    <p>PERPUSTAKAAN NASIONAL</p>
+                    <p>REPUBLIK INDONESIA</p>
                 </div>
             </div>
             <div class="header-controls">
@@ -74,16 +75,8 @@
     <!-- Hero/Stats Section -->
     <section class="hero-section">
         <div class="container">
+            <h2 class="section-title">Statistik Kerja Sama</h2>
             <div class="row">
-                <div class="col-md-3 col-sm-6">
-                    <div class="stats-card loading">
-                        <div class="stats-number">103</div>
-                        <div class="stats-label">x 36</div>
-                        <div class="mt-2">
-                            <small>Statistik Kerja Sama</small>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-md-9">
                     <div class="row">
                         <div class="col-md-4">

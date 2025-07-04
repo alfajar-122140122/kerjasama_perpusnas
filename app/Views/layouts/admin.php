@@ -3,140 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $this->renderSection('title', true) ?> - Dashboard Admin</title>
+    <title><?= $this->renderSection('title') ?> - Admin Kerjasama Perpustakaan</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="<?= base_url('images/ICON-PERPUSNAS.png') ?>">
+    <link rel="icon" type="image/x-icon" href="<?= base_url('assets/images/favicon.ico') ?>">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet">
+    
     <!-- Custom Admin CSS -->
-    <link href="<?= base_url('css/admin.css') ?>" rel="stylesheet">
+    <link href="<?= base_url('assets/css/admin.css') ?>" rel="stylesheet">
+    
+    <!-- Additional CSS -->
+    <?= $this->renderSection('styles') ?>
 </head>
-<body>
-    <div class="admin-container" id="adminContainer">
+<body id="page-top">
+    <div id="wrapper">
         <!-- Sidebar -->
-        <nav class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <img src="<?= base_url('images/LOGO-PERPUSNAS.png') ?>" alt="Perpusnas Logo" class="perpusnas-logo mb-2" width="100">
-                <div class="user-profile">
-                    <div class="user-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <span><?= session()->get('username') ?? 'Admin' ?></span>
-                </div>
-            </div>
-            <div class="sidebar-menu">
-                <a href="<?= base_url('admin/dashboard') ?>" class="menu-item <?= (uri_string() == 'admin/dashboard') ? 'active' : '' ?>">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
-                </a>
-                <a href="<?= base_url('admin/users') ?>" class="menu-item <?= (strpos(uri_string(), 'admin/users') !== false) ? 'active' : '' ?>">
-                    <i class="fas fa-users"></i>
-                    Manajemen User
-                </a>
-                <a href="<?= base_url('admin/kerjasama') ?>" class="menu-item">
-                    <i class="fas fa-handshake"></i>
-                    Kerjasama
-                </a>
-                <a href="<?= base_url('admin/berita') ?>" class="menu-item">
-                    <i class="fas fa-newspaper"></i>
-                    Berita
-                </a>
-                <a href="<?= base_url('admin/pengaturan') ?>" class="menu-item <?= (strpos(uri_string(), 'admin/pengaturan') !== false) ? 'active' : '' ?>">
-                    <i class="fas fa-cog"></i>
-                    Pengaturan
-                </a>
-            </div>
-        </nav>
+        <?= $this->include('layouts/components/admin_sidebar') ?>
         
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Top Bar -->
-            <div class="top-bar">
-                <div class="d-flex align-items-center">
-                    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <img src="<?= base_url('images/LOGO-PERPUSNAS.png') ?>" alt="Perpusnas Logo" class="perpusnas-logo-sm mx-2" height="30">
-                    <span class="ms-2"><?= $this->renderSection('page-title', true) ?></span>
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <?= $this->include('layouts/components/admin_navbar') ?>
+                
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800"><?= $this->renderSection('page-title') ?></h1>
+                        <?= $this->renderSection('page-actions') ?>
+                    </div>
+                    
+                    <!-- Content -->
+                    <?= $this->renderSection('content') ?>
                 </div>
-                <a href="<?= base_url('auth/logout') ?>" class="logout-btn">
-                    <i class="fas fa-sign-out-alt me-1"></i>
-                    Log Out
-                </a>
             </div>
             
-            <!-- Content Area -->
-            <div class="content-area">
-                <?= $this->renderSection('content') ?>
-            </div>
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>&copy; <?= date('Y') ?> Perpustakaan Nasional Republik Indonesia. All Rights Reserved.</span>
+                    </div>
+                </div>
+            </footer>
         </div>
     </div>
     
-    <!-- Bootstrap JS -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Konfirmasi Logout</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">Apakah Anda yakin ingin keluar dari sistem?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Batal</button>
+                    <a class="btn btn-primary" href="<?= base_url('auth/logout') ?>">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    
+    <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Inline JavaScript -->
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const adminContainer = document.getElementById('adminContainer');
-            
-            if (window.innerWidth <= 768) {
-                // Mobile behavior - toggle sidebar visibility
-                sidebar.classList.toggle('show');
-            } else {
-                // Desktop behavior - collapse/expand sidebar
-                adminContainer.classList.toggle('sidebar-collapsed');
-            }
-        }
-
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(e) {
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.getElementById('sidebarToggle');
-            
-            if (window.innerWidth <= 768) {
-                if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
-                    sidebar.classList.remove('show');
-                }
-            }
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            const sidebar = document.getElementById('sidebar');
-            const adminContainer = document.getElementById('adminContainer');
-            
-            if (window.innerWidth > 768) {
-                // Reset mobile classes when switching to desktop
-                sidebar.classList.remove('show');
-            } else {
-                // Reset desktop classes when switching to mobile
-                adminContainer.classList.remove('sidebar-collapsed');
-            }
-        });
-
-        // Dashboard Animation
-        document.addEventListener('DOMContentLoaded', function() {
-            const statsCards = document.querySelectorAll('.stats-card');
-            
-            statsCards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = 'all 0.5s ease';
-                
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100 + 200);
-            });
-        });
-    </script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
     
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom Admin JS -->
+    <script src="<?= base_url('assets/js/admin.js') ?>"></script>
+    
+    <!-- Page Level Scripts -->
     <?= $this->renderSection('scripts') ?>
 </body>
 </html>
