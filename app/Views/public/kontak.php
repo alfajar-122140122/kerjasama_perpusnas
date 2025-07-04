@@ -274,7 +274,7 @@
             <!-- Google Maps -->
             <div class="map-container">
                 <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.521260322283!2d106.8302461!3d-6.2034188!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5d2e764b12d%3A0x3d2ad6e1e0e9bcc8!2sPerpustakaan%20Nasional%20Republik%20Indonesia!5e0!3m2!1sid!2sid!4v1609459200000!5m2!1sid!2sid"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.623033187347!2d106.82692039999999!3d-6.1811826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f442596e0c93%3A0x4ba58be40979fe36!2sPerpustakaan%20Nasional%20Republik%20Indonesia!5e0!3m2!1sid!2sid!4v1751613236634!5m2!1sid!2sid"
                     width="100%" 
                     height="100%" 
                     allowfullscreen="" 
@@ -329,52 +329,6 @@
                     </p>
                 </div>
             </div>
-        </div>
-        
-        <!-- Contact Form -->
-        <div class="contact-form">
-            <h3 class="contact-title">Kirim Pesan</h3>
-            <form id="contactForm" action="<?= base_url('kontak/kirim') ?>" method="POST">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="nama" class="form-label">Nama Lengkap *</label>
-                            <input type="text" class="form-control" id="nama" name="nama" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="email" class="form-label">Email *</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="telepon" class="form-label">Telepon</label>
-                            <input type="tel" class="form-control" id="telepon" name="telepon">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="instansi" class="form-label">Instansi/Organisasi</label>
-                            <input type="text" class="form-control" id="instansi" name="instansi">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="subjek" class="form-label">Subjek *</label>
-                    <input type="text" class="form-control" id="subjek" name="subjek" required>
-                </div>
-                <div class="form-group">
-                    <label for="pesan" class="form-label">Pesan *</label>
-                    <textarea class="form-control" id="pesan" name="pesan" rows="5" required></textarea>
-                </div>
-                <button type="submit" class="btn-submit">
-                    <i class="fas fa-paper-plane"></i> Kirim Pesan
-                </button>
-            </form>
         </div>
     </div>
 </section>

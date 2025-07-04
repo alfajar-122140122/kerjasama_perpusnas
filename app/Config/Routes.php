@@ -12,7 +12,7 @@ $routes->get('/', 'Public\Home::index');
 // Public routes
 $routes->get('tentang', 'Public\Home::tentang');
 $routes->get('kontak', 'Public\Home::kontak');
-$routes->post('kontak/kirim', 'Public\Home::kirimKontak');
+$routes->get('aktivitas', 'Public\Home::aktivitas');
 
 // Auth routes
 $routes->group('auth', function($routes) {

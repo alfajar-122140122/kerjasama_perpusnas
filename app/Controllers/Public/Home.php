@@ -106,42 +106,29 @@ class Home extends BaseController
         
         return view('public/kontak', $data);
     }
-
-    public function kirimKontak()
+    
+    public function aktivitas()
     {
-        $validation = \Config\Services::validation();
-        
-        $validation->setRules([
-            'nama' => 'required|min_length[3]|max_length[100]',
-            'email' => 'required|valid_email',
-            'subjek' => 'required|min_length[5]|max_length[200]',
-            'pesan' => 'required|min_length[10]|max_length[1000]',
-            'telepon' => 'permit_empty|min_length[10]|max_length[15]',
-            'instansi' => 'permit_empty|max_length[200]'
-        ]);
-        
-        if (!$validation->withRequest($this->request)->run()) {
-            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
-        }
-        
         $data = [
-            'nama' => $this->request->getPost('nama'),
-            'email' => $this->request->getPost('email'),
-            'telepon' => $this->request->getPost('telepon'),
-            'instansi' => $this->request->getPost('instansi'),
-            'subjek' => $this->request->getPost('subjek'),
-            'pesan' => $this->request->getPost('pesan'),
-            'ip_address' => $this->request->getIPAddress(),
-            'user_agent' => $this->request->getUserAgent(),
-            'created_at' => date('Y-m-d H:i:s')
+            'page_title' => 'Aktivitas Kami',
+            'activities' => [
+                [
+                    'title' => 'Pelatihan Pustakawan',
+                    'date' => '2024-07-01',
+                    'description' => 'Pelatihan pustakawan untuk meningkatkan kompetensi dalam layanan perpustakaan digital.',
+                    'image' => 'activity-1.jpg'
+                ],
+                [
+                    'title' => 'Kerjasama Internasional',
+                    'date' => '2024-06-20',
+                    'description' => 'Penandatanganan MoU dengan perpustakaan internasional untuk pertukaran koleksi.',
+                    'image' => 'activity-2.jpg'
+                ]
+            ]
         ];
         
-        // Here you can save to database or send email
-        // For now, just return success message
-        
-        return redirect()->to('kontak')->with('success', 'Pesan berhasil dikirim! Kami akan segera merespons.');
+        return view('public/aktivitas', $data);
     }
-    
     private function getAboutContent()
     {
         return [
