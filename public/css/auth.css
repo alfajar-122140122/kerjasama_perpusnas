@@ -7,6 +7,11 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.auth-logo {
+    width: 120px;
+    margin-bottom: 10px;
+}
+
 .auth-container {
     max-width: 400px;
     margin: 0 auto;

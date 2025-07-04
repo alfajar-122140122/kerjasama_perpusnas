@@ -27,6 +27,16 @@ body {
     transition: all 0.3s ease;
 }
 
+.perpusnas-logo {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+.perpusnas-logo-sm {
+    height: 30px;
+}
+
 .sidebar-header {
     padding: 20px;
     text-align: center;

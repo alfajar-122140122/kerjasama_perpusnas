@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $this->renderSection('title', true) ?> - Dashboard Admin</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="<?= base_url('images/LOGO-PERPUSNAS.png') ?>">
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -17,6 +20,7 @@
         <!-- Sidebar -->
         <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
+                <img src="<?= base_url('images/LOGO-PERPUSNAS.png') ?>" alt="Perpusnas Logo" class="perpusnas-logo mb-2" width="100">
                 <div class="user-profile">
                     <div class="user-avatar">
                         <i class="fas fa-user"></i>
@@ -56,6 +60,7 @@
                     <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
                         <i class="fas fa-bars"></i>
                     </button>
+                    <img src="<?= base_url('images/LOGO-PERPUSNAS.png') ?>" alt="Perpusnas Logo" class="perpusnas-logo-sm mx-2" height="30">
                     <span class="ms-2"><?= $this->renderSection('page-title', true) ?></span>
                 </div>
                 <a href="<?= base_url('auth/logout') ?>" class="logout-btn">

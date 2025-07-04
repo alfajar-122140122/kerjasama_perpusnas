@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kerjasama Perpustakaan - Perpustakaan Nasional Republik Indonesia</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="<?= base_url('images/LOGO-PERPUSNAS.png') ?>">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -14,9 +17,7 @@
     <div class="header-top">
         <div class="container">
             <div class="logo-section">
-                <div class="logo-icon">
-                    <i class="fas fa-star"></i>
-                </div>
+                <img src="<?= base_url('images/LOGO-PERPUSNAS.png') ?>" alt="Perpusnas Logo" class="logo-img me-3" height="80">
                 <div class="logo-text">
                     <h1>KERJASAMA PERPUSTAKAAN</h1>
                     <p>PERPUSTAKAAN NASIONAL REPUBLIK INDONESIA</p>

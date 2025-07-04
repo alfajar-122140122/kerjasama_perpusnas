@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $this->renderSection('title', true) ?> - Sistem Kerjasama Perpusnas</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="<?= base_url('images/LOGO-PERPUSNAS.png') ?>">
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -14,6 +17,10 @@
 </head>
 <body>
     <div class="container">
+        <div class="text-center mb-4">
+            <img src="<?= base_url('images/LOGO-PERPUSNAS.png') ?>" alt="Perpusnas Logo" class="auth-logo" width="120">
+            <h3 class="mt-2">PERPUSTAKAAN NASIONAL REPUBLIK INDONESIA</h3>
+        </div>
         <div class="auth-container">
             <?= $this->renderSection('content') ?>
         </div>
