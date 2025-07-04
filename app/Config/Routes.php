@@ -13,6 +13,8 @@ $routes->get('/', 'Public\Home::index');
 $routes->get('tentang', 'Public\Home::tentang');
 $routes->get('kontak', 'Public\Home::kontak');
 $routes->get('aktivitas', 'Public\Home::aktivitas');
+$routes->get('kerja-sama', 'Public\Home::kerjaSama');
+$routes->get('peta-kerja-sama', 'Public\Home::petaKerjaSama');
 
 // Auth routes
 $routes->group('auth', function($routes) {

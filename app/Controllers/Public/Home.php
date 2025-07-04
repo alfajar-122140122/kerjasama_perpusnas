@@ -129,6 +129,26 @@ class Home extends BaseController
         
         return view('public/aktivitas', $data);
     }
+
+    public function petaKerjaSama()
+    {
+        $data = [
+            'page_title' => 'Peta Kerja Sama',
+            'map_data' => [
+                'title' => 'Peta Kerja Sama Perpustakaan Nasional',
+                'description' => 'Visualisasi kerja sama perpustakaan di seluruh Indonesia dan internasional.',
+                'locations' => [
+                    ['name' => 'Perpustakaan Nasional', 'lat' => -6.2034188, 'lng' => 106.8302461],
+                    ['name' => 'Perpustakaan Daerah Jakarta', 'lat' => -6.2087634, 'lng' => 106.845599],
+                    ['name' => 'Perpustakaan Universitas Indonesia', 'lat' => -6.360000, 'lng' => 106.820000]
+                ]
+            ]
+        ];
+        
+        return view('public/peta_kerjasama', $data);
+    }
+
+
     private function getAboutContent()
     {
         return [
