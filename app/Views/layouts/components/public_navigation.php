@@ -1,23 +1,26 @@
-<!-- Custom Header using Bootstrap utilities -->
-<header class="home-header">
+<!-- Header dengan style baru -->
+<header class="new-header">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-md-4">
+            <!-- Logo Section -->
+            <div class="col-md-3">
                 <div class="d-flex align-items-center">
-                    <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                        <img src="<?= base_url('assets/images/logo-perpusnas.png') ?>" alt="Logo Perpustakaan Nasional" class="img-fluid" style="width: 35px; height: 35px;">
+                    <div class="logo-container me-3">
+                        <img src="<?= base_url('assets/images/logo-perpusnas.png') ?>" alt="Logo Perpustakaan Nasional" class="logo-img">
                     </div>
-                    <div class="text-white">
-                        <h4 class="mb-0 fw-bold" style="font-size: 14px; line-height: 1.2;">KERJASAMA PERPUSTAKAAN</h4>
-                        <p class="mb-0 opacity-75" style="font-size: 12px;">PERPUSTAKAAN NASIONAL REPUBLIK INDONESIA</p>
+                    <div class="logo-text">
+                        <h4 class="logo-title">KERJASAMA PERPUSTAKAAN</h4>
+                        <p class="logo-subtitle">PERPUSTAKAAN NASIONAL<br>REPUBLIK INDONESIA</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-8">
-                <div class="d-flex justify-content-end align-items-center gap-3 flex-wrap">
-                    <!-- Dropdown using Bootstrap -->
+            
+            <!-- Header Controls -->
+            <div class="col-md-9">
+                <div class="d-flex justify-content-end align-items-center gap-3">
+                    <!-- Dropdown -->
                     <div class="dropdown">
-                        <button class="btn btn-light dropdown-toggle rounded-pill px-3 py-2" type="button" data-bs-toggle="dropdown" style="font-size: 14px;">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
                             Situs ini
                         </button>
                         <ul class="dropdown-menu">
@@ -27,43 +30,55 @@
                             <li><a class="dropdown-item" href="https://koleksi.perpusnas.go.id" target="_blank">Koleksi Digital</a></li>
                         </ul>
                     </div>
-                    <!-- Search using Bootstrap input group -->
-                    <div class="position-relative">
-                        <input type="text" class="form-control rounded-pill pe-5" placeholder="Cari" style="width: 250px; font-size: 14px;" id="headerSearchInput">
-                        <button type="button" class="btn position-absolute end-0 top-50 translate-middle-y pe-3 border-0 bg-transparent" onclick="performHeaderSearch()">
-                            <i class="fas fa-search text-muted"></i>
-                        </button>
+                    
+                    <!-- Search -->
+                    <div class="search-container">
+                        <div class="input-group">
+                            <input type="text" class="form-control search-input" placeholder="Cari" id="headerSearchInput">
+                            <button class="btn btn-outline-light search-btn" type="button" onclick="performHeaderSearch()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
                     </div>
-                    <a href="<?= base_url('auth/login') ?>" class="btn btn-light rounded-pill px-3 py-2" style="font-size: 14px;">Login</a>
+                    
+                    <!-- Login -->
+                    <a href="<?= base_url('auth/login') ?>" class="btn btn-light login-btn">Login</a>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Navigation using Bootstrap nav -->
-<nav class="home-nav">
+<!-- Navigation dengan Home icon -->
+<nav class="new-navigation">
     <div class="container">
-        <ul class="nav nav-pills flex-nowrap overflow-auto">
-            <li class="nav-item">
-                <a class="nav-link <?= (uri_string() == '' || uri_string() == '/') ? 'active' : '' ?>" href="<?= base_url('/') ?>">Beranda</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <?= (uri_string() == 'tentang') ? 'active' : '' ?>" href="<?= base_url('tentang') ?>">Tentang</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <?= (strpos(uri_string(), 'aktivitas') !== false) ? 'active' : '' ?>" href="<?= base_url('aktivitas') ?>">Aktivitas</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <?= (strpos(uri_string(), 'kerja-sama') !== false) ? 'active' : '' ?>" href="<?= base_url('kerja-sama') ?>">Kerja Sama</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <?= (strpos(uri_string(), 'peta-kerja-sama') !== false) ? 'active' : '' ?>" href="<?= base_url('peta-kerja-sama') ?>">Peta Kerja Sama</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <?= (uri_string() == 'kontak' || strpos(uri_string(), 'kontak') !== false) ? 'active' : '' ?>" href="<?= base_url('kontak') ?>">Kontak</a>
-            </li>
-        </ul>
+        <div class="nav-wrapper">
+            <!-- Home Icon dengan background hijau -->
+            <div class="home-icon-container">
+                <a href="<?= base_url('/') ?>" class="home-icon-link <?= (uri_string() == '' || uri_string() == '/') ? 'active' : '' ?>">
+                    <i class="fas fa-home"></i>
+                </a>
+            </div>
+            
+            <!-- Navigation Links -->
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a class="nav-link <?= (uri_string() == 'tentang') ? 'active' : '' ?>" href="<?= base_url('tentang') ?>">Tentang</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= (strpos(uri_string(), 'aktivitas') !== false) ? 'active' : '' ?>" href="<?= base_url('aktivitas') ?>">Aktivitas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= (strpos(uri_string(), 'kerja-sama') !== false) ? 'active' : '' ?>" href="<?= base_url('kerja-sama') ?>">Kerja Sama</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= (strpos(uri_string(), 'peta-kerja-sama') !== false) ? 'active' : '' ?>" href="<?= base_url('peta-kerja-sama') ?>">Peta Kerja Sama</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= (uri_string() == 'kontak' || strpos(uri_string(), 'kontak') !== false) ? 'active' : '' ?>" href="<?= base_url('kontak') ?>">Kontak</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
 
@@ -74,7 +89,6 @@ function performHeaderSearch() {
     const query = searchInput.value.trim();
     
     if (query) {
-        // Redirect to search page with query parameter
         window.location.href = `${window.location.origin}/pencarian?q=${encodeURIComponent(query)}`;
     }
 }
