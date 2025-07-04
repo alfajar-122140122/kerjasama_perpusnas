@@ -59,10 +59,21 @@ class Home extends BaseController
     {
         $data = [
             'page_title' => 'Tentang Kami',
-            'about_content' => $this->getAboutContent()
+            'about_content' => [
+                'title' => 'Portal Kerjasama Perpustakaan Nasional',
+                'description' => 'Penyiapan bahan dan melakukan kerja sama perpustakaan dalam dan luar negeri sesuai dengan petunjuk dan pedoman yang berlaku.',
+                'functions' => [
+                    'Pelaksanaan kerja sama perpustakaan dalam dan luar negeri',
+                    'Penerima dan mengelola permohonan inisiasi kerja sama',
+                    'Pelaksanaan penanda tanganan naskah Kesepahaman Bersama atau Memorandum of Understanding (MoU)',
+                    'Mengelola dan mengevaluasi implementasi kerja sama.'
+                ],
+                'mission' => 'Membangun ekosistem kerjasama perpustakaan yang kuat untuk kemajuan literasi bangsa',
+                'vision' => 'Menjadi pusat koordinasi kerjasama perpustakaan terdepan di Asia Tenggara'
+            ]
         ];
         
-        return view('public/about', $data);
+        return view('public/tentang', $data);
     }
     
     public function kontak()

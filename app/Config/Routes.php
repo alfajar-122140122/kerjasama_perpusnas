@@ -9,6 +9,10 @@ use CodeIgniter\Router\RouteCollection;
 // Landing page
 $routes->get('/', 'Public\Home::index');
 
+// Public routes
+$routes->get('tentang', 'Public\Home::tentang');
+$routes->get('kontak', 'Public\Home::kontak');
+
 // Auth routes
 $routes->group('auth', function($routes) {
     $routes->get('login', 'Auth\Auth::login');
@@ -44,9 +48,6 @@ $routes->group('admin', function($routes) {
 // Redirect dashboard ke admin dashboard untuk backward compatibility
 $routes->get('dashboard', 'Admin\Dashboard::dashboard');
 
-// Landing page routes
-$routes->get('tentang', 'Public\Home::tentang');
 $routes->get('aktivitas', 'Public\Home::aktivitas');
 $routes->get('kerja-sama', 'Public\Home::kerjaSama');
 $routes->get('peta-kerja-sama', 'Public\Home::petaKerjaSama');
-$routes->get('kontak', 'Public\Home::kontak');
