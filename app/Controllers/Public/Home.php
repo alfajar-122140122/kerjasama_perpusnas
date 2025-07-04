@@ -81,14 +81,65 @@ class Home extends BaseController
         $data = [
             'page_title' => 'Kontak Kami',
             'contact_info' => [
-                'address' => 'Jl. Salemba Raya No. 28A, Jakarta Pusat 10440',
-                'phone' => '+62 21 3928 8221',
-                'email' => 'kerjasama@perpusnas.go.id',
-                'working_hours' => 'Senin - Jumat, 08:00 - 16:00 WIB'
+                'name' => 'Sub Bidang Kerja Sama Perpustakaan',
+                'organization' => 'Perpustakaan Nasional RI',
+                'address' => [
+                    'building' => 'Gedung Layanan, Lantai 5',
+                    'street' => 'Jl. Medan Merdeka Selatan No. 11',
+                    'city' => 'Jakarta Pusat 10110'
+                ],
+                'phone' => '021-80664603',
+                'emails' => [
+                    'kerjasama@perpusnas.go.id',
+                    'kerjasama@gmail.com'
+                ],
+                'operating_hours' => [
+                    'weekdays' => 'Senin - Jumat: 08:00 - 16:00 WIB',
+                    'weekend' => 'Sabtu - Minggu: Tutup'
+                ],
+                'coordinates' => [
+                    'lat' => -6.2034188,
+                    'lng' => 106.8302461
+                ]
             ]
         ];
         
-        return view('public/contact', $data);
+        return view('public/kontak', $data);
+    }
+
+    public function kirimKontak()
+    {
+        $validation = \Config\Services::validation();
+        
+        $validation->setRules([
+            'nama' => 'required|min_length[3]|max_length[100]',
+            'email' => 'required|valid_email',
+            'subjek' => 'required|min_length[5]|max_length[200]',
+            'pesan' => 'required|min_length[10]|max_length[1000]',
+            'telepon' => 'permit_empty|min_length[10]|max_length[15]',
+            'instansi' => 'permit_empty|max_length[200]'
+        ]);
+        
+        if (!$validation->withRequest($this->request)->run()) {
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+        }
+        
+        $data = [
+            'nama' => $this->request->getPost('nama'),
+            'email' => $this->request->getPost('email'),
+            'telepon' => $this->request->getPost('telepon'),
+            'instansi' => $this->request->getPost('instansi'),
+            'subjek' => $this->request->getPost('subjek'),
+            'pesan' => $this->request->getPost('pesan'),
+            'ip_address' => $this->request->getIPAddress(),
+            'user_agent' => $this->request->getUserAgent(),
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        
+        // Here you can save to database or send email
+        // For now, just return success message
+        
+        return redirect()->to('kontak')->with('success', 'Pesan berhasil dikirim! Kami akan segera merespons.');
     }
     
     private function getAboutContent()

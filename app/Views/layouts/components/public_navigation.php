@@ -4,8 +4,8 @@
         <div class="row align-items-center">
             <div class="col-md-4">
                 <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                        <img src="<?= base_url('assets/images/logo-perpusnas.png') ?>" alt="Logo Perpustakaan Nasional" class="img-fluid" style="width: 100px; height: 50px;">
+                    <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                        <img src="<?= base_url('assets/images/logo-perpusnas.png') ?>" alt="Logo Perpustakaan Nasional" class="img-fluid" style="width: 35px; height: 35px;">
                     </div>
                     <div class="text-white">
                         <h4 class="mb-0 fw-bold" style="font-size: 14px; line-height: 1.2;">KERJASAMA PERPUSTAKAAN</h4>
@@ -46,22 +46,22 @@
     <div class="container">
         <ul class="nav nav-pills flex-nowrap overflow-auto">
             <li class="nav-item">
-                <a class="nav-link <?= (current_url() == base_url('/')) ? 'active' : '' ?>" href="<?= base_url('/') ?>">Beranda</a>
+                <a class="nav-link <?= (uri_string() == '' || uri_string() == '/') ? 'active' : '' ?>" href="<?= base_url('/') ?>">Beranda</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?= (strpos(current_url(), 'tentang') !== false) ? 'active' : '' ?>" href="<?= base_url('tentang') ?>">Tentang</a>
+                <a class="nav-link <?= (uri_string() == 'tentang') ? 'active' : '' ?>" href="<?= base_url('tentang') ?>">Tentang</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?= (strpos(current_url(), 'aktivitas') !== false) ? 'active' : '' ?>" href="<?= base_url('aktivitas') ?>">Aktivitas</a>
+                <a class="nav-link <?= (strpos(uri_string(), 'aktivitas') !== false) ? 'active' : '' ?>" href="<?= base_url('aktivitas') ?>">Aktivitas</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?= (strpos(current_url(), 'kerja-sama') !== false) ? 'active' : '' ?>" href="<?= base_url('kerja-sama') ?>">Kerja Sama</a>
+                <a class="nav-link <?= (strpos(uri_string(), 'kerja-sama') !== false) ? 'active' : '' ?>" href="<?= base_url('kerja-sama') ?>">Kerja Sama</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?= (strpos(current_url(), 'peta-kerja-sama') !== false) ? 'active' : '' ?>" href="<?= base_url('peta-kerja-sama') ?>">Peta Kerja Sama</a>
+                <a class="nav-link <?= (strpos(uri_string(), 'peta-kerja-sama') !== false) ? 'active' : '' ?>" href="<?= base_url('peta-kerja-sama') ?>">Peta Kerja Sama</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?= (strpos(current_url(), 'kontak') !== false) ? 'active' : '' ?>" href="<?= base_url('kontak') ?>">Kontak</a>
+                <a class="nav-link <?= (uri_string() == 'kontak' || strpos(uri_string(), 'kontak') !== false) ? 'active' : '' ?>" href="<?= base_url('kontak') ?>">Kontak</a>
             </li>
         </ul>
     </div>
