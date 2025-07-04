@@ -6,7 +6,7 @@
     <title><?= $this->renderSection('title', true) ?> - Sistem Kerjasama Perpusnas</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="<?= base_url('images/LOGO-PERPUSNAS.png') ?>">
+    <link rel="icon" type="image/png" href="<?= base_url('images/ICON-PERPUSNAS.png') ?>">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">

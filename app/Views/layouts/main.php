@@ -3,51 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $this->renderSection('title', true) ?> - Dashboard Admin</title>
+    <title><?= $this->renderSection('title', true) ?> - Kerjasama Perpustakaan Nasional</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="<?= base_url('images/ICON-PERPUSNAS.png') ?>">
-    
+    <link rel="icon" type="image/png" href="<?= base_url('images/favicon-perpusnas.png') ?>">
+    <link rel="shortcut icon" href="<?= base_url('favicon.ico') ?>">
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Custom Admin CSS -->
-    <link href="<?= base_url('css/admin.css') ?>" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="<?= base_url('css/main.css') ?>" rel="stylesheet">
+    <?= $this->renderSection('styles') ?>
 </head>
 <body>
-    <div class="admin-container" id="adminContainer">
+    <div class="main-container" id="mainContainer">
         <!-- Sidebar -->
         <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <img src="<?= base_url('images/LOGO-PERPUSNAS.png') ?>" alt="Perpusnas Logo" class="perpusnas-logo mb-2" width="100">
-                <div class="user-profile">
-                    <div class="user-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <span><?= session()->get('username') ?? 'Admin' ?></span>
+                <div class="site-info">
+                    <h6 class="text-white">KERJASAMA PERPUSTAKAAN</h6>
+                    <small class="text-light">PERPUSNAS RI</small>
                 </div>
             </div>
             <div class="sidebar-menu">
-                <a href="<?= base_url('admin/dashboard') ?>" class="menu-item <?= (uri_string() == 'admin/dashboard') ? 'active' : '' ?>">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
+                <a href="<?= base_url('/') ?>" class="menu-item <?= (uri_string() == '' || uri_string() == '/') ? 'active' : '' ?>">
+                    <i class="fas fa-home"></i>
+                    Beranda
                 </a>
-                <a href="<?= base_url('admin/users') ?>" class="menu-item <?= (strpos(uri_string(), 'admin/users') !== false) ? 'active' : '' ?>">
-                    <i class="fas fa-users"></i>
-                    Manajemen User
+                <a href="<?= base_url('tentang') ?>" class="menu-item <?= (uri_string() == 'tentang') ? 'active' : '' ?>">
+                    <i class="fas fa-info-circle"></i>
+                    Tentang
                 </a>
-                <a href="<?= base_url('admin/kerjasama') ?>" class="menu-item">
+                <a href="<?= base_url('aktivitas') ?>" class="menu-item <?= (uri_string() == 'aktivitas') ? 'active' : '' ?>">
+                    <i class="fas fa-calendar-alt"></i>
+                    Aktivitas
+                </a>
+                <a href="<?= base_url('kerja-sama') ?>" class="menu-item <?= (uri_string() == 'kerja-sama') ? 'active' : '' ?>">
                     <i class="fas fa-handshake"></i>
-                    Kerjasama
+                    Kerja Sama
                 </a>
-                <a href="<?= base_url('admin/berita') ?>" class="menu-item">
-                    <i class="fas fa-newspaper"></i>
-                    Berita
+                <a href="<?= base_url('peta-kerja-sama') ?>" class="menu-item <?= (uri_string() == 'peta-kerja-sama') ? 'active' : '' ?>">
+                    <i class="fas fa-map"></i>
+                    Peta Kerja Sama
                 </a>
-                <a href="<?= base_url('admin/pengaturan') ?>" class="menu-item <?= (strpos(uri_string(), 'admin/pengaturan') !== false) ? 'active' : '' ?>">
-                    <i class="fas fa-cog"></i>
-                    Pengaturan
+                <a href="<?= base_url('kontak') ?>" class="menu-item <?= (uri_string() == 'kontak') ? 'active' : '' ?>">
+                    <i class="fas fa-envelope"></i>
+                    Kontak
                 </a>
             </div>
         </nav>
@@ -63,10 +67,18 @@
                     <img src="<?= base_url('images/LOGO-PERPUSNAS.png') ?>" alt="Perpusnas Logo" class="perpusnas-logo-sm mx-2" height="30">
                     <span class="ms-2"><?= $this->renderSection('page-title', true) ?></span>
                 </div>
-                <a href="<?= base_url('auth/logout') ?>" class="logout-btn">
-                    <i class="fas fa-sign-out-alt me-1"></i>
-                    Log Out
-                </a>
+                <div class="header-controls">
+                    <div class="search-box me-3">
+                        <input type="text" placeholder="Cari..." class="form-control form-control-sm">
+                        <button type="button" class="btn btn-sm">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <a href="<?= base_url('auth/login') ?>" class="login-btn">
+                        <i class="fas fa-sign-in-alt me-1"></i>
+                        Login
+                    </a>
+                </div>
             </div>
             
             <!-- Content Area -->
@@ -83,14 +95,14 @@
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
-            const adminContainer = document.getElementById('adminContainer');
+            const mainContainer = document.getElementById('mainContainer');
             
             if (window.innerWidth <= 768) {
                 // Mobile behavior - toggle sidebar visibility
                 sidebar.classList.toggle('show');
             } else {
                 // Desktop behavior - collapse/expand sidebar
-                adminContainer.classList.toggle('sidebar-collapsed');
+                mainContainer.classList.toggle('sidebar-collapsed');
             }
         }
 
@@ -106,34 +118,12 @@
             }
         });
 
-        // Handle window resize
+        // Auto-collapse sidebar on window resize
         window.addEventListener('resize', function() {
             const sidebar = document.getElementById('sidebar');
-            const adminContainer = document.getElementById('adminContainer');
-            
             if (window.innerWidth > 768) {
-                // Reset mobile classes when switching to desktop
                 sidebar.classList.remove('show');
-            } else {
-                // Reset desktop classes when switching to mobile
-                adminContainer.classList.remove('sidebar-collapsed');
             }
-        });
-
-        // Dashboard Animation
-        document.addEventListener('DOMContentLoaded', function() {
-            const statsCards = document.querySelectorAll('.stats-card');
-            
-            statsCards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = 'all 0.5s ease';
-                
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100 + 200);
-            });
         });
     </script>
     
