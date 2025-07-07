@@ -287,6 +287,7 @@
     transform: translateY(-10px);
     transition: all 0.3s ease;
     border: 1px solid #e9ecef;
+    list-style: none;
 }
 
 .nav-dropdown.show .nav-dropdown-menu {
