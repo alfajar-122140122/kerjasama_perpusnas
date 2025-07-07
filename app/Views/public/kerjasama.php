@@ -1,51 +1,84 @@
 <?= $this->extend('layouts/public') ?>
 
-<?= $this->section('title') ?>Kerja Sama<?= $this->endSection() ?>
+<?= $this->section('title') ?>Kerja Sama - Pilih Halaman<?= $this->endSection() ?>
 
-<?= $this->section('description') ?>Implementasi Kerja Sama Perpustakaan Nasional RI dengan berbagai mitra institusi pendidikan, pemerintah, dan organisasi dalam bidang perpustakaan dan informasi.<?= $this->endSection() ?>
+<?= $this->section('description') ?>Pilih halaman Kerja Sama yang ingin Anda kunjungi - Data Kerja Sama, Implementasi, Progress, dan lainnya.<?= $this->endSection() ?>
 
-<?= $this->section('keywords') ?>kerja sama, implementasi, MOU, MOA, kerjasama perpustakaan, mitra, akademi, universitas, badan informasi, perpustakaan nasional<?= $this->endSection() ?>
+<?= $this->section('keywords') ?>kerja sama, data, implementasi, progress, pengajuan, perpustakaan nasional<?= $this->endSection() ?>
 
 <?= $this->section('styles') ?>
 <link href="<?= base_url('css/public.css') ?>" rel="stylesheet">
 <link href="<?= base_url('css/public/navigation.css') ?>" rel="stylesheet">
 <style>
-/* Kerja Sama Page Styles */
-.kerja-sama-wrapper {
-    background: #f8f9fa;
+/* Kerja Sama Landing Page Styles */
+.landing-wrapper {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     min-height: calc(100vh - 200px);
-    padding: 2rem 0;
+    padding: 3rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.landing-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="%23ffffff" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') repeat;
+    pointer-events: none;
 }
 
 .page-header-section {
     background: white;
-    padding: 1.5rem 0;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid #e9ecef;
+    padding: 2rem 0;
+    margin-bottom: 3rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    position: relative;
+    z-index: 2;
 }
 
 .page-header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
+    text-align: center;
 }
 
 .page-main-title {
     color: #2c3e50;
-    font-size: 2.25rem;
+    font-size: 2.75rem;
     font-weight: 700;
-    margin: 0;
+    margin-bottom: 1rem;
     line-height: 1.2;
+    position: relative;
+}
+
+.page-main-title::after {
+    content: '';
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(45deg, #4CAF50, #66BB6A);
+    display: block;
+    margin: 1rem auto 0;
+    border-radius: 2px;
+}
+
+.page-subtitle {
+    color: #6c757d;
+    font-size: 1.25rem;
+    font-weight: 300;
+    margin: 0;
+    line-height: 1.4;
 }
 
 .breadcrumb-nav {
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 0.5rem;
     color: #6c757d;
     font-size: 0.95rem;
+    margin-top: 1.5rem;
 }
 
 .breadcrumb-nav a {
@@ -64,498 +97,392 @@
     margin: 0 0.25rem;
 }
 
-/* Search and Filter Section */
-.search-filter-section {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-}
-
-.search-form-wrapper {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 1.5rem;
-    align-items: end;
-}
-
-.search-input-group {
+/* Menu Grid Section */
+.menu-section {
     position: relative;
+    z-index: 2;
 }
 
-.search-label {
-    display: block;
-    font-weight: 600;
-    color: #495057;
-    margin-bottom: 0.75rem;
-    font-size: 0.95rem;
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
-.search-input-field {
+.menu-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+}
+
+.menu-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
     width: 100%;
-    padding: 0.875rem 1rem;
-    border: 2px solid #e9ecef;
-    border-radius: 10px;
-    font-size: 1rem;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.menu-card:hover::before {
+    left: 100%;
+}
+
+.menu-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    border-color: #4CAF50;
+}
+
+.menu-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, #4CAF50, #66BB6A);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
     transition: all 0.3s ease;
-    background: #fff;
+    position: relative;
+    z-index: 2;
 }
 
-.search-input-field:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.25rem rgba(0,123,255,0.25);
+.menu-card:hover .menu-icon {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
 }
 
-.search-btn-primary {
-    background: linear-gradient(45deg, #007bff, #0056b3);
+.menu-title {
+    color: #2c3e50;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+    position: relative;
+    z-index: 2;
+}
+
+.menu-description {
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.menu-button {
+    background: linear-gradient(45deg, #4CAF50, #66BB6A);
     color: white;
     border: none;
     padding: 0.875rem 2rem;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    white-space: nowrap;
-    box-shadow: 0 2px 4px rgba(0,123,255,0.3);
-}
-
-.search-btn-primary:hover {
-    background: linear-gradient(45deg, #0056b3, #004085);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,123,255,0.4);
-}
-
-/* Table Section */
-.table-section {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    margin-bottom: 2rem;
-}
-
-.table-header {
-    background: linear-gradient(45deg, #007bff, #0056b3);
-    color: white;
-    padding: 1.5rem 2rem;
-}
-
-.table-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin: 0;
-}
-
-.table-subtitle {
-    font-size: 0.9rem;
-    opacity: 0.9;
-    margin: 0.25rem 0 0 0;
-}
-
-.table-responsive-wrapper {
-    overflow-x: auto;
-    background: white;
-}
-
-.cooperation-data-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-    margin: 0;
-}
-
-.cooperation-data-table thead th {
-    background: #f8f9fa;
-    color: #495057;
-    padding: 1.25rem 1rem;
-    text-align: left;
-    font-weight: 600;
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    border-bottom: 2px solid #dee2e6;
-    white-space: nowrap;
-}
-
-.cooperation-data-table tbody td {
-    padding: 1.25rem 1rem;
-    border-bottom: 1px solid #f1f3f4;
-    vertical-align: top;
-    line-height: 1.5;
-}
-
-.cooperation-data-table tbody tr {
-    transition: all 0.2s ease;
-}
-
-.cooperation-data-table tbody tr:hover {
-    background: #f8f9fa;
-    transform: scale(1.005);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.cooperation-data-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-/* Table Column Styles */
-.partner-info {
-    min-width: 200px;
-}
-
-.partner-name {
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.25rem;
-    font-size: 0.95rem;
-}
-
-.partner-location {
-    color: #6c757d;
-    font-size: 0.85rem;
-    font-style: italic;
-}
-
-.date-info {
-    min-width: 150px;
-    white-space: nowrap;
-}
-
-.date-range {
-    color: #495057;
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-.implementation-details {
-    min-width: 350px;
-    max-width: 500px;
-}
-
-.implementation-list {
-    margin: 0;
-    padding-left: 1.2rem;
-    color: #495057;
-    line-height: 1.6;
-}
-
-.implementation-list li {
-    margin-bottom: 0.5rem;
-    font-size: 0.85rem;
-}
-
-.scope-info {
-    min-width: 120px;
-    text-align: center;
-}
-
-.scope-badge {
-    display: inline-block;
-    padding: 0.375rem 0.875rem;
     border-radius: 25px;
-    font-size: 0.8rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.scope-nasional {
-    background: linear-gradient(45deg, #28a745, #20c997);
-    color: white;
-}
-
-.scope-internasional {
-    background: linear-gradient(45deg, #007bff, #6f42c1);
-    color: white;
-}
-
-.unit-info {
-    min-width: 200px;
-    max-width: 250px;
-}
-
-.unit-details {
-    color: #495057;
-    font-size: 0.85rem;
-    line-height: 1.4;
-}
-
-.unit-name {
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-/* Pagination Section */
-.pagination-section {
-    display: flex;
-    justify-content: center;
-    padding: 2rem 0;
-}
-
-.pagination-wrapper {
-    display: flex;
+    font-size: 0.95rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
     gap: 0.5rem;
-    align-items: center;
-}
-
-.pagination-btn {
-    width: 44px;
-    height: 44px;
-    border: 2px solid #e9ecef;
-    background: white;
-    color: #495057;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.9rem;
     transition: all 0.3s ease;
-    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
 }
 
-.pagination-btn:hover {
-    background: #007bff;
+.menu-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #45a049, #5db85a);
+    transition: left 0.3s ease;
+    z-index: -1;
+}
+
+.menu-button:hover::before {
+    left: 0;
+}
+
+.menu-button:hover {
     color: white;
-    border-color: #007bff;
+    text-decoration: none;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
-    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
 }
 
-.pagination-btn.active {
-    background: linear-gradient(45deg, #28a745, #20c997);
-    color: white;
-    border-color: #28a745;
-    box-shadow: 0 2px 4px rgba(40,167,69,0.3);
+.menu-button i {
+    transition: transform 0.3s ease;
 }
 
-.pagination-btn.disabled {
-    background: #f8f9fa;
-    color: #adb5bd;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+.menu-button:hover i {
+    transform: translateX(4px);
 }
 
-.pagination-btn.disabled:hover {
-    background: #f8f9fa;
-    color: #adb5bd;
-    border-color: #e9ecef;
-    transform: none;
-    box-shadow: none;
+/* Special styles for different menu items */
+.menu-card:nth-child(1) .menu-icon {
+    background: linear-gradient(135deg, #007bff, #4dabf7);
 }
 
-/* Statistics Cards */
-.stats-section {
-    margin-bottom: 2rem;
+.menu-card:nth-child(1):hover .menu-icon {
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
 }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
+.menu-card:nth-child(2) .menu-icon {
+    background: linear-gradient(135deg, #28a745, #51cf66);
 }
 
-.stat-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
+.menu-card:nth-child(2):hover .menu-icon {
+    box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+}
+
+.menu-card:nth-child(3) .menu-icon {
+    background: linear-gradient(135deg, #ffc107, #ffdd57);
+}
+
+.menu-card:nth-child(3):hover .menu-icon {
+    box-shadow: 0 8px 20px rgba(255, 193, 7, 0.4);
+}
+
+.menu-card:nth-child(4) .menu-icon {
+    background: linear-gradient(135deg, #17a2b8, #4dd0e1);
+}
+
+.menu-card:nth-child(4):hover .menu-icon {
+    box-shadow: 0 8px 20px rgba(23, 162, 184, 0.4);
+}
+
+.menu-card:nth-child(5) .menu-icon {
+    background: linear-gradient(135deg, #6f42c1, #9775fa);
+}
+
+.menu-card:nth-child(5):hover .menu-icon {
+    box-shadow: 0 8px 20px rgba(111, 66, 193, 0.4);
+}
+
+/* Animation on scroll */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+}
+
+.fade-in-up.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Quick access section */
+.quick-access-section {
+    margin-top: 3rem;
     text-align: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
 }
 
-.stat-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+.quick-access-title {
+    color: #495057;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
 }
 
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #007bff;
-    margin-bottom: 0.5rem;
-    line-height: 1;
+.quick-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
-.stat-label {
+.quick-link {
+    background: white;
     color: #6c757d;
+    border: 2px solid #e9ecef;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quick-link:hover {
+    background: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+    transform: translateY(-2px);
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
 
 /* Responsive Design */
 @media (max-width: 1200px) {
-    .search-form-wrapper {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .page-header-content {
-        flex-direction: column;
-        align-items: start;
+    .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 800px;
     }
 }
 
 @media (max-width: 992px) {
-    .kerja-sama-wrapper {
-        padding: 1.5rem 0;
+    .landing-wrapper {
+        padding: 2rem 0;
     }
     
     .page-main-title {
-        font-size: 2rem;
+        font-size: 2.25rem;
     }
     
-    .search-filter-section {
+    .page-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .menu-grid {
+        gap: 1.5rem;
+    }
+    
+    .menu-card {
         padding: 1.5rem;
-    }
-    
-    .table-header {
-        padding: 1.25rem 1.5rem;
-    }
-    
-    .cooperation-data-table thead th,
-    .cooperation-data-table tbody td {
-        padding: 1rem 0.75rem;
-    }
-    
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 768px) {
-    .page-main-title {
-        font-size: 1.75rem;
+    .menu-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
     }
     
-    .search-filter-section {
+    .page-main-title {
+        font-size: 2rem;
+    }
+    
+    .page-subtitle {
+        font-size: 1rem;
+    }
+    
+    .menu-card {
         padding: 1.25rem;
     }
     
-    .table-header {
-        padding: 1rem;
+    .menu-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 2rem;
     }
     
-    .table-title {
+    .menu-title {
         font-size: 1.1rem;
     }
     
-    .cooperation-data-table {
-        font-size: 0.8rem;
+    .quick-links {
+        gap: 0.75rem;
     }
     
-    .cooperation-data-table thead th,
-    .cooperation-data-table tbody td {
-        padding: 0.75rem 0.5rem;
-    }
-    
-    .implementation-details {
-        min-width: 250px;
-    }
-    
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .stat-number {
-        font-size: 2rem;
+    .quick-link {
+        padding: 0.6rem 1.25rem;
+        font-size: 0.85rem;
     }
 }
 
 @media (max-width: 576px) {
-    .kerja-sama-wrapper {
-        padding: 1rem 0;
+    .landing-wrapper {
+        padding: 1.5rem 0;
     }
     
     .page-header-section {
-        padding: 1rem 0;
+        padding: 1.5rem 0;
+        margin-bottom: 2rem;
     }
     
     .page-main-title {
-        font-size: 1.5rem;
-    }
-    
-    .search-filter-section {
-        padding: 1rem;
-        margin-bottom: 1.5rem;
+        font-size: 1.75rem;
     }
     
     .breadcrumb-nav {
         font-size: 0.85rem;
     }
     
-    .cooperation-data-table thead th {
-        font-size: 0.75rem;
-        padding: 0.6rem 0.4rem;
+    .menu-card {
+        padding: 1rem;
     }
     
-    .cooperation-data-table tbody td {
-        padding: 0.6rem 0.4rem;
+    .menu-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
     }
     
-    .partner-info,
-    .date-info,
-    .implementation-details,
-    .scope-info,
-    .unit-info {
-        min-width: auto;
+    .menu-title {
+        font-size: 1rem;
     }
     
-    .pagination-btn {
-        width: 38px;
-        height: 38px;
-        font-size: 0.8rem;
+    .menu-description {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .menu-button {
+        padding: 0.75rem 1.75rem;
+        font-size: 0.9rem;
     }
 }
 
-/* Loading and Animation States */
-.table-loading {
-    text-align: center;
-    padding: 3rem;
-    color: #6c757d;
+/* Loading animation */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
-.fade-in {
-    opacity: 0;
-    animation: fadeInUp 0.6s ease forwards;
+.menu-card.loading .menu-icon {
+    animation: pulse 1.5s infinite;
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Print Styles */
-@media print {
-    .search-filter-section,
-    .pagination-section {
-        display: none;
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    .menu-card,
+    .menu-icon,
+    .menu-button,
+    .quick-link,
+    .fade-in-up {
+        transition: none;
+        animation: none;
     }
     
-    .cooperation-data-table {
-        font-size: 0.8rem;
+    .menu-card:hover {
+        transform: none;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .menu-card {
+        border: 2px solid #000;
     }
     
-    .cooperation-data-table thead th,
-    .cooperation-data-table tbody td {
-        padding: 0.5rem;
+    .menu-title {
+        color: #000;
+    }
+    
+    .menu-description {
+        color: #333;
     }
 }
 </style>
@@ -567,219 +494,124 @@
 <?= $this->include('layouts/components/public_navigation') ?>
 
 <!-- Main Content Wrapper -->
-<div class="kerja-sama-wrapper">
+<div class="landing-wrapper">
     <div class="container">
         
         <!-- Page Header -->
-        <div class="page-header-section">
+        <div class="page-header-section fade-in-up">
             <div class="page-header-content">
-                <h1 class="page-main-title">Implementasi Kerja Sama</h1>
+                <h1 class="page-main-title">Kerja Sama</h1>
+                <p class="page-subtitle">Pilih halaman yang ingin Anda kunjungi untuk melihat informasi detail tentang kerja sama Perpustakaan Nasional</p>
                 <nav class="breadcrumb-nav">
                     <a href="<?= base_url('/') ?>">Beranda</a>
                     <span class="breadcrumb-separator">/</span>
-                    <span>Implementasi Kerja Sama</span>
+                    <span>Kerja Sama</span>
                 </nav>
             </div>
         </div>
 
-        <!-- Statistics Section -->
-        <div class="stats-section">
-            <div class="stats-grid">
-                <div class="stat-card fade-in">
-                    <div class="stat-number">150</div>
-                    <div class="stat-label">Total Mitra</div>
+        <!-- Menu Grid -->
+        <div class="menu-section">
+            <div class="menu-grid">
+                
+                <!-- Data Kerja Sama -->
+                <div class="menu-card fade-in-up" data-delay="100">
+                    <div class="menu-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="menu-title">Data Kerja Sama</h3>
+                    <p class="menu-description">
+                        Lihat seluruh data kerja sama yang telah ditandatangani dengan berbagai institusi dan organisasi mitra.
+                    </p>
+                    <a href="<?= base_url('kerja-sama/data') ?>" class="menu-button">
+                        Lihat Data
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
-                <div class="stat-card fade-in">
-                    <div class="stat-number">89</div>
-                    <div class="stat-label">Aktif</div>
+                
+                <!-- Implementasi Kerja Sama -->
+                <div class="menu-card fade-in-up" data-delay="200">
+                    <div class="menu-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="menu-title">Implementasi Kerja Sama</h3>
+                    <p class="menu-description">
+                        Monitor dan evaluasi implementasi dari kerja sama yang sedang berjalan dan pencapaian yang telah diraih.
+                    </p>
+                    <a href="<?= base_url('kerja-sama/implementasi') ?>" class="menu-button">
+                        Lihat Implementasi
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
-                <div class="stat-card fade-in">
-                    <div class="stat-number">61</div>
-                    <div class="stat-label">Berakhir</div>
+                
+                <!-- Kerja Sama yang Akan Berakhir -->
+                <div class="menu-card fade-in-up" data-delay="300">
+                    <div class="menu-icon">
+                        <i class="fas fa-calendar-times"></i>
+                    </div>
+                    <h3 class="menu-title">Kerja Sama yang Akan Berakhir</h3>
+                    <p class="menu-description">
+                        Pantau kerja sama yang akan segera berakhir dan memerlukan perpanjangan atau evaluasi lanjutan.
+                    </p>
+                    <a href="<?= base_url('kerja-sama/akan-berakhir') ?>" class="menu-button">
+                        Lihat Status
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
-                <div class="stat-card fade-in">
-                    <div class="stat-number">25</div>
-                    <div class="stat-label">Internasional</div>
+                
+                <!-- Progress -->
+                <div class="menu-card fade-in-up" data-delay="400">
+                    <div class="menu-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="menu-title">Progress</h3>
+                    <p class="menu-description">
+                        Analisis progress dan capaian dari berbagai program kerja sama yang sedang berjalan dengan mitra.
+                    </p>
+                    <a href="<?= base_url('kerja-sama/progress') ?>" class="menu-button">
+                        Lihat Progress
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
+                
+                <!-- Pengajuan -->
+                <div class="menu-card fade-in-up" data-delay="500">
+                    <div class="menu-icon">
+                        <i class="fas fa-file-signature"></i>
+                    </div>
+                    <h3 class="menu-title">Pengajuan</h3>
+                    <p class="menu-description">
+                        Ajukan proposal kerja sama baru atau perpanjangan kerja sama yang sudah ada dengan berbagai institusi.
+                    </p>
+                    <a href="<?= base_url('kerja-sama/pengajuan') ?>" class="menu-button">
+                        Buat Pengajuan
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
             </div>
         </div>
 
-        <!-- Search and Filter Section -->
-        <div class="search-filter-section fade-in">
-            <form class="search-form-wrapper" id="cooperationSearchForm">
-                <div class="search-input-group">
-                    <label class="search-label" for="searchCooperation">Cari Data</label>
-                    <input 
-                        type="text" 
-                        class="search-input-field" 
-                        id="searchCooperation" 
-                        placeholder="Masukkan nama mitra, lokasi, atau kata kunci..."
-                        autocomplete="off"
-                    >
-                </div>
-                <div>
-                    <button type="submit" class="search-btn-primary">
-                        <i class="fas fa-search"></i>
-                        Cari
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Data Table Section -->
-        <div class="table-section fade-in">
-            <div class="table-header">
-                <h2 class="table-title">Data Implementasi Kerja Sama</h2>
-                <p class="table-subtitle">Daftar lengkap kerja sama Perpustakaan Nasional dengan berbagai mitra</p>
-            </div>
-            
-            <div class="table-responsive-wrapper">
-                <table class="cooperation-data-table" id="cooperationTable">
-                    <thead>
-                        <tr>
-                            <th class="partner-info">Nama Mitra</th>
-                            <th class="date-info">Masa Berlaku</th>
-                            <th class="implementation-details">Implementasi Kerja Sama</th>
-                            <th class="scope-info">Lingkup</th>
-                            <th class="unit-info">Unit Kerja</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cooperationTableBody">
-                        <tr data-aos="fade-up">
-                            <td class="partner-info">
-                                <div class="partner-name">Akademi Kebidanan Nusantara</div>
-                                <div class="partner-location">Lubuklinggau</div>
-                            </td>
-                            <td class="date-info">
-                                <div class="date-range">30 Mar 2016 - 30 Mar 2021</div>
-                            </td>
-                            <td class="implementation-details">
-                                <ol class="implementation-list" type="a">
-                                    <li>Pengembangan SDM bidang Perpustakaan</li>
-                                    <li>Pertemuan ilmiah, penelitian dan publikasi bersama koleksi perpustakaan</li>
-                                    <li>Pertukaran data katalog induk perpustakaan</li>
-                                    <li>Pengembangan dan pemanfaatan bersama koleksi perpustakaan</li>
-                                    <li>Penghimpunan dan pelestarian Karya Cetak Karya Rekam (KCKR)</li>
-                                    <li>Pertukaran jejaring perpustakaan lingkup nasional dan internasional</li>
-                                </ol>
-                            </td>
-                            <td class="scope-info">
-                                <span class="scope-badge scope-nasional">Nasional</span>
-                            </td>
-                            <td class="unit-info">
-                                <div class="unit-details">
-                                    <span class="unit-name">-</span>
-                                </div>
-                            </td>
-                        </tr>
-                        
-                        <tr data-aos="fade-up">
-                            <td class="partner-info">
-                                <div class="partner-name">Akademi Kebidanan Nusantara</div>
-                                <div class="partner-location">Palembang</div>
-                            </td>
-                            <td class="date-info">
-                                <div class="date-range">30 Mar 2016 - 30 Mar 2021</div>
-                            </td>
-                            <td class="implementation-details">
-                                <ol class="implementation-list" type="a">
-                                    <li>Pengembangan SDM bidang Perpustakaan</li>
-                                    <li>Pertemuan ilmiah, penelitian dan publikasi bersama koleksi perpustakaan</li>
-                                    <li>Pertukaran data katalog induk perpustakaan</li>
-                                    <li>Pengembangan dan pemanfaatan bersama koleksi perpustakaan</li>
-                                    <li>Penghimpunan dan pelestarian Karya Cetak Karya Rekam (KCKR)</li>
-                                    <li>Pertukaran jejaring perpustakaan lingkup nasional dan internasional</li>
-                                </ol>
-                            </td>
-                            <td class="scope-info">
-                                <span class="scope-badge scope-nasional">Nasional</span>
-                            </td>
-                            <td class="unit-info">
-                                <div class="unit-details">
-                                    <span class="unit-name">-</span>
-                                </div>
-                            </td>
-                        </tr>
-                        
-                        <tr data-aos="fade-up">
-                            <td class="partner-info">
-                                <div class="partner-name">ARSIP NASIONAL</div>
-                                <div class="partner-location">Jakarta</div>
-                            </td>
-                            <td class="date-info">
-                                <div class="date-range">5 Maret 2018</div>
-                            </td>
-                            <td class="implementation-details">
-                                <ol class="implementation-list" type="a">
-                                    <li>Pembinaan penyelenggaraan kearsipan dan perpustakaan</li>
-                                    <li>Pertemuan ilmiah dan pengelolaan koleksi</li>
-                                    <li>Pengembangan sumber daya manusia kearsipan dan perpustakaan</li>
-                                    <li>Pengembangan sistem preservasi</li>
-                                    <li>Penyusunan dan pengembangan jabatan fungsional konservator</li>
-                                </ol>
-                            </td>
-                            <td class="scope-info">
-                                <span class="scope-badge scope-nasional">Nasional</span>
-                            </td>
-                            <td class="unit-info">
-                                <div class="unit-details">
-                                    <span class="unit-name">Inspektorat, Pusat Jasa Informasi Perpustakaan dan Pengelolaan Naskah Nusantara, Pusat Pendidikan dan Pelatihan</span>
-                                </div>
-                            </td>
-                        </tr>
-                        
-                        <tr data-aos="fade-up">
-                            <td class="partner-info">
-                                <div class="partner-name">Badan Informasi Geospasial (BIG)</div>
-                                <div class="partner-location">Bogor</div>
-                            </td>
-                            <td class="date-info">
-                                <div class="date-range">Belum terimplementasikan</div>
-                            </td>
-                            <td class="implementation-details">
-                                <ol class="implementation-list" type="a">
-                                    <li>Pengembangan informasi geospasial tematik bidang kepustakawanan</li>
-                                    <li>Pertemuan ilmiah berbasis sumber informasi geospasial</li>
-                                    <li>Pengembangan koleksi perpustakaan</li>
-                                    <li>Peningkatan layanan informasi bidang kepustakawanan dan informasi geospasial pada masyarakat</li>
-                                    <li>Publikasi informasi bidang informasi geospasial</li>
-                                    <li>Peningkatan sumber daya manusia di bidang kepustakawanan dan informasi geospasial</li>
-                                    <li>Penggunaan bersama data koleksi elektronik nasional dan internasional</li>
-                                    <li>Penghimpunan dan pelestarian Karya Cetak Karya Rekam (KCKR)</li>
-                                    <li>Penyerahan duplikat informasi geospasial statistik berupa peta dan atlas</li>
-                                    <li>Pengembangan Simpul Jaringan Informasi Geospasial Nasional</li>
-                                    <li>Pertukaran data katalog induk Nasional Perpustakaan</li>
-                                </ol>
-                            </td>
-                            <td class="scope-info">
-                                <span class="scope-badge scope-nasional">Nasional</span>
-                            </td>
-                            <td class="unit-info">
-                                <div class="unit-details">
-                                    <span class="unit-name">Biro SDM dan Umum, Pusat Bibliografi dan Pengolahan Bahan Perpustakaan, Pusat Pengembangan Koleksi Perpustakaan</span>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Pagination Section -->
-        <div class="pagination-section">
-            <div class="pagination-wrapper">
-                <button class="pagination-btn disabled" id="prevBtn">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="pagination-btn active" data-page="1">1</button>
-                <button class="pagination-btn" data-page="2">2</button>
-                <button class="pagination-btn" data-page="3">3</button>
-                <button class="pagination-btn" data-page="4">4</button>
-                <button class="pagination-btn" data-page="5">5</button>
-                <button class="pagination-btn" data-page="6">6</button>
-                <button class="pagination-btn" id="nextBtn">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+        <!-- Quick Access Section -->
+        <div class="quick-access-section fade-in-up" data-delay="600">
+            <h4 class="quick-access-title">Akses Cepat</h4>
+            <div class="quick-links">
+                <a href="<?= base_url('/') ?>" class="quick-link">
+                    <i class="fas fa-home"></i>
+                    Beranda
+                </a>
+                <a href="<?= base_url('tentang') ?>" class="quick-link">
+                    <i class="fas fa-info-circle"></i>
+                    Tentang
+                </a>
+                <a href="<?= base_url('peta-kerja-sama') ?>" class="quick-link">
+                    <i class="fas fa-map"></i>
+                    Peta Kerja Sama
+                </a>
+                <a href="<?= base_url('kontak') ?>" class="quick-link">
+                    <i class="fas fa-envelope"></i>
+                    Kontak
+                </a>
             </div>
         </div>
 
@@ -791,149 +623,36 @@
 <?= $this->section('scripts') ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize page functionality
-    initializeKerjaSamaPage();
+    // Initialize landing page functionality
+    initializeLandingPage();
     
-    function initializeKerjaSamaPage() {
-        // Search functionality
-        setupSearchFunctionality();
-        
-        // Pagination functionality
-        setupPaginationFunctionality();
-        
-        // Animation on scroll
+    function initializeLandingPage() {
+        // Setup scroll animations
         setupScrollAnimations();
         
-        // Table interactions
-        setupTableInteractions();
-    }
-    
-    function setupSearchFunctionality() {
-        const searchForm = document.getElementById('cooperationSearchForm');
-        const searchInput = document.getElementById('searchCooperation');
-        const tableRows = document.querySelectorAll('#cooperationTableBody tr');
+        // Setup card interactions
+        setupCardInteractions();
         
-        // Real-time search
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase().trim();
-            filterTableRows(searchTerm, tableRows);
-        });
+        // Setup loading states
+        setupLoadingStates();
         
-        // Form submit
-        searchForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            filterTableRows(searchTerm, tableRows);
-        });
-        
-        function filterTableRows(searchTerm, rows) {
-            let visibleCount = 0;
-            
-            rows.forEach(function(row) {
-                const partnerName = row.querySelector('.partner-name').textContent.toLowerCase();
-                const partnerLocation = row.querySelector('.partner-location').textContent.toLowerCase();
-                const implementationText = row.querySelector('.implementation-list').textContent.toLowerCase();
-                const unitName = row.querySelector('.unit-name').textContent.toLowerCase();
-                
-                const isMatch = searchTerm === '' || 
-                               partnerName.includes(searchTerm) || 
-                               partnerLocation.includes(searchTerm) || 
-                               implementationText.includes(searchTerm) || 
-                               unitName.includes(searchTerm);
-                
-                if (isMatch) {
-                    row.style.display = '';
-                    visibleCount++;
-                    // Add highlight effect
-                    if (searchTerm !== '') {
-                        row.style.backgroundColor = '#fff3cd';
-                        setTimeout(() => {
-                            row.style.backgroundColor = '';
-                        }, 1000);
-                    }
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-            
-            // Update pagination visibility
-            updatePaginationVisibility(searchTerm !== '');
-            
-            // Show no results message if needed
-            showNoResultsMessage(visibleCount === 0 && searchTerm !== '');
-        }
-    }
-    
-    function setupPaginationFunctionality() {
-        const paginationBtns = document.querySelectorAll('.pagination-btn[data-page]');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        
-        paginationBtns.forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                const page = parseInt(this.dataset.page);
-                setActivePage(page);
-                
-                // Simulate page loading (you would implement actual pagination here)
-                showLoadingState();
-                setTimeout(() => {
-                    hideLoadingState();
-                    scrollToTop();
-                }, 500);
-            });
-        });
-        
-        prevBtn.addEventListener('click', function() {
-            const currentPage = getCurrentPage();
-            if (currentPage > 1) {
-                setActivePage(currentPage - 1);
-            }
-        });
-        
-        nextBtn.addEventListener('click', function() {
-            const currentPage = getCurrentPage();
-            const maxPage = 6; // Based on your pagination
-            if (currentPage < maxPage) {
-                setActivePage(currentPage + 1);
-            }
-        });
-        
-        function setActivePage(page) {
-            // Remove active class from all buttons
-            paginationBtns.forEach(btn => btn.classList.remove('active'));
-            
-            // Add active class to selected page
-            const targetBtn = document.querySelector(`[data-page="${page}"]`);
-            if (targetBtn) {
-                targetBtn.classList.add('active');
-            }
-            
-            // Update prev/next button states
-            updatePrevNextButtons(page);
-        }
-        
-        function getCurrentPage() {
-            const activeBtn = document.querySelector('.pagination-btn.active');
-            return activeBtn ? parseInt(activeBtn.dataset.page) : 1;
-        }
-        
-        function updatePrevNextButtons(currentPage) {
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            
-            prevBtn.classList.toggle('disabled', currentPage === 1);
-            nextBtn.classList.toggle('disabled', currentPage === 6);
-        }
+        // Add accessibility enhancements
+        setupAccessibility();
     }
     
     function setupScrollAnimations() {
-        const animatedElements = document.querySelectorAll('.fade-in');
+        const animatedElements = document.querySelectorAll('.fade-in-up');
         
         const observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    const delay = parseInt(entry.target.dataset.delay) || 0;
+                    
+                    setTimeout(() => {
+                        entry.target.classList.add('animate');
+                    }, delay);
+                    
+                    observer.unobserve(entry.target);
                 }
             });
         }, {
@@ -942,192 +661,140 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         animatedElements.forEach(function(element) {
-            element.style.opacity = '0';
-            element.style.transform = 'translateY(30px)';
-            element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(element);
         });
     }
     
-    function setupTableInteractions() {
-        const tableRows = document.querySelectorAll('#cooperationTableBody tr');
+    function setupCardInteractions() {
+        const menuCards = document.querySelectorAll('.menu-card');
         
-        tableRows.forEach(function(row) {
-            row.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.01)';
-                this.style.zIndex = '10';
-            });
+        menuCards.forEach(function(card) {
+            const button = card.querySelector('.menu-button');
             
-            row.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1)';
-                this.style.zIndex = '1';
-            });
-        });
-    }
-    
-    function updatePaginationVisibility(isSearching) {
-        const paginationSection = document.querySelector('.pagination-section');
-        paginationSection.style.display = isSearching ? 'none' : 'flex';
-    }
-    
-    function showNoResultsMessage(show) {
-        const existingMessage = document.getElementById('noResultsMessage');
-        
-        if (show && !existingMessage) {
-            const tableBody = document.getElementById('cooperationTableBody');
-            const message = document.createElement('tr');
-            message.id = 'noResultsMessage';
-            message.innerHTML = `
-                <td colspan="5" style="text-align: center; padding: 3rem; color: #6c757d;">
-                    <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                    <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">Tidak ada data yang ditemukan</div>
-                    <div style="font-size: 0.9rem;">Coba gunakan kata kunci yang berbeda</div>
-                </td>
-            `;
-            tableBody.appendChild(message);
-        } else if (!show && existingMessage) {
-            existingMessage.remove();
-        }
-    }
-    
-    function showLoadingState() {
-        const tableBody = document.getElementById('cooperationTableBody');
-        const existingRows = tableBody.querySelectorAll('tr:not(#loadingMessage)');
-        existingRows.forEach(row => row.style.opacity = '0.5');
-        
-        if (!document.getElementById('loadingMessage')) {
-            const loadingRow = document.createElement('tr');
-            loadingRow.id = 'loadingMessage';
-            loadingRow.innerHTML = `
-                <td colspan="5" style="text-align: center; padding: 2rem;">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; color: #007bff;"></i>
-                    <div style="margin-top: 0.5rem; color: #6c757d;">Memuat data...</div>
-                </td>
-            `;
-            tableBody.appendChild(loadingRow);
-        }
-    }
-    
-    function hideLoadingState() {
-        const loadingMessage = document.getElementById('loadingMessage');
-        if (loadingMessage) {
-            loadingMessage.remove();
-        }
-        
-        const tableRows = document.querySelectorAll('#cooperationTableBody tr');
-        tableRows.forEach(row => row.style.opacity = '1');
-    }
-    
-    function scrollToTop() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }
-    
-    // Enhanced table functionality
-    function enhanceTableFeatures() {
-        // Add sorting functionality
-        const headerCells = document.querySelectorAll('.cooperation-data-table thead th');
-        
-        headerCells.forEach(function(header, index) {
-            header.style.cursor = 'pointer';
-            header.style.userSelect = 'none';
-            
-            header.addEventListener('click', function() {
-                sortTable(index);
-            });
-        });
-    }
-    
-    function sortTable(columnIndex) {
-        const table = document.getElementById('cooperationTable');
-        const tbody = table.querySelector('tbody');
-        const rows = Array.from(tbody.querySelectorAll('tr:not(#noResultsMessage):not(#loadingMessage)'));
-        
-        // Toggle sort direction
-        const currentSort = table.dataset.sortColumn;
-        const currentDirection = table.dataset.sortDirection || 'asc';
-        const newDirection = (currentSort === columnIndex.toString() && currentDirection === 'asc') ? 'desc' : 'asc';
-        
-        table.dataset.sortColumn = columnIndex;
-        table.dataset.sortDirection = newDirection;
-        
-        // Sort rows
-        rows.sort(function(a, b) {
-            const aText = a.cells[columnIndex].textContent.trim();
-            const bText = b.cells[columnIndex].textContent.trim();
-            
-            const comparison = aText.localeCompare(bText);
-            return newDirection === 'asc' ? comparison : -comparison;
-        });
-        
-        // Re-append sorted rows
-        rows.forEach(row => tbody.appendChild(row));
-        
-        // Update header indicators
-        updateSortIndicators(columnIndex, newDirection);
-    }
-    
-    function updateSortIndicators(activeColumn, direction) {
-        const headers = document.querySelectorAll('.cooperation-data-table thead th');
-        
-        headers.forEach(function(header, index) {
-            // Remove existing indicators
-            const existingIcon = header.querySelector('.sort-icon');
-            if (existingIcon) {
-                existingIcon.remove();
-            }
-            
-            // Add new indicator for active column
-            if (index === activeColumn) {
-                const icon = document.createElement('i');
-                icon.className = `fas fa-chevron-${direction === 'asc' ? 'up' : 'down'} sort-icon`;
-                icon.style.marginLeft = '0.5rem';
-                icon.style.fontSize = '0.8rem';
-                header.appendChild(icon);
-            }
-        });
-    }
-    
-    // Initialize enhanced features
-    enhanceTableFeatures();
-    
-    // Statistics counter animation
-    function animateCounters() {
-        const counters = document.querySelectorAll('.stat-number');
-        
-        counters.forEach(function(counter) {
-            const target = parseInt(counter.textContent);
-            const duration = 2000;
-            const increment = target / (duration / 16);
-            let current = 0;
-            
-            const timer = setInterval(function() {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                }
-                counter.textContent = Math.floor(current);
-            }, 16);
-        });
-    }
-    
-    // Trigger counter animation when stats section is visible
-    const statsSection = document.querySelector('.stats-section');
-    if (statsSection) {
-        const statsObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    animateCounters();
-                    statsObserver.unobserve(entry.target);
+            // Add click handler for entire card
+            card.addEventListener('click', function(e) {
+                if (e.target === card || e.target.closest('.menu-icon, .menu-title, .menu-description')) {
+                    button.click();
                 }
             });
-        }, { threshold: 0.5 });
-        
-        statsObserver.observe(statsSection);
+            
+            // Add keyboard navigation
+            card.setAttribute('tabindex', '0');
+            card.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    button.click();
+                }
+            });
+            
+            // Enhanced hover effects
+            card.addEventListener('mouseenter', function() {
+                this.style.cursor = 'pointer';
+            });
+        });
     }
+    
+    function setupLoadingStates() {
+        const menuButtons = document.querySelectorAll('.menu-button');
+        
+        menuButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                const card = this.closest('.menu-card');
+                
+                // Add loading state
+                card.classList.add('loading');
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat...';
+                this.style.pointerEvents = 'none';
+                
+                // Remove loading state after navigation (fallback)
+                setTimeout(() => {
+                    card.classList.remove('loading');
+                }, 3000);
+            });
+        });
+    }
+    
+    function setupAccessibility() {
+        // Add ARIA labels
+        const menuCards = document.querySelectorAll('.menu-card');
+        menuCards.forEach(function(card, index) {
+            const title = card.querySelector('.menu-title').textContent;
+            card.setAttribute('aria-label', `Menu ${title}`);
+            card.setAttribute('role', 'button');
+        });
+        
+        // Add focus management
+        const quickLinks = document.querySelectorAll('.quick-link');
+        quickLinks.forEach(function(link) {
+            link.addEventListener('focus', function() {
+                this.style.outline = '2px solid #4CAF50';
+                this.style.outlineOffset = '2px';
+            });
+            
+            link.addEventListener('blur', function() {
+                this.style.outline = 'none';
+            });
+        });
+    }
+    
+    // Add performance monitoring
+    function trackMenuUsage() {
+        const menuButtons = document.querySelectorAll('.menu-button');
+        
+        menuButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const menuTitle = this.closest('.menu-card').querySelector('.menu-title').textContent;
+                
+                // Track usage (you can send this to analytics)
+                console.log('Menu accessed:', menuTitle, 'at', new Date().toISOString());
+                
+                // Store in localStorage for future reference
+                const accessHistory = JSON.parse(localStorage.getItem('menuAccessHistory') || '[]');
+                accessHistory.push({
+                    menu: menuTitle,
+                    timestamp: new Date().toISOString()
+                });
+                
+                // Keep only last 10 accesses
+                if (accessHistory.length > 10) {
+                    accessHistory.shift();
+                }
+                
+                localStorage.setItem('menuAccessHistory', JSON.stringify(accessHistory));
+            });
+        });
+    }
+    
+    trackMenuUsage();
+    
+    // Add smooth scrolling for quick links
+    document.querySelectorAll('.quick-link[href^="#"]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Add page visibility handling
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            // Page is hidden, pause animations
+            document.querySelectorAll('.menu-card.loading .menu-icon').forEach(function(icon) {
+                icon.style.animationPlayState = 'paused';
+            });
+        } else {
+            // Page is visible, resume animations
+            document.querySelectorAll('.menu-card.loading .menu-icon').forEach(function(icon) {
+                icon.style.animationPlayState = 'running';
+            });
+        }
+    });
 });
 </script>
 <?= $this->endSection() ?>

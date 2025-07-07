@@ -11,10 +11,18 @@ $routes->get('/', 'Public\Home::index');
 
 // Public routes
 $routes->get('tentang', 'Public\Home::tentang');
-$routes->get('kontak', 'Public\Home::kontak');
 $routes->get('aktivitas', 'Public\Home::aktivitas');
-$routes->get('kerja-sama', 'Public\Home::kerjaSama');
+
+// Kerja Sama routes - pastikan namespace dan method benar
+$routes->get('kerja-sama', 'Public\KerjaSama::index');
+$routes->get('kerja-sama/data', 'Public\KerjaSama::data');
+$routes->get('kerja-sama/implementasi', 'Public\KerjaSama::implementasi');
+$routes->get('kerja-sama/akan-berakhir', 'Public\KerjaSama::akanBerakhir');
+$routes->get('kerja-sama/progress', 'Public\KerjaSama::progress');
+$routes->get('kerja-sama/pengajuan', 'Public\KerjaSama::pengajuan');
+
 $routes->get('peta-kerja-sama', 'Public\Home::petaKerjaSama');
+$routes->get('kontak', 'Public\Home::kontak');
 
 // Auth routes
 $routes->group('auth', function($routes) {
@@ -55,7 +63,3 @@ $routes->group('admin', function($routes) {
 
 // Redirect dashboard ke admin dashboard untuk backward compatibility
 $routes->get('dashboard', 'Admin\Dashboard::dashboard');
-
-$routes->get('aktivitas', 'Public\Home::aktivitas');
-$routes->get('kerja-sama', 'Public\Home::kerjaSama');
-$routes->get('peta-kerja-sama', 'Public\Home::petaKerjaSama');
