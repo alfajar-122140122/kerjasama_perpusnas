@@ -8,6 +8,7 @@
 
 <?= $this->section('styles') ?>
 <link href="<?= base_url('css/public.css') ?>" rel="stylesheet">
+<link href="<?= base_url('css/public/navigation.css') ?>" rel="stylesheet">
 <style>
 /* Consistent header styles with other pages */
 .home-header {
