@@ -1,0 +1,416 @@
+/* Main Wrapper */
+.akan-berakhir-wrapper {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    padding: 20px 0;
+}
+
+/* Page Header */
+.akan-berakhir-page-header {
+    margin-bottom: 30px;
+}
+
+.akan-berakhir-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.akan-berakhir-page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.akan-berakhir-breadcrumb {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.akan-berakhir-breadcrumb .separator {
+    margin: 0 8px;
+}
+
+.akan-berakhir-breadcrumb .current {
+    color: #495057;
+    font-weight: 500;
+}
+
+/* Search Section */
+.akan-berakhir-search-section {
+    margin-bottom: 30px;
+}
+
+.akan-berakhir-search-container {
+    max-width: 400px;
+    margin: 0;
+}
+
+.akan-berakhir-search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.akan-berakhir-search-box:focus-within {
+    border-color: #28a745;
+    box-shadow: 0 6px 20px rgba(40,167,69,0.15);
+    transform: translateY(-2px);
+}
+
+.akan-berakhir-search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 0.95rem;
+    color: #495057;
+    font-family: inherit;
+    height: 52px;
+    line-height: 1;
+}
+
+.akan-berakhir-search-input::placeholder {
+    color: #adb5bd;
+    font-style: normal;
+}
+
+.akan-berakhir-search-btn {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border: none;
+    color: white;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 0;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.akan-berakhir-search-btn:hover {
+    background: linear-gradient(135deg, #218838 0%, #1e8a66 100%);
+}
+
+.akan-berakhir-search-btn:active {
+    transform: scale(0.95);
+}
+
+.akan-berakhir-search-btn i {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+/* Data Table Section */
+.akan-berakhir-table-section {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    margin-bottom: 30px;
+    border: 1px solid #f0f0f0;
+}
+
+.akan-berakhir-table-container {
+    overflow-x: auto;
+}
+
+.akan-berakhir-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.akan-berakhir-table thead {
+    background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+}
+
+.akan-berakhir-table th {
+    padding: 16px 20px;
+    text-align: left;
+    font-weight: 600;
+    color: #2c3e50;
+    border-bottom: 2px solid #81c784;
+    white-space: nowrap;
+    font-size: 0.95rem;
+}
+
+.akan-berakhir-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f1f3f4;
+    vertical-align: top;
+    line-height: 1.6;
+}
+
+.akan-berakhir-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.akan-berakhir-table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Column Widths */
+.akan-berakhir-col-partner {
+    width: 25%;
+    min-width: 200px;
+}
+
+.akan-berakhir-col-scope {
+    width: 45%;
+    min-width: 300px;
+}
+
+.akan-berakhir-col-start, .akan-berakhir-col-end {
+    width: 15%;
+    min-width: 120px;
+}
+
+/* Partner Cell */
+.akan-berakhir-partner-name {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 2px;
+}
+
+/* Scope Cell */
+.akan-berakhir-scope-text {
+    color: #495057;
+    line-height: 1.6;
+}
+
+/* Date Cells */
+.akan-berakhir-date-cell {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #495057;
+    font-size: 0.9rem;
+}
+
+/* Loading State */
+.akan-berakhir-loading-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+    background: white;
+}
+
+.akan-berakhir-loading-spinner {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #28a745;
+}
+
+/* Empty State */
+.akan-berakhir-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+    background: white;
+}
+
+.akan-berakhir-empty-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #dee2e6;
+}
+
+.akan-berakhir-empty-state h4 {
+    color: #495057;
+    margin-bottom: 10px;
+}
+
+/* Pagination */
+.akan-berakhir-pagination-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.akan-berakhir-pagination {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 5px;
+}
+
+.akan-berakhir-pagination li {
+    display: flex;
+}
+
+.akan-berakhir-pagination a,
+.akan-berakhir-pagination span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    text-decoration: none;
+    color: #6c757d;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    min-width: 42px;
+    height: 42px;
+    font-weight: 500;
+}
+
+.akan-berakhir-pagination a:hover {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(40,167,69,0.15);
+}
+
+.akan-berakhir-pagination .active span {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    border-color: #28a745;
+    box-shadow: 0 2px 8px rgba(40,167,69,0.2);
+}
+
+.akan-berakhir-pagination .disabled span {
+    color: #adb5bd;
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+    border-color: #e9ecef;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .akan-berakhir-page-title {
+        font-size: 1.5rem;
+    }
+    
+    .akan-berakhir-header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .akan-berakhir-search-container {
+        max-width: 100%;
+    }
+    
+    .akan-berakhir-search-box {
+        border-radius: 12px;
+    }
+    
+    .akan-berakhir-search-input {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+        height: 48px;
+    }
+    
+    .akan-berakhir-search-btn {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .akan-berakhir-table {
+        font-size: 0.85rem;
+    }
+    
+    .akan-berakhir-table th,
+    .akan-berakhir-table td {
+        padding: 12px 15px;
+    }
+    
+    .akan-berakhir-col-partner {
+        min-width: 150px;
+    }
+    
+    .akan-berakhir-col-scope {
+        min-width: 250px;
+    }
+    
+    .akan-berakhir-col-start, .akan-berakhir-col-end {
+        min-width: 100px;
+    }
+}
+
+@media (max-width: 576px) {
+    .akan-berakhir-wrapper {
+        padding: 15px 0;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    .akan-berakhir-search-box {
+        border-radius: 10px;
+    }
+    
+    .akan-berakhir-search-input {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+        height: 44px;
+    }
+    
+    .akan-berakhir-search-btn {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .akan-berakhir-search-btn i {
+        font-size: 0.9rem;
+    }
+    
+    .akan-berakhir-table th,
+    .akan-berakhir-table td {
+        padding: 10px 12px;
+    }
+    
+    .akan-berakhir-pagination a,
+    .akan-berakhir-pagination span {
+        padding: 8px 10px;
+        min-width: 36px;
+        height: 36px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+    }
+}
+
+/* Animation for table rows */
+@keyframes akan-berakhir-fadeInRow {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.akan-berakhir-table tbody tr {
+    animation: akan-berakhir-fadeInRow 0.3s ease forwards;
+}
+
+/* Focus states for accessibility */
+.akan-berakhir-search-input:focus {
+    outline: none;
+}
+
+.akan-berakhir-search-btn:focus {
+    outline: 2px solid #28a745;
+    outline-offset: 2px;
+}
