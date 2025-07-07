@@ -1,26 +1,32 @@
-/* New Header Styles */
+/* ===== HEADER STYLES ===== */
 .new-header {
     background: #ffffff;
     padding: 0.75rem 0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 1000;
 }
 
+/* Logo and Brand Styles */
 .logo-container {
     width: 50px;
     height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .logo-img {
     width: 50px;
     height: 50px;
     object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
 .logo-text {
     color: #195e2c;
+    flex: 1;
 }
 
 .logo-title {
@@ -36,9 +42,28 @@
     margin: 0;
     opacity: 0.9;
     line-height: 1.1;
+    font-weight: 400;
 }
 
 /* Header Controls */
+.btn-outline-light {
+    border: 1px solid #0B8F1C;
+    color: #0B8F1C;
+    background: transparent;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover,
+.btn-outline-light:focus {
+    background: #0B8F1C;
+    border-color: #0B8F1C;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(11, 143, 28, 0.3);
+}
+
+/* Search Styles */
 .search-container {
     min-width: 200px;
 }
@@ -48,30 +73,38 @@
     background: #ffffff;
     color: #565656;
     font-size: 14px;
+    transition: all 0.3s ease;
 }
 
 .search-input::placeholder {
     color: #0B8F1C;
+    opacity: 0.7;
 }
 
 .search-input:focus {
     background: #ffffff;
     border-color: #0B8F1C;
     color: #565656;
-    box-shadow: none;
+    box-shadow: 0 0 0 0.25rem rgba(11, 143, 28, 0.25);
+    outline: none;
 }
 
 .search-btn {
     border: 1px solid #0B8F1C;
     color: #0B8F1C;
+    background: transparent;
+    transition: all 0.3s ease;
 }
 
-.search-btn:hover {
+.search-btn:hover,
+.search-btn:focus {
     background: #0B8F1C;
-    border-color: rgba(255,255,255,0.5);
+    border-color: #0B8F1C;
     color: white;
+    transform: translateY(-1px);
 }
 
+/* Login Button */
 .login-btn {
     background: white;
     color: #4CAF50;
@@ -80,19 +113,48 @@
     font-size: 14px;
     padding: 0.5rem 1.25rem;
     transition: all 0.3s ease;
+    border-radius: 4px;
 }
 
-.login-btn:hover {
+.login-btn:hover,
+.login-btn:focus {
     background: #0B8F1C;
     color: #ffffff;
+    border-color: #0B8F1C;
     transform: translateY(-1px);
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(11, 143, 28, 0.3);
 }
 
-/* New Navigation Styles */
+/* Dropdown Styles */
+.dropdown-menu {
+    border-radius: 8px;
+    border: 1px solid #0B8F1C;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 0.5rem 0;
+    margin-top: 4px;
+}
+
+.dropdown-item {
+    padding: 0.6rem 1.2rem;
+    font-size: 14px;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background: #0B8F1C;
+    color: white;
+}
+
+/* ===== NAVIGATION STYLES ===== */
 .new-navigation {
     background: #004AAD;
     padding: 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 999;
 }
 
 .nav-wrapper {
@@ -101,6 +163,7 @@
     min-height: 50px;
 }
 
+/* Home Button */
 .home-icon-container {
     margin-right: 0;
 }
@@ -117,70 +180,107 @@
     font-size: 18px;
     transition: all 0.3s ease;
     border-radius: 0;
+    position: relative;
 }
 
-.home-icon-link:hover,
-.home-icon-link.active {
-    background: #0B8F1C;
+.home-icon-link:hover {
+    background: #45a049;
     color: white;
+    text-decoration: none;
     transform: none;
 }
 
+.home-icon-link.active {
+    background: #0B8F1C;
+    color: white;
+    text-decoration: none;
+}
+
+.home-icon-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: transparent;
+    transition: background 0.3s ease;
+}
+
+.home-icon-link.active::after {
+    background: #FFC107;
+}
+
+/* Navigation Menu */
 .nav-list {
     display: flex;
     list-style: none;
     margin: 0;
     padding: 0;
     flex: 1;
+    height: 50px;
 }
 
 .nav-item {
     margin: 0;
+    height: 100%;
 }
 
 .nav-link {
-    display: block;
-    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 20px;
     color: white;
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
     transition: all 0.3s ease;
+    position: relative;
     border-bottom: 3px solid transparent;
+    white-space: nowrap;
 }
 
 .nav-link:hover {
     background: rgba(255,255,255,0.1);
     color: white;
     text-decoration: none;
+    transform: none;
 }
 
 .nav-link.active {
     background: rgba(255,255,255,0.15);
     border-bottom-color: #4CAF50;
     color: white;
+    font-weight: 600;
 }
 
-/* Dropdown Styles */
-.dropdown-menu {
-    border-radius: 8px;
-    border: 1px solid #0B8F1C;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    padding: 0.5rem 0;
+/* Enhanced Active State Indicator */
+.nav-link.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #4CAF50;
 }
 
-.dropdown-item {
-    padding: 0.6rem 1.2rem;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
+/* Hover Effect Enhancement */
+.nav-link:not(.active):hover {
+    background: rgba(255,255,255,0.08);
+    border-bottom-color: rgba(255,255,255,0.3);
 }
 
-.dropdown-item:hover {
-    background: #0B8F1C;
+/* Focus States for Accessibility */
+.nav-link:focus,
+.home-icon-link:focus {
+    outline: 2px solid #FFC107;
+    outline-offset: -2px;
 }
 
-/* Responsive Design */
-@media (max-width: 992px) {
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1200px) {
     .logo-title {
         font-size: 12px;
     }
@@ -190,23 +290,13 @@
     }
     
     .search-container {
-        min-width: 150px;
+        min-width: 180px;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .new-header {
         padding: 0.5rem 0;
-    }
-    
-    .logo-container {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .logo-img {
-        width: 26px;
-        height: 26px;
     }
     
     .logo-title {
@@ -218,11 +308,37 @@
     }
     
     .search-container {
-        min-width: 120px;
+        min-width: 150px;
     }
     
-    .search-input {
+    .search-input,
+    .login-btn {
         font-size: 13px;
+        padding: 0.4rem 0.75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .logo-container {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .logo-img {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .logo-title {
+        font-size: 10px;
+    }
+    
+    .logo-subtitle {
+        font-size: 7px;
+    }
+    
+    .search-container {
+        min-width: 120px;
     }
     
     .nav-wrapper {
@@ -235,18 +351,24 @@
         font-size: 16px;
     }
     
-    .nav-link {
-        padding: 12px 15px;
-        font-size: 13px;
+    .nav-list {
+        height: 45px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
     }
     
-    .nav-list {
-        overflow-x: auto;
-        white-space: nowrap;
+    .nav-list::-webkit-scrollbar {
+        display: none;
     }
     
     .nav-item {
         flex-shrink: 0;
+    }
+    
+    .nav-link {
+        padding: 0 15px;
+        font-size: 13px;
     }
 }
 
@@ -260,12 +382,99 @@
     }
     
     .login-btn {
-        padding: 0.4rem 1rem;
-        font-size: 13px;
+        padding: 0.3rem 0.75rem;
+        font-size: 12px;
+    }
+    
+    .nav-link {
+        padding: 0 12px;
+        font-size: 12px;
     }
 }
 
-/* Chart containers and other existing styles remain the same */
+/* ===== ANIMATION AND INTERACTION IMPROVEMENTS ===== */
+@keyframes activeGlow {
+    0% { box-shadow: 0 0 5px rgba(76, 175, 80, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.6); }
+    100% { box-shadow: 0 0 5px rgba(76, 175, 80, 0.3); }
+}
+
+.nav-link.active:hover {
+    animation: activeGlow 2s infinite;
+}
+
+/* Smooth transition for all interactive elements */
+.nav-link,
+.home-icon-link,
+.btn-outline-light,
+.search-btn,
+.login-btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced hover effects */
+.nav-link:hover,
+.home-icon-link:hover {
+    transform: translateY(-1px);
+}
+
+.nav-link.active:hover {
+    transform: translateY(-1px) scale(1.02);
+}
+
+/* ===== ACCESSIBILITY IMPROVEMENTS ===== */
+@media (prefers-reduced-motion: reduce) {
+    .nav-link,
+    .home-icon-link,
+    .btn-outline-light,
+    .search-btn,
+    .login-btn {
+        transition: none;
+    }
+    
+    .nav-link.active:hover {
+        animation: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .new-header {
+        border-bottom: 2px solid #000;
+    }
+    
+    .new-navigation {
+        border-bottom: 2px solid #000;
+    }
+    
+    .nav-link.active {
+        background: #000;
+        color: #fff;
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    .new-header,
+    .new-navigation {
+        display: none;
+    }
+}
+
+/* ===== LEGACY BROWSER SUPPORT ===== */
+.new-header {
+    background: #ffffff; /* Fallback */
+}
+
+.new-navigation {
+    background: #004AAD; /* Fallback */
+}
+
+.home-icon-link {
+    background: #4CAF50; /* Fallback */
+}
+
+/* ===== ADDITIONAL COMPONENTS (keep existing styles) ===== */
 .chart-container {
     height: 250px;
     background: var(--bg-light, #f8f9fa);

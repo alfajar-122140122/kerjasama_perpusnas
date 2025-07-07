@@ -1,3 +1,8 @@
+<?php
+// Load navigation helper
+helper('navigation');
+?>
+
 <!-- Header dengan style baru -->
 <header class="new-header">
     <div class="container">
@@ -98,5 +103,44 @@ document.getElementById('headerSearchInput').addEventListener('keypress', functi
     if (e.key === 'Enter') {
         performHeaderSearch();
     }
+});
+
+// Enhanced navigation interaction
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    const homeIcon = document.querySelector('.home-icon-link');
+    
+    // Add smooth hover effects
+    navLinks.forEach(link => {
+        link.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('active')) {
+                this.style.transform = 'translateY(-1px)';
+                this.style.transition = 'transform 0.2s ease';
+            }
+        });
+        
+        link.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('active')) {
+                this.style.transform = 'translateY(0)';
+            }
+        });
+    });
+    
+    // Home icon hover effect
+    if (homeIcon) {
+        homeIcon.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-1px)';
+            this.style.transition = 'transform 0.2s ease';
+        });
+        
+        homeIcon.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    }
+    
+    // Debug current page detection
+    console.log('Current URI:', '<?= uri_string() ?>');
+    console.log('Active nav detected for:', 
+        document.querySelector('.nav-link.active')?.textContent.trim() || 'Home');
 });
 </script>

@@ -6,15 +6,19 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-// Landing page
-$routes->get('/', 'Public\Home::index');
-
 // Public routes
+$routes->get('/', 'Public\Home::index');
 $routes->get('tentang', 'Public\Home::tentang');
-$routes->get('kontak', 'Public\Home::kontak');
 $routes->get('aktivitas', 'Public\Home::aktivitas');
 $routes->get('kerja-sama', 'Public\Home::kerjaSama');
 $routes->get('peta-kerja-sama', 'Public\Home::petaKerjaSama');
+$routes->get('kontak', 'Public\Home::kontak');
+
+// API routes for AJAX if needed
+$routes->group('api', function($routes) {
+    $routes->get('kerja-sama/search', 'Public\Home::searchKerjaSama');
+    $routes->get('kerja-sama/filter', 'Public\Home::filterKerjaSama');
+});
 
 // Auth routes
 $routes->group('auth', function($routes) {
