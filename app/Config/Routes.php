@@ -6,19 +6,15 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-// Public routes
+// Landing page
 $routes->get('/', 'Public\Home::index');
+
+// Public routes
 $routes->get('tentang', 'Public\Home::tentang');
+$routes->get('kontak', 'Public\Home::kontak');
 $routes->get('aktivitas', 'Public\Home::aktivitas');
 $routes->get('kerja-sama', 'Public\Home::kerjaSama');
 $routes->get('peta-kerja-sama', 'Public\Home::petaKerjaSama');
-$routes->get('kontak', 'Public\Home::kontak');
-
-// API routes for AJAX if needed
-$routes->group('api', function($routes) {
-    $routes->get('kerja-sama/search', 'Public\Home::searchKerjaSama');
-    $routes->get('kerja-sama/filter', 'Public\Home::filterKerjaSama');
-});
 
 // Auth routes
 $routes->group('auth', function($routes) {
@@ -43,7 +39,12 @@ $routes->group('admin', function($routes) {
     
     // Tambahan routes untuk menu lain
     $routes->get('kerjasama', 'Admin\Dashboard::kerjasama');
-    $routes->get('berita', 'Admin\Dashboard::berita');
+    
+    // Berita management routes
+    $routes->get('berita', 'Admin\Berita::index');
+    $routes->post('berita/add', 'Admin\Berita::create');
+    $routes->post('berita/update/(:num)', 'Admin\Berita::update/$1');
+    $routes->delete('berita/delete/(:num)', 'Admin\Berita::delete/$1');
 
     // Settings routes
     $routes->get('pengaturan', 'Admin\Settings::index');

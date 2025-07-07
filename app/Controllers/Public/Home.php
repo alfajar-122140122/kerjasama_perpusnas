@@ -148,7 +148,7 @@ class Home extends BaseController
             'items_per_page' => 10
         ];
         
-        return view('public/kerja_sama', $data);
+        return view('public/kerjasama', $data);
     }
     
     private function getCooperationData()
