@@ -1,0 +1,456 @@
+/* Main Wrapper */
+.implementasi-wrapper {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    padding: 20px 0;
+}
+
+/* Page Header */
+.implementasi-page-header {
+    margin-bottom: 30px;
+}
+
+.implementasi-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.implementasi-page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.implementasi-breadcrumb {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.implementasi-breadcrumb .separator {
+    margin: 0 8px;
+}
+
+.implementasi-breadcrumb .current {
+    color: #495057;
+    font-weight: 500;
+}
+
+/* Search Section */
+.implementasi-search-section {
+    margin-bottom: 30px;
+}
+
+.implementasi-search-container {
+    max-width: 400px;
+    margin: 0;
+}
+
+.implementasi-search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.implementasi-search-box:focus-within {
+    border-color: #007bff;
+    box-shadow: 0 6px 20px rgba(0,123,255,0.15);
+    transform: translateY(-2px);
+}
+
+.implementasi-search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 0.95rem;
+    color: #495057;
+    font-family: inherit;
+    height: 52px;
+    line-height: 1;
+}
+
+.implementasi-search-input::placeholder {
+    color: #adb5bd;
+    font-style: normal;
+}
+
+.implementasi-search-btn {
+    background: #0056b3;
+    border: none;
+    color: white;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 0;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.implementasi-search-btn:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+}
+
+.implementasi-search-btn:active {
+    transform: scale(0.95);
+}
+
+.implementasi-search-btn i {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+/* Data Table Section */
+.implementasi-table-section {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    margin-bottom: 30px;
+    border: 1px solid #f0f0f0;
+}
+
+.implementasi-table-container {
+    overflow-x: auto;
+}
+
+.implementasi-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.implementasi-table thead {
+    background: #0056b3;
+}
+
+.implementasi-table th {
+    padding: 16px 15px;
+    text-align: left;
+    font-weight: 600;
+    color: white;
+    border-bottom: 2px solid #4a90e2;
+    white-space: nowrap;
+    font-size: 0.9rem;
+}
+
+.implementasi-table td {
+    padding: 16px 15px;
+    border-bottom: 1px solid #f1f3f4;
+    vertical-align: top;
+    line-height: 1.5;
+}
+
+.implementasi-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.implementasi-table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Column Widths - Based on UI Design */
+.implementasi-col-partner {
+    width: 15%;
+    min-width: 140px;
+}
+
+.implementasi-col-period {
+    width: 12%;
+    min-width: 120px;
+}
+
+.implementasi-col-implementation {
+    width: 45%;
+    min-width: 350px;
+}
+
+.implementasi-col-scope {
+    width: 18%;
+    min-width: 150px;
+}
+
+.implementasi-col-unit {
+    width: 10%;
+    min-width: 100px;
+}
+
+/* Cell Content Styling */
+.implementasi-partner-name {
+    font-weight: 600;
+    color: #2c3e50;
+    line-height: 1.4;
+}
+
+.implementasi-period-text {
+    color: #495057;
+    font-size: 0.85rem;
+    line-height: 1.3;
+}
+
+.implementasi-detail-text {
+    color: #495057;
+    line-height: 1.5;
+    font-size: 0.85rem;
+}
+
+.implementasi-scope-text {
+    color: #495057;
+    line-height: 1.4;
+    font-size: 0.85rem;
+}
+
+.implementasi-unit-text {
+    color: #495057;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+/* Null value styling */
+.implementasi-null-value {
+    color: #adb5bd;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Loading State */
+.implementasi-loading-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+    background: white;
+}
+
+.implementasi-loading-spinner {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #007bff;
+}
+
+/* Empty State */
+.implementasi-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+    background: white;
+}
+
+.implementasi-empty-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #dee2e6;
+}
+
+.implementasi-empty-state h4 {
+    color: #495057;
+    margin-bottom: 10px;
+}
+
+/* Pagination */
+.implementasi-pagination-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.implementasi-pagination {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 5px;
+}
+
+.implementasi-pagination li {
+    display: flex;
+}
+
+.implementasi-pagination a,
+.implementasi-pagination span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    text-decoration: none;
+    color: #6c757d;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    min-width: 42px;
+    height: 42px;
+    font-weight: 500;
+}
+
+.implementasi-pagination a:hover {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+}
+
+.implementasi-pagination .active span {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    border-color: #28a745;
+    box-shadow: 0 2px 8px rgba(40,167,69,0.2);
+}
+
+.implementasi-pagination .disabled span {
+    color: #adb5bd;
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+    border-color: #e9ecef;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .implementasi-page-title {
+        font-size: 1.5rem;
+    }
+    
+    .implementasi-header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .implementasi-search-container {
+        max-width: 100%;
+    }
+    
+    .implementasi-search-box {
+        border-radius: 12px;
+    }
+    
+    .implementasi-search-input {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+        height: 48px;
+    }
+    
+    .implementasi-search-btn {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .implementasi-table {
+        font-size: 0.8rem;
+    }
+    
+    .implementasi-table th,
+    .implementasi-table td {
+        padding: 12px 10px;
+    }
+    
+    .implementasi-col-partner {
+        min-width: 120px;
+    }
+    
+    .implementasi-col-period {
+        min-width: 100px;
+    }
+    
+    .implementasi-col-implementation {
+        min-width: 280px;
+    }
+    
+    .implementasi-col-scope {
+        min-width: 120px;
+    }
+    
+    .implementasi-col-unit {
+        min-width: 80px;
+    }
+}
+
+@media (max-width: 576px) {
+    .implementasi-wrapper {
+        padding: 15px 0;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    .implementasi-search-box {
+        border-radius: 10px;
+    }
+    
+    .implementasi-search-input {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+        height: 44px;
+    }
+    
+    .implementasi-search-btn {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .implementasi-table th,
+    .implementasi-table td {
+        padding: 10px 8px;
+    }
+    
+    .implementasi-table th {
+        font-size: 0.8rem;
+    }
+    
+    .implementasi-table td {
+        font-size: 0.75rem;
+    }
+    
+    .implementasi-pagination a,
+    .implementasi-pagination span {
+        padding: 8px 10px;
+        min-width: 36px;
+        height: 36px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+    }
+}
+
+/* Animation for table rows */
+@keyframes implementasi-fadeInRow {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.implementasi-table tbody tr {
+    animation: implementasi-fadeInRow 0.3s ease forwards;
+}
+
+/* Focus states for accessibility */
+.implementasi-search-input:focus {
+    outline: none;
+}
+
+.implementasi-search-btn:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
