@@ -18,8 +18,8 @@
 <div class="row">
     <!-- Profile Settings -->
     <div class="col-lg-8">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <div class="card settings-card">
+            <div class="card-header py-3 profile-header">
                 <h6 class="m-0 font-weight-bold">
                     <i class="fas fa-user-edit me-2"></i>Informasi Profil
                 </h6>
@@ -88,8 +88,8 @@
     
     <!-- Account Info Sidebar -->
     <div class="col-lg-4">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white;">
+        <div class="card settings-card">
+            <div class="card-header py-3 account-info-header">
                 <h6 class="m-0 font-weight-bold">
                     <i class="fas fa-info-circle me-2"></i>Informasi Akun
                 </h6>
@@ -132,8 +132,8 @@
 <!-- Security Settings -->
 <div class="row">
     <div class="col-12">
-        <div class="card shadow">
-            <div class="card-header py-3" style="background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%); color: white;">
+        <div class="card settings-card">
+            <div class="card-header py-3 security-header">
                 <h6 class="m-0 font-weight-bold">
                     <i class="fas fa-shield-alt me-2"></i>Keamanan Akun
                 </h6>
@@ -202,309 +202,16 @@
     </div>
 </div>
 
-<!-- Styles -->
-<style>
-.avatar-circle-large {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, #4A6CF7, #667eea);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 24px;
-    margin: 0 auto;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
+<?= $this->endSection() ?>
 
-.card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
-}
-
-.card-header {
-    border-radius: 15px 15px 0 0 !important;
-    border-bottom: none;
-}
-
-.form-control:focus {
-    border-color: #4A6CF7;
-    box-shadow: 0 0 0 0.2rem rgba(74, 108, 247, 0.25);
-}
-
-.progress {
-    background-color: #e9ecef;
-    border-radius: 10px;
-}
-
-.progress-bar {
-    border-radius: 10px;
-    transition: all 0.3s ease;
-}
-
-.btn {
-    border-radius: 8px;
-    font-weight: 500;
-}
-
-.badge {
-    font-size: 0.8rem;
-    padding: 0.5em 1em;
-}
-</style>
+<?= $this->section('styles') ?>
+<link rel="stylesheet" href="<?= base_url('css/settings-management.css') ?>">
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
 <script>
-// Profile Form Handler
-document.getElementById('profileForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const formData = new FormData(this);
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const originalContent = submitBtn.innerHTML;
-    
-    // Show loading
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
-    submitBtn.disabled = true;
-    
-    // Clear previous errors
-    clearFormErrors(this);
-    
-    // Make API call
-    fetch('<?= base_url('admin/pengaturan/update-profile') ?>', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showAlert('success', data.message);
-            updateUserDisplay();
-        } else {
-            showAlert('danger', data.message || 'Gagal memperbarui profil');
-            if (data.errors) {
-                showFormErrors(this, data.errors);
-            }
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('danger', 'Terjadi kesalahan saat memperbarui profil');
-    })
-    .finally(() => {
-        submitBtn.innerHTML = originalContent;
-        submitBtn.disabled = false;
-    });
-});
-
-// Password Form Handler
-document.getElementById('passwordForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const newPassword = document.getElementById('new_password').value;
-    const confirmPassword = document.getElementById('confirm_password').value;
-    
-    // Client-side validation
-    if (newPassword.length < 6) {
-        showAlert('danger', 'Password baru minimal 6 karakter');
-        document.getElementById('new_password').classList.add('is-invalid');
-        return;
-    }
-    
-    if (newPassword !== confirmPassword) {
-        showAlert('danger', 'Konfirmasi password tidak sama');
-        document.getElementById('confirm_password').classList.add('is-invalid');
-        return;
-    }
-    
-    const formData = new FormData(this);
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const originalContent = submitBtn.innerHTML;
-    
-    // Show loading
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Mengubah...';
-    submitBtn.disabled = true;
-    
-    // Clear previous errors
-    clearFormErrors(this);
-    
-    // Make API call
-    fetch('<?= base_url('admin/pengaturan/change-password') ?>', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showAlert('success', data.message);
-            this.reset();
-            updatePasswordStrength('');
-        } else {
-            showAlert('danger', data.message || 'Gagal mengubah password');
-            if (data.errors) {
-                showFormErrors(this, data.errors);
-            }
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('danger', 'Terjadi kesalahan saat mengubah password');
-    })
-    .finally(() => {
-        submitBtn.innerHTML = originalContent;
-        submitBtn.disabled = false;
-    });
-});
-
-// Password Strength Checker
-function updatePasswordStrength(password) {
-    const strengthBar = document.getElementById('passwordStrength');
-    const strengthText = document.getElementById('passwordStrengthText');
-    
-    let strength = 0;
-    let strengthLabel = '';
-    let strengthClass = '';
-    
-    if (password.length >= 6) strength += 1;
-    if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength += 1;
-    if (password.match(/[0-9]/)) strength += 1;
-    if (password.match(/[^a-zA-Z0-9]/)) strength += 1;
-    
-    switch (strength) {
-        case 0:
-        case 1:
-            strengthLabel = 'Lemah';
-            strengthClass = 'bg-danger';
-            break;
-        case 2:
-            strengthLabel = 'Sedang';
-            strengthClass = 'bg-warning';
-            break;
-        case 3:
-        case 4:
-            strengthLabel = 'Kuat';
-            strengthClass = 'bg-success';
-            break;
-    }
-    
-    const percentage = (strength / 4) * 100;
-    strengthBar.style.width = percentage + '%';
-    strengthBar.className = `progress-bar ${strengthClass}`;
-    strengthText.textContent = password ? strengthLabel : 'Masukkan password baru untuk melihat kekuatan';
-}
-
-// Toggle Password Visibility
-function togglePasswordVisibility(inputId, toggleId) {
-    const input = document.getElementById(inputId);
-    const toggle = document.getElementById(toggleId);
-    
-    if (input.type === 'password') {
-        input.type = 'text';
-        toggle.classList.remove('fa-eye');
-        toggle.classList.add('fa-eye-slash');
-    } else {
-        input.type = 'password';
-        toggle.classList.remove('fa-eye-slash');
-        toggle.classList.add('fa-eye');
-    }
-}
-
-// Update User Display
-function updateUserDisplay() {
-    const name = document.getElementById('name').value;
-    const initials = name.substring(0, 2).toUpperCase();
-    
-    document.querySelector('.avatar-circle-large').textContent = initials;
-    document.querySelector('.card-body h5').textContent = name;
-}
-
-// Show Alert Function
-function showAlert(type, message) {
-    const alertContainer = document.getElementById('alertContainer');
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type} alert-dismissible fade show`;
-    alert.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    
-    alertContainer.appendChild(alert);
-    
-    // Auto hide after 5 seconds
-    setTimeout(() => {
-        if (alert.parentNode) {
-            const bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        }
-    }, 5000);
-}
-
-// Show Form Errors
-function showFormErrors(form, errors) {
-    Object.keys(errors).forEach(field => {
-        const input = form.querySelector(`[name="${field}"]`);
-        if (input) {
-            input.classList.add('is-invalid');
-            const feedback = input.parentNode.querySelector('.invalid-feedback');
-            if (feedback) {
-                feedback.textContent = errors[field];
-            }
-        }
-    });
-}
-
-// Clear Form Errors
-function clearFormErrors(form) {
-    const inputs = form.querySelectorAll('.is-invalid');
-    inputs.forEach(input => {
-        input.classList.remove('is-invalid');
-    });
-}
-
-// Event Listeners
-document.addEventListener('DOMContentLoaded', function() {
-    // Password strength checker
-    document.getElementById('new_password').addEventListener('input', function() {
-        updatePasswordStrength(this.value);
-        
-        // Check password match
-        const confirmPassword = document.getElementById('confirm_password');
-        if (confirmPassword.value && confirmPassword.value !== this.value) {
-            confirmPassword.classList.add('is-invalid');
-        } else {
-            confirmPassword.classList.remove('is-invalid');
-        }
-    });
-    
-    // Confirm password validation
-    document.getElementById('confirm_password').addEventListener('input', function() {
-        const newPassword = document.getElementById('new_password').value;
-        if (this.value && this.value !== newPassword) {
-            this.classList.add('is-invalid');
-        } else {
-            this.classList.remove('is-invalid');
-        }
-    });
-    
-    // Clear validation errors on input
-    document.querySelectorAll('input').forEach(input => {
-        input.addEventListener('input', function() {
-            if (this.classList.contains('is-invalid')) {
-                this.classList.remove('is-invalid');
-            }
-        });
-    });
-});
+    // Set base URL for AJAX calls
+    const baseUrl = '<?= base_url() ?>';
 </script>
+<script src="<?= base_url('js/settings-management.js') ?>"></script>
 <?= $this->endSection() ?>
