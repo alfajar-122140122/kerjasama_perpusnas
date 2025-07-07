@@ -4,18 +4,58 @@
 
 <?= $this->section('page-title') ?>Manajemen User<?= $this->endSection() ?>
 
+<?= $this->section('styles') ?>
+<link href="<?= base_url('css/user-management.css') ?>" rel="stylesheet">
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
-<div class="row">
-    <div class="col-12">
-        <h2 class="page-title">Manajemen User</h2>
-        <p class="text-muted mb-4">Kelola data user sistem</p>
-    </div>
-</div>
+<?php
+// Sample data for demo purposes - replace with actual data from controller
+if (!isset($users)) {
+    $users = [
+        [
+            'id' => 1,
+            'name' => 'Fulan',
+            'username' => 'fulan',
+            'email' => 'fulan@example.com',
+            'role' => 'Admin',
+            'status' => 'active',
+            'created_at' => '2024-01-15'
+        ],
+        [
+            'id' => 2,
+            'name' => 'Fulana',
+            'username' => 'fulana',
+            'email' => 'fulana@example.com',
+            'role' => 'User',
+            'status' => 'active',
+            'created_at' => '2024-02-10'
+        ],
+        [
+            'id' => 3,
+            'name' => 'Fulani',
+            'username' => 'fulani',
+            'email' => 'fulani@example.com',
+            'role' => 'Admin',
+            'status' => 'active',
+            'created_at' => '2024-03-05'
+        ],
+        [
+            'id' => 4,
+            'name' => 'Fulano',
+            'username' => 'fulano',
+            'email' => 'fulano@example.com',
+            'role' => 'User',
+            'status' => 'active',
+            'created_at' => '2024-03-20'
+        ]
+    ];
+}
+?>
 
 <!-- Alerts -->
 <?php if (session()->getFlashdata('success')): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="fas fa-check-circle me-2"></i>
         <?= session()->getFlashdata('success') ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
@@ -23,109 +63,45 @@
 
 <?php if (session()->getFlashdata('error')): ?>
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="fas fa-exclamation-triangle me-2"></i>
         <?= session()->getFlashdata('error') ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 <?php endif; ?>
 
 <!-- User Management Card -->
-<div class="card shadow">
-    <div class="card-header py-3" style="background: var(--primary-green); color: white;">
+<div class="card">
+    <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold">
-                <i class="fas fa-users me-2"></i>
-                Daftar User (<?= count($users ?? []) ?>)
-            </h6>
-            <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">
-                <i class="fas fa-plus me-2"></i>Tambah User
+            <h6 class="mb-0">Kelola User</h6>
+            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                Tambah User
             </button>
         </div>
     </div>
-    <div class="card-body">
-        <!-- Search and Filter -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="fas fa-search"></i>
-                    </span>
-                    <input type="text" class="form-control" id="searchUser" placeholder="Cari user...">
+    <div class="card-body p-0">
+        <!-- Users Table with Green Background Style -->
+        <div class="user-table-container" style="background: linear-gradient(135deg, #28a745, #20c997); min-height: 400px; padding: 20px; border-radius: 0 0 8px 8px;">
+            <!-- Header Row -->
+            <div class="row text-white fw-bold mb-3" style="padding: 10px 0;">
+                <div class="col-6">
+                    <span>Nama User</span>
+                </div>
+                <div class="col-3 text-center">
+                    <span>Hak Akses</span>
+                </div>
+                <div class="col-3 text-center">
+                    <span>Aksi</span>
                 </div>
             </div>
-            <div class="col-md-3">
-                <select class="form-select" id="filterRole">
-                    <option value="">Semua Role</option>
-                    <option value="Admin">Admin</option>
-                    <option value="User">User</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <select class="form-select" id="filterStatus">
-                    <option value="">Semua Status</option>
-                    <option value="active">Aktif</option>
-                    <option value="inactive">Tidak Aktif</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Bulk Actions -->
-        <div class="row mb-3" id="bulkActions" style="display: none;">
-            <div class="col-12">
-                <div class="alert alert-info">
-                    <span id="selectedCount">0</span> user dipilih
-                    <button class="btn btn-sm btn-outline-danger ms-2" onclick="bulkDelete()">
-                        <i class="fas fa-trash me-1"></i>Hapus Terpilih
-                    </button>
-                    <button class="btn btn-sm btn-outline-secondary ms-2" onclick="clearSelection()">
-                        <i class="fas fa-times me-1"></i>Batal
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Users Table -->
-        <?php if (isset($users) && !empty($users)): ?>
-        <div class="table-responsive">
-            <table class="table table-hover align-middle" id="usersTable">
-                <thead class="table-primary">
-                    <tr>
-                        <th width="5%">
-                            <input type="checkbox" class="form-check-input" id="selectAll">
-                        </th>
-                        <th width="5%">#</th>
-                        <th width="25%">
-                            <i class="fas fa-user me-1"></i>Nama & Username
-                        </th>
-                        <th width="20%">
-                            <i class="fas fa-envelope me-1"></i>Email
-                        </th>
-                        <th width="15%">
-                            <i class="fas fa-user-tag me-1"></i>Role
-                        </th>
-                        <th width="10%">
-                            <i class="fas fa-toggle-on me-1"></i>Status
-                        </th>
-                        <th width="15%">
-                            <i class="fas fa-calendar me-1"></i>Bergabung
-                        </th>
-                        <th width="15%" class="text-center">
-                            <i class="fas fa-cogs me-1"></i>Aksi
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($users as $index => $user): ?>
-                    <tr data-user-id="<?= $user['id'] ?>" class="user-row">
-                        <td>
-                            <input type="checkbox" class="form-check-input user-checkbox" value="<?= $user['id'] ?>">
-                        </td>
-                        <td>
-                            <span class="fw-bold text-primary"><?= $index + 1 ?></span>
-                        </td>
-                        <td>
+            
+            <!-- User Rows -->
+            <?php if (isset($users) && !empty($users)): ?>
+                <?php foreach ($users as $user): ?>
+                <div class="user-row bg-white mb-3 p-3 shadow-sm" data-user-id="<?= $user['id'] ?>" style="border-radius: 20px;">
+                    <div class="row align-items-center">
+                        <div class="col-6">
                             <div class="d-flex align-items-center">
-                                <div class="user-avatar-table me-3">
+                                <div class="user-avatar me-3">
                                     <div class="avatar-circle">
                                         <?= strtoupper(substr($user['name'], 0, 2)) ?>
                                     </div>
@@ -135,86 +111,34 @@
                                     <small class="text-muted user-username">@<?= esc($user['username']) ?></small>
                                 </div>
                             </div>
-                        </td>
-                        <td>
-                            <a href="mailto:<?= esc($user['email'] ?? 'user' . $user['id'] . '@example.com') ?>" class="text-decoration-none user-email">
-                                <i class="fas fa-envelope text-muted me-1"></i>
-                                <?= esc($user['email'] ?? 'user' . $user['id'] . '@example.com') ?>
-                            </a>
-                        </td>
-                        <td>
-                            <span class="badge bg-<?= $user['role'] === 'Admin' ? 'primary' : 'secondary' ?> badge-role user-role">
-                                <i class="fas fa-<?= $user['role'] === 'Admin' ? 'crown' : 'user' ?> me-1"></i>
+                        </div>
+                        <div class="col-3 text-center">
+                            <span class="badge bg-<?= $user['role'] === 'Admin' ? 'primary' : 'secondary' ?> user-role">
                                 <?= esc($user['role']) ?>
                             </span>
-                        </td>
-                        <td>
-                            <span class="badge bg-<?= $user['status'] === 'active' ? 'success' : 'danger' ?> user-status">
-                                <i class="fas fa-circle me-1"></i>
-                                <?= ucfirst($user['status']) ?>
-                            </span>
-                        </td>
-                        <td>
-                            <small class="text-muted">
-                                <i class="fas fa-calendar-alt me-1"></i>
-                                <?= date('d/m/Y', strtotime($user['created_at'] ?? '2024-01-01')) ?>
-                            </small>
-                        </td>
-                        <td class="text-center">
+                        </div>
+                        <div class="col-3 text-center">
                             <div class="btn-group" role="group">
-                                <button class="btn btn-sm btn-outline-primary" onclick="viewUser(<?= $user['id'] ?>)" title="Lihat Detail">
-                                    <i class="fas fa-eye"></i>
+                                <button class="btn btn-sm btn-primary" onclick="editUser(<?= $user['id'] ?>)" title="Edit User">
+                                    Edit
                                 </button>
-                                <button class="btn btn-sm btn-outline-warning" onclick="editUser(<?= $user['id'] ?>)" title="Edit User">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="deleteUser(<?= $user['id'] ?>)" title="Hapus User">
-                                    <i class="fas fa-trash"></i>
+                                <button class="btn btn-sm btn-danger" onclick="deleteUser(<?= $user['id'] ?>)" title="Hapus User">
+                                    Hapus
                                 </button>
                             </div>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                        </div>
+                    </div>
+                    <!-- Hidden email for JavaScript -->
+                    <span class="user-status d-none"><?= $user['status'] ?></span>
+                </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="text-center text-white py-5">
+                    <h5>Belum ada user</h5>
+                    <p>Tambahkan user pertama dengan klik tombol "Tambah User"</p>
+                </div>
+            <?php endif; ?>
         </div>
-
-        <!-- Pagination -->
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <div>
-                <small class="text-muted">
-                    Menampilkan <?= count($users) ?> dari <?= count($users) ?> user
-                </small>
-            </div>
-            <nav aria-label="User pagination">
-                <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                    </li>
-                    <li class="page-item active">
-                        <a class="page-link" href="#">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <?php else: ?>
-        <div class="empty-state">
-            <div class="empty-icon">
-                <i class="fas fa-users-slash"></i>
-            </div>
-            <h5>Belum ada user</h5>
-            <p class="text-muted">Tambahkan user pertama dengan klik tombol "Tambah User"</p>
-        </div>
-        <?php endif; ?>
     </div>
 </div>
 
@@ -224,7 +148,7 @@
         <div class="modal-content">
             <div class="modal-header bg-warning text-white">
                 <h5 class="modal-title" id="changePasswordModalLabel">
-                    <i class="fas fa-key me-2"></i>Ubah Password User
+                    Ubah Password User
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -243,7 +167,6 @@
                     </div>
                     
                     <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
                         <strong>Perhatian:</strong> Password baru akan langsung aktif setelah disimpan.
                     </div>
                     
@@ -252,7 +175,7 @@
                         <div class="input-group">
                             <input type="password" class="form-control" id="new_password" name="new_password" required minlength="6">
                             <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('new_password', 'newPasswordToggle')">
-                                <i class="fas fa-eye" id="newPasswordToggle"></i>
+                                Lihat
                             </button>
                         </div>
                         <div class="form-text">Password minimal 6 karakter</div>
@@ -264,7 +187,7 @@
                         <div class="input-group">
                             <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
                             <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('confirm_password', 'confirmPasswordToggle')">
-                                <i class="fas fa-eye" id="confirmPasswordToggle"></i>
+                                Lihat
                             </button>
                         </div>
                         <div class="invalid-feedback">Konfirmasi password harus sama dengan password baru</div>
@@ -281,10 +204,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-2"></i>Batal
+                        Batal
                     </button>
                     <button type="submit" class="btn btn-warning">
-                        <i class="fas fa-save me-2"></i>Ubah Password
+                        Ubah Password
                     </button>
                 </div>
             </form>
@@ -298,7 +221,7 @@
         <div class="modal-content">
             <div class="modal-header bg-info text-white">
                 <h5 class="modal-title" id="resetPasswordModalLabel">
-                    <i class="fas fa-redo me-2"></i>Reset Password User
+                    Reset Password User
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -316,17 +239,15 @@
                 </div>
                 
                 <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
                     <strong>Peringatan:</strong> Tindakan ini akan menghasilkan password acak baru dan menggantikan password lama.
                 </div>
                 
                 <div class="alert alert-info" id="newPasswordAlert" style="display: none;">
-                    <i class="fas fa-key me-2"></i>
                     <strong>Password Baru:</strong>
                     <div class="d-flex align-items-center mt-2">
                         <code id="generatedPassword" class="flex-grow-1"></code>
                         <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyPassword()" title="Copy Password">
-                            <i class="fas fa-copy"></i>
+                            Copy
                         </button>
                     </div>
                     <small class="text-muted">Pastikan untuk mencatat password ini dan memberitahukan kepada user.</small>
@@ -334,10 +255,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-2"></i>Tutup
+                    Tutup
                 </button>
                 <button type="button" class="btn btn-info" id="resetPasswordBtn" onclick="confirmResetPassword()">
-                    <i class="fas fa-redo me-2"></i>Reset Password
+                    Reset Password
                 </button>
             </div>
         </div>
@@ -350,7 +271,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewUserModalLabel">
-                    <i class="fas fa-user me-2"></i>Detail User
+                    Detail User
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -400,10 +321,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-2"></i>Tutup
+                    Tutup
                 </button>
                 <button type="button" class="btn btn-warning" onclick="editUserFromView()">
-                    <i class="fas fa-edit me-2"></i>Edit User
+                    Edit User
                 </button>
             </div>
         </div>
@@ -416,7 +337,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addUserModalLabel">
-                    <i class="fas fa-user-plus me-2"></i>Tambah User Baru
+                    Tambah User Baru
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -486,7 +407,7 @@
                                 <div class="input-group">
                                     <input type="password" class="form-control" id="password" name="password" required minlength="6">
                                     <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('password')">
-                                        <i class="fas fa-eye" id="passwordToggle"></i>
+                                        Lihat
                                     </button>
                                 </div>
                                 <div class="invalid-feedback">Password minimal 6 karakter</div>
@@ -503,10 +424,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-2"></i>Batal
+                        Batal
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>Simpan User
+                        Simpan User
                     </button>
                 </div>
             </form>
@@ -520,7 +441,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editUserModalLabel">
-                    <i class="fas fa-user-edit me-2"></i>Edit User
+                    Edit User
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -581,16 +502,15 @@
                     </div>
                     
                     <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
                         <strong>Catatan:</strong> Untuk mengubah password, user dapat melakukannya melalui halaman pengaturan mereka sendiri.
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-2"></i>Batal
+                        Batal
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>Update User
+                        Update User
                     </button>
                 </div>
             </form>
@@ -598,138 +518,7 @@
     </div>
 </div>
 
-<!-- Additional Styles for Users Table -->
-<style>
-/* Avatar Styles */
-.avatar-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, #4A6CF7, #667eea);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
-}
 
-.avatar-circle-large {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, #4A6CF7, #667eea);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 24px;
-    margin: 0 auto;
-}
-
-/* Table Styles */
-.table th {
-    background-color: #f8f9fc;
-    border-color: #e3e6f0;
-    font-weight: 600;
-    color: #5a5c69;
-    font-size: 0.875rem;
-}
-
-.table td {
-    border-color: #e3e6f0;
-    vertical-align: middle;
-}
-
-.table-hover tbody tr:hover {
-    background-color: #f8f9fc;
-}
-
-/* Badge Styles */
-.badge-role {
-    font-size: 0.75rem;
-    padding: 0.5em 0.75em;
-}
-
-/* Dropdown Menu */
-.dropdown-menu {
-    border: none;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
-
-.dropdown-item {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-}
-
-.dropdown-item:hover {
-    background-color: #f8f9fc;
-}
-
-/* Password Strength */
-.progress {
-    background-color: #e9ecef;
-}
-
-.progress-bar.bg-danger {
-    background-color: #dc3545 !important;
-}
-
-.progress-bar.bg-warning {
-    background-color: #ffc107 !important;
-}
-
-.progress-bar.bg-success {
-    background-color: #28a745 !important;
-}
-
-/* Empty State */
-.empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    background: #f8f9fc;
-    border-radius: 15px;
-    margin: 20px 0;
-}
-
-.empty-icon {
-    font-size: 4rem;
-    color: #dee2e6;
-    margin-bottom: 20px;
-}
-
-/* Button Group */
-.btn-group .btn {
-    border: none;
-    margin: 0 2px;
-    border-radius: 5px !important;
-}
-
-/* Search and Filter */
-.input-group-text {
-    background-color: #f8f9fc;
-    border-color: #e3e6f0;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .table-responsive {
-        font-size: 0.875rem;
-    }
-    
-    .btn-group .btn {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
-    }
-    
-    .avatar-circle {
-        width: 32px;
-        height: 32px;
-        font-size: 12px;
-    }
-}
-</style>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>

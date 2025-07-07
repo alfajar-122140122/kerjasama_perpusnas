@@ -3,108 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $this->renderSection('title') ?> - Admin Kerjasama Perpustakaan</title>
+    <title><?= $this->renderSection('title', true) ?> - Admin Perpusnas</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="<?= base_url('assets/images/favicon.ico') ?>">
+    <link rel="icon" type="image/png" href="<?= base_url('assets/images/icon-perpusnas.png') ?>">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- DataTables CSS -->
-    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    
-    <!-- Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet">
-    
+    <!-- Chart.js -->
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.min.css" rel="stylesheet">
     <!-- Custom Admin CSS -->
-    <link href="<?= base_url('assets/css/admin.css') ?>" rel="stylesheet">
+    <link href="<?= base_url('css/admin.css') ?>" rel="stylesheet">
     
-    <!-- Additional CSS -->
     <?= $this->renderSection('styles') ?>
 </head>
-<body id="page-top">
-    <div id="wrapper">
+<body>
+    <div class="wrapper">
         <!-- Sidebar -->
-        <?= $this->include('layouts/components/admin_sidebar') ?>
-        
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
-            <!-- Main Content -->
-            <div id="content">
-                <!-- Topbar -->
-                <?= $this->include('layouts/components/admin_navbar') ?>
-                
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><?= $this->renderSection('page-title') ?></h1>
-                        <?= $this->renderSection('page-actions') ?>
-                    </div>
-                    
-                    <!-- Content -->
-                    <?= $this->renderSection('content') ?>
-                </div>
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <img src="<?= base_url('assets/images/logo-perpusnas.png') ?>" alt="Logo" class="sidebar-logo">
+                <h4>Admin Panel</h4>
             </div>
             
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>&copy; <?= date('Y') ?> Perpustakaan Nasional Republik Indonesia. All Rights Reserved.</span>
+            <ul class="list-unstyled components">
+                <li class="<?= (current_url() == base_url('admin/dashboard')) ? 'active' : '' ?>">
+                    <a href="<?= base_url('admin/dashboard') ?>">
+                        <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="<?= (strpos(current_url(), 'admin/users') !== false) ? 'active' : '' ?>">
+                    <a href="<?= base_url('admin/users') ?>">
+                        <i class="fas fa-users"></i> <span>Kelola Users</span>
+                    </a>
+                </li>
+                <li class="<?= (strpos(current_url(), 'admin/kerjasama') !== false) ? 'active' : '' ?>">
+                    <a href="<?= base_url('admin/kerjasama') ?>">
+                        <i class="fas fa-handshake"></i> <span>Kerjasama</span>
+                    </a>
+                </li>
+                <li class="<?= (strpos(current_url(), 'admin/berita') !== false) ? 'active' : '' ?>">
+                    <a href="<?= base_url('admin/berita') ?>">
+                        <i class="fas fa-newspaper"></i> <span>Berita</span>
+                    </a>
+                </li>
+                <li class="<?= (strpos(current_url(), 'admin/pengaturan') !== false) ? 'active' : '' ?>">
+                    <a href="<?= base_url('admin/pengaturan') ?>">
+                        <i class="fas fa-cog"></i> <span>Pengaturan</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <a href="<?= base_url('auth/logout') ?>" class="btn btn-danger btn-sm w-100">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div id="content" class="content">
+            <!-- Top Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-outline-primary">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <div class="ms-auto d-flex align-items-center">
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle fa-lg me-2"></i>
+                                <span><?= session()->get('name') ?? session()->get('username') ?></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="<?= base_url('admin/profile') ?>">
+                                    <i class="fas fa-user me-2"></i>Profile
+                                </a></li>
+                                <li><a class="dropdown-item" href="<?= base_url('admin/settings') ?>">
+                                    <i class="fas fa-cog me-2"></i>Settings
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="<?= base_url('auth/logout') ?>">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </footer>
-        </div>
-    </div>
-    
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-    
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Konfirmasi Logout</h5>
-                    <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+            </nav>
+
+            <!-- Page Content -->
+            <div class="container-fluid py-4">
+                <!-- Page Title -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h1 class="h3 mb-0 text-gray-800"><?= $this->renderSection('page-title', true) ?></h1>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
+                                <li class="breadcrumb-item active"><?= $this->renderSection('title', true) ?></li>
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
-                <div class="modal-body">Apakah Anda yakin ingin keluar dari sistem?</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Batal</button>
-                    <a class="btn btn-primary" href="<?= base_url('auth/logout') ?>">Logout</a>
-                </div>
+                
+                <!-- Main Content -->
+                <?= $this->renderSection('content') ?>
             </div>
         </div>
     </div>
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    
-    <!-- Bootstrap Bundle JS -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-    
-    <!-- Select2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.min.js"></script>
     <!-- Custom Admin JS -->
-    <script src="<?= base_url('assets/js/admin.js') ?>"></script>
+    <script src="<?= base_url('js/admin.js') ?>"></script>
     
-    <!-- Page Level Scripts -->
     <?= $this->renderSection('scripts') ?>
 </body>
 </html>

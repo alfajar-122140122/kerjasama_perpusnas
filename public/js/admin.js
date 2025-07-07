@@ -236,3 +236,136 @@ rippleStyle.textContent = `
     }
 `;
 document.head.appendChild(rippleStyle);
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Sidebar Toggle - Fixed Implementation
+    const sidebarCollapse = document.getElementById('sidebarCollapse');
+    const sidebar = document.getElementById('sidebar');
+    
+    function isMobile() {
+        return window.innerWidth <= 768;
+    }
+    
+    function toggleSidebar() {
+        const wrapper = document.querySelector('.wrapper');
+        
+        if (isMobile()) {
+            // Mobile: Show/Hide sidebar completely
+            sidebar.classList.toggle('show');
+            
+            // Add/remove body overlay
+            if (sidebar.classList.contains('show')) {
+                document.body.classList.add('sidebar-open');
+                if (!document.querySelector('.sidebar-overlay')) {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'sidebar-overlay';
+                    document.body.appendChild(overlay);
+                    
+                    overlay.addEventListener('click', function() {
+                        sidebar.classList.remove('show');
+                        document.body.classList.remove('sidebar-open');
+                        overlay.remove();
+                    });
+                }
+            } else {
+                document.body.classList.remove('sidebar-open');
+                const overlay = document.querySelector('.sidebar-overlay');
+                if (overlay) overlay.remove();
+            }
+        } else {
+            // Desktop: Completely Hide/Show sidebar
+            sidebar.classList.toggle('collapsed');
+            wrapper.classList.toggle('sidebar-collapsed');
+        }
+    }
+    
+    if (sidebarCollapse && sidebar) {
+        sidebarCollapse.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleSidebar();
+        });
+    }
+    
+    // Close sidebar when clicking outside (mobile only)
+    document.addEventListener('click', function(e) {
+        if (isMobile() && sidebar && sidebar.classList.contains('show')) {
+            if (!sidebar.contains(e.target) && !sidebarCollapse.contains(e.target)) {
+                sidebar.classList.remove('show');
+                document.body.classList.remove('sidebar-open');
+                const overlay = document.querySelector('.sidebar-overlay');
+                if (overlay) overlay.remove();
+            }
+        }
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        const wrapper = document.querySelector('.wrapper');
+        
+        if (!isMobile()) {
+            // Remove mobile classes when switching to desktop
+            sidebar.classList.remove('show');
+            document.body.classList.remove('sidebar-open');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (overlay) overlay.remove();
+        } else {
+            // Remove desktop classes when switching to mobile
+            sidebar.classList.remove('collapsed');
+            wrapper.classList.remove('sidebar-collapsed');
+        }
+    });
+    
+    // Auto-dismiss alerts
+    const alerts = document.querySelectorAll('.alert-dismissible');
+    alerts.forEach(alert => {
+        if (alert.classList.contains('alert-success')) {
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }, 5000);
+        }
+    });
+    
+    // Animate cards on scroll
+    function animateOnScroll() {
+        const cards = document.querySelectorAll('.stats-card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    }
+    
+    // Start animations
+    setTimeout(animateOnScroll, 200);
+    
+    // Real-time clock
+    function updateClock() {
+        const clockElements = document.querySelectorAll('[data-clock]');
+        const now = new Date();
+        const options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        const timeString = now.toLocaleDateString('id-ID', options);
+        
+        clockElements.forEach(element => {
+            element.textContent = timeString;
+        });
+    }
+    
+    // Update clock every second
+    setInterval(updateClock, 1000);
+    updateClock(); // Initial call
+});

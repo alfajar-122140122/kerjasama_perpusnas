@@ -1,11 +1,26 @@
-// Auto hide alerts after 5 seconds
-setTimeout(function() {
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-        const bsAlert = new bootstrap.Alert(alert);
-        bsAlert.close();
+// Auto dismiss success alerts
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto dismiss alerts after 5 seconds
+    document.querySelectorAll('.alert-success').forEach(alert => {
+        setTimeout(() => {
+            if (bootstrap.Alert) {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }
+        }, 5000);
     });
-}, 5000);
+    
+    // Input focus animations
+    document.querySelectorAll('.form-control').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.closest('.input-group').style.transform = 'translateY(-2px)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.closest('.input-group').style.transform = 'translateY(0)';
+        });
+    });
+});
 
 // Form validation
 document.getElementById('loginForm')?.addEventListener('submit', function(e) {
