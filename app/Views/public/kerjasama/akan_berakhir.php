@@ -9,7 +9,7 @@
 <?= $this->section('styles') ?>
 <link href="<?= base_url('css/public.css') ?>" rel="stylesheet">
 <link href="<?= base_url('css/public/navigation.css') ?>" rel="stylesheet">
-<link href="<?= base_url('css/public/akan_berakhir.css') ?>" rel="stylesheet">
+<link href="<?= base_url('css/public/kerjasama/akan_berakhir.css') ?>" rel="stylesheet">
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <?= $this->endSection() ?>
 
@@ -116,5 +116,5 @@
     window.akanBerakhirStats = <?= json_encode($akan_berakhir_stats ?? []) ?>;
     window.filterOptions = <?= json_encode($filter_options ?? []) ?>;
 </script>
-<script src="<?= base_url('js/public/akan_berakhir.js') ?>"></script>
+<script src="<?= base_url('js/public/kerjasama/akan_berakhir.js') ?>"></script>
 <?= $this->endSection() ?>

@@ -9,7 +9,7 @@
 <?= $this->section('styles') ?>
 <link href="<?= base_url('css/public.css') ?>" rel="stylesheet">
 <link href="<?= base_url('css/public/navigation.css') ?>" rel="stylesheet">
-<link href="<?= base_url('css/public/pengajuan_kerjasama.css') ?>" rel="stylesheet">
+<link href="<?= base_url('css/public/kerjasama/pengajuan.css') ?>" rel="stylesheet">
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <?= $this->endSection() ?>
 
@@ -219,5 +219,5 @@
         offset: 100
     });
 </script>
-<script src="<?= base_url('js/public/pengajuan_kerjasama.js') ?>"></script>
+<script src="<?= base_url('js/public/kerjasama/pengajuan.js') ?>"></script>
 <?= $this->endSection() ?>
