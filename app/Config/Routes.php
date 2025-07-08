@@ -49,8 +49,14 @@ $routes->group('admin', function($routes) {
     $routes->post('users/edit/(:num)', 'Admin\Dashboard::editUser/$1');
     $routes->delete('users/delete/(:num)', 'Admin\Dashboard::deleteUser/$1');
     
-    // Tambahan routes untuk menu lain
-    $routes->get('kerjasama', 'Admin\Dashboard::kerjasama');
+    // Kerjasama management routes
+    $routes->get('kerjasama', 'Admin\Kerjasama::index');
+    $routes->get('kerjasama/getAll', 'Admin\Kerjasama::getAll');
+    $routes->get('kerjasama/getOne', 'Admin\Kerjasama::getOne');
+    $routes->post('kerjasama/create', 'Admin\Kerjasama::create');
+    $routes->post('kerjasama/update', 'Admin\Kerjasama::update');
+    $routes->post('kerjasama/delete', 'Admin\Kerjasama::delete');
+    $routes->get('kerjasama/getStats', 'Admin\Kerjasama::getStats');
     
     // Berita management routes
     $routes->get('berita', 'Admin\Berita::index');

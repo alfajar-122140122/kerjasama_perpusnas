@@ -1,0 +1,302 @@
+/* Kerjasama Management CSS */
+
+/* Card Styling */
+.border-left-primary {
+    border-left: 4px solid var(--primary-color);
+}
+
+.border-left-success {
+    border-left: 4px solid #28a745;
+}
+
+.border-left-danger {
+    border-left: 4px solid #dc3545;
+}
+
+.border-left-info {
+    border-left: 4px solid #17a2b8;
+}
+
+/* Table Styling */
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.progress-badge {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+
+.status-active {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-expired {
+    background-color: #dc3545;
+    color: white;
+}
+
+.status-pending {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+/* Filter Styling */
+.filter-section {
+    padding: 1rem;
+    background-color: #f8f9fc;
+    border-radius: 0.35rem;
+    margin-bottom: 1rem;
+}
+
+/* Action Buttons */
+.action-btn {
+    margin: 0 2px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Modal Styling */
+.modal-header {
+    background-color: #f8f9fc;
+    border-bottom: 1px solid #e3e6f0;
+}
+
+.modal-footer {
+    background-color: #f8f9fc;
+    border-top: 1px solid #e3e6f0;
+}
+
+/* Progress Bar */
+.progress {
+    height: 10px;
+    border-radius: 0.25rem;
+}
+
+/* Map Container */
+#mapContainer {
+    height: 200px;
+    border-radius: 0.25rem;
+}
+
+/* Leaflet Map Styling */
+.leaflet-container {
+    border-radius: 0.25rem;
+}
+
+/* View Tabs Styling */
+.nav-tabs .nav-link {
+    color: #6c757d;
+    font-weight: 500;
+    border: 1px solid transparent;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #495057;
+    background-color: #f8f9fc;
+    border-color: #e3e6f0 #e3e6f0 #fff;
+}
+
+.nav-tabs .nav-link.active {
+    color: #4e73df;
+    font-weight: 600;
+    background-color: #fff;
+    border-color: #e3e6f0 #e3e6f0 #fff;
+    border-bottom: 2px solid #4e73df;
+}
+
+/* Form Tab Styling */
+#formTabs .nav-link {
+    color: #6c757d;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    border-radius: 0;
+    transition: all 0.2s ease;
+}
+
+#formTabs .nav-link:hover {
+    color: #4e73df;
+    background-color: #f8f9fc;
+}
+
+#formTabs .nav-link.active {
+    color: #4e73df;
+    font-weight: 600;
+    background-color: #fff;
+    border-bottom: 2px solid #4e73df;
+}
+
+#formTabContent {
+    padding: 1rem 0;
+}
+
+/* Required field indicator */
+.form-label .text-danger {
+    margin-left: 2px;
+}
+
+/* Modal size for forms with tabs */
+#kerjasamaModal .modal-dialog {
+    max-width: 700px;
+}
+
+/* Tab content animation */
+.tab-pane.fade {
+    transition: opacity 0.2s linear;
+}
+
+/* Current tab highlight indicator */
+.form-section-indicator {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.form-section-indicator .indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    margin: 0 4px;
+}
+
+.form-section-indicator .indicator.active {
+    background-color: #4e73df;
+    transform: scale(1.2);
+}
+
+/* Badge Styling for Lingkup */
+.badge-nasional {
+    background-color: #4e73df;
+    color: white;
+}
+
+.badge-internasional {
+    background-color: #36b9cc;
+    color: white;
+}
+
+/* Region Badge Styling */
+.badge-asia {
+    background-color: #f6c23e;
+    color: #212529;
+}
+
+.badge-europe {
+    background-color: #4e73df;
+    color: white;
+}
+
+.badge-america {
+    background-color: #e74a3b;
+    color: white;
+}
+
+.badge-africa {
+    background-color: #1cc88a;
+    color: white;
+}
+
+.badge-oceania {
+    background-color: #6f42c1;
+    color: white;
+}
+
+/* Implementasi List Styling */
+.implementasi-list {
+    padding-left: 1.25rem;
+    margin-bottom: 0;
+}
+
+.implementasi-list li {
+    margin-bottom: 0.25rem;
+}
+
+/* Progress View Styling */
+.progress-timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.progress-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #e3e6f0;
+}
+
+.progress-item {
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.progress-item::before {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    top: 0.35rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #4e73df;
+}
+
+/* Filter Input */
+.filter-input {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.filter-input:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Table Cell Max Width and Truncate */
+.cell-truncate {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Pagination Styling */
+.pagination-info {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}

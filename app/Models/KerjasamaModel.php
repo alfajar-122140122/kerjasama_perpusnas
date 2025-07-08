@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Kerjasama extends Model
+class KerjasamaModel extends Model
 {
     protected $table            = 'kerjasama';
     protected $primaryKey       = 'id_kerjasama';
@@ -22,7 +22,18 @@ class Kerjasama extends Model
         'progress',
         'latitude',
         'longitude',
-        'created_by_user_id'
+        'created_by_user_id',
+        'lokasi_mitra',
+        'lingkup', // nasional atau internasional
+        'status', // aktif, berakhir, menunggu perpanjangan
+        'implementasi', // JSON array dengan list implementasi
+        'unit_kerja',
+        'kontak_nama',
+        'kontak_email',
+        'kontak_telepon',
+        'region', // untuk mitra internasional
+        'masa_berlaku', // digunakan untuk tampilan implementasi
+        'tanggal_pengajuan' // untuk tracking progress
     ];
 
     // Dates
