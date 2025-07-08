@@ -6,23 +6,27 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-// Landing page
-$routes->get('/', 'Public\Home::index');
-
 // Public routes
-$routes->get('tentang', 'Public\Home::tentang');
-$routes->get('aktivitas', 'Public\Home::aktivitas');
+$routes->group('', function($routes) {
+    // Landing page
+    $routes->get('/', 'Public\Home::index');
 
-// Kerja Sama routes - pastikan namespace dan method benar
-$routes->get('kerja-sama', 'Public\KerjaSama::index');
-$routes->get('kerja-sama/data', 'Public\KerjaSama::data');
-$routes->get('kerja-sama/implementasi', 'Public\KerjaSama::implementasi');
-$routes->get('kerja-sama/akan-berakhir', 'Public\KerjaSama::akanBerakhir');
-$routes->get('kerja-sama/progress', 'Public\KerjaSama::progress');
-$routes->get('kerja-sama/pengajuan', 'Public\KerjaSama::pengajuan');
+    // Public routes
+    $routes->get('tentang', 'Public\Home::tentang');
+    $routes->get('aktivitas', 'Public\Home::aktivitas');
 
-$routes->get('peta-kerja-sama', 'Public\Home::petaKerjaSama');
-$routes->get('kontak', 'Public\Home::kontak');
+    // Kerja Sama routes - pastikan namespace dan method benar
+    $routes->get('kerja-sama', 'Public\KerjaSama::index');
+    $routes->get('kerja-sama/data', 'Public\KerjaSama::data');
+    $routes->get('kerja-sama/implementasi', 'Public\KerjaSama::implementasi');
+    $routes->get('kerja-sama/akan-berakhir', 'Public\KerjaSama::akanBerakhir');
+    $routes->get('kerja-sama/progress', 'Public\KerjaSama::progress');
+    $routes->get('kerja-sama/pengajuan', 'Public\KerjaSama::pengajuan');
+    $routes->post('kerja-sama/pengajuan', 'Public\KerjaSama::submitPengajuan');
+
+    $routes->get('peta-kerja-sama', 'Public\Home::petaKerjaSama');
+    $routes->get('kontak', 'Public\Home::kontak');
+});
 
 // Auth routes
 $routes->group('auth', function($routes) {
