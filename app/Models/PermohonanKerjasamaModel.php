@@ -6,13 +6,25 @@ use CodeIgniter\Model;
 
 class PermohonanKerjasamaModel extends Model
 {
-    protected $table            = 'permohonankerjasamas';
-    protected $primaryKey       = 'id';
+    protected $table            = 'permohonan_kerjasama';
+    protected $primaryKey       = 'id_permohonan';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'jenis_permohonan',
+        'lembaga', 
+        'alamat',
+        'telepon',
+        'email',
+        'unit_terkait',
+        'kontak_dapat_dihubungi',
+        'file_formulir',
+        'tanggal_pengajuan',
+        'kerjasama_id',
+        'created_by_user_id'
+    ];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

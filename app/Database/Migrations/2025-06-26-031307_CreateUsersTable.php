@@ -32,6 +32,10 @@ class CreateUsersTable extends Migration
                 'default'    => 'user',
                 'null'       => false,
             ],
+            'last_active' => [
+                'type'       => 'DATETIME',
+                'null'       => true,
+            ],
             'created_at'  => [
                 'type'       => 'DATETIME',
                 'null'       => true,

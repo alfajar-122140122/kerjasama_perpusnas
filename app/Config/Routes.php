@@ -37,17 +37,17 @@ $routes->group('auth', function($routes) {
 
 // Admin routes (dengan prefix admin)
 $routes->group('admin', function($routes) {
+    // Dashboard
     $routes->get('dashboard', 'Admin\Dashboard::dashboard');
-    $routes->get('users', 'Admin\Dashboard::users');
-
-    // Password management routes
-    $routes->post('users/change-password/(:num)', 'Admin\Dashboard::changePassword/$1');
-    $routes->post('users/reset-password/(:num)', 'Admin\Dashboard::resetPassword/$1');
-
-    // User management routes
-    $routes->post('users/add', 'Admin\Dashboard::addUser');
-    $routes->post('users/edit/(:num)', 'Admin\Dashboard::editUser/$1');
-    $routes->delete('users/delete/(:num)', 'Admin\Dashboard::deleteUser/$1');
+    
+    // User Management Routes
+    $routes->get('users', 'Admin\UserController::index');
+    $routes->post('users/add', 'Admin\UserController::add');
+    $routes->post('users/edit/(:num)', 'Admin\UserController::edit/$1');
+    $routes->get('users/delete/(:num)', 'Admin\UserController::delete/$1');
+    $routes->post('users/change-password/(:num)', 'Admin\UserController::changePassword/$1');
+    $routes->post('users/reset-password/(:num)', 'Admin\UserController::resetPassword/$1');
+    $routes->get('users/data/(:num)', 'Admin\UserController::getUserData/$1');
     
     // Kerjasama management routes
     $routes->get('kerjasama', 'Admin\Kerjasama::index');
@@ -69,7 +69,6 @@ $routes->group('admin', function($routes) {
     $routes->post('pengaturan/update-profile', 'Admin\Settings::updateProfile');
     $routes->post('pengaturan/change-password', 'Admin\Settings::changePassword');
 });
-
 
 // Redirect dashboard ke admin dashboard untuk backward compatibility
 $routes->get('dashboard', 'Admin\Dashboard::dashboard');
