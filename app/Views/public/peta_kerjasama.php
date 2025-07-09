@@ -8,14 +8,10 @@
 
 <?= $this->section('styles') ?>
 <link href="<?= base_url('css/public.css') ?>" rel="stylesheet">
-<link href="<?= base_url('css/public/navigation.css') ?>" rel="stylesheet">
 <link href="<?= base_url('css/public/peta_kerjasama.css') ?>" rel="stylesheet">
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-
-<!-- Include Navigation Component - Same as other pages -->
-<?= $this->include('layouts/components/public_navigation') ?>
 
 <!-- Main Content -->
 <section class="peta-section">

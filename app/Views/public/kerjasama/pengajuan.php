@@ -8,15 +8,11 @@
 
 <?= $this->section('styles') ?>
 <link href="<?= base_url('css/public.css') ?>" rel="stylesheet">
-<link href="<?= base_url('css/public/navigation.css') ?>" rel="stylesheet">
 <link href="<?= base_url('css/public/kerjasama/pengajuan.css') ?>" rel="stylesheet">
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-
-<!-- Include Navigation Component -->
-<?= $this->include('layouts/components/public_navigation') ?>
 
 <!-- Main Content Wrapper -->
 <div class="pengajuan-wrapper">
