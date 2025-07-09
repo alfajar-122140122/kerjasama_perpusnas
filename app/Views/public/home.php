@@ -8,14 +8,10 @@
 
 <?= $this->section('styles') ?>
 <link href="<?= base_url('css/public.css') ?>" rel="stylesheet">
-<link href="<?= base_url('css/public/navigation.css') ?>" rel="stylesheet">
 <link href="<?= base_url('css/public/home.css') ?>" rel="stylesheet">
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-
-<!-- Include Navigation Component - Same as Home -->
-<?= $this->include('layouts/components/public_navigation') ?>
 
 <!-- Main Content using Bootstrap containers and utilities -->
 <main class="py-4" style="background: #F5F5F5; min-height: calc(100vh - 200px);">

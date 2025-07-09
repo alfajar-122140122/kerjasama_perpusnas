@@ -1,6 +1,6 @@
 <!-- Footer -->
 <footer class="footer">
-    <div class="container">
+    <div class="footer-container">
         <div class="footer-content">
             <div class="footer-section">
                 <h5>Portal Kerjasama</h5>
@@ -45,26 +45,9 @@
     </div>
 </footer>
 
-<script>
-// Back to top button functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const backToTopButton = document.getElementById('btn-back-to-top');
-    
-    // Show/hide button based on scroll position
-    window.addEventListener('scroll', function() {
-        if (window.pageYOffset > 300) {
-            backToTopButton.style.display = 'block';
-        } else {
-            backToTopButton.style.display = 'none';
-        }
-    });
-    
-    // Smooth scroll to top
-    backToTopButton.addEventListener('click', function() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
-});
-</script>
+<!-- Back to Top Button -->
+<button type="button" class="btn-back-to-top" id="btn-back-to-top" aria-label="Kembali ke atas">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<script src="<?= base_url('js/public/components/footer.js') ?>"></script>

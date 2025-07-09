@@ -1,50 +1,4 @@
-/* Consistent header styles with other pages */
-.home-header {
-    background: var(--primary-green);
-    padding: 1rem 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.home-nav {
-    background: var(--primary-blue);
-    padding: 0;
-}
-
-.home-nav .nav-link {
-    color: white !important;
-    padding: 15px 20px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background 0.3s;
-}
-
-.home-nav .nav-link:hover,
-.home-nav .nav-link.active {
-    background: rgba(255,255,255,0.1);
-}
-
-/* Logo optimization - same as other pages */
-.home-header .logo-container {
-    width: 50px;
-    height: 50px;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-}
-
-.home-header .logo-container:hover {
-    transform: scale(1.05);
-}
-
-.home-header .logo-container img {
-    width: 35px;
-    height: 35px;
-    object-fit: contain;
-}
+/* Contact page specific styles - Hapus semua style header/nav yang bertabrakan */
 
 /* Contact page specific styles */
 .contact-section {
@@ -141,18 +95,18 @@
     margin-top: 2rem;
 }
 
-.form-group {
+.contact-form .form-group {
     margin-bottom: 1.5rem;
 }
 
-.form-label {
+.contact-form .form-label {
     color: var(--text-dark, #333);
     font-weight: 600;
     margin-bottom: 0.5rem;
     display: block;
 }
 
-.form-control {
+.contact-form .form-control {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #ddd;
@@ -161,13 +115,13 @@
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.form-control:focus {
+.contact-form .form-control:focus {
     outline: none;
     border-color: var(--primary-blue, #2196F3);
     box-shadow: 0 0 0 0.25rem rgba(33, 150, 243, 0.25);
 }
 
-.btn-submit {
+.contact-form .btn-submit {
     background: var(--primary-green, #4CAF50);
     color: white;
     border: none;
@@ -179,7 +133,7 @@
     transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.btn-submit:hover {
+.contact-form .btn-submit:hover {
     background: #45a049;
     transform: translateY(-1px);
 }
@@ -221,21 +175,6 @@
     .contact-form {
         padding: 1.5rem;
         margin-top: 1.5rem;
-    }
-    
-    .home-nav .nav-link {
-        padding: 12px 15px;
-        font-size: 13px;
-    }
-    
-    .home-header .logo-container {
-        width: 45px;
-        height: 45px;
-    }
-    
-    .home-header .logo-container img {
-        width: 30px;
-        height: 30px;
     }
 }
 

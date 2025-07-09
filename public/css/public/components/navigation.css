@@ -119,7 +119,7 @@
 .login-btn:hover,
 .login-btn:focus {
     background: #0B8F1C;
-    color: #ffffff;
+    color: white;
     border-color: #0B8F1C;
     transform: translateY(-1px);
     text-decoration: none;
@@ -296,15 +296,13 @@
     transform: translateY(0);
 }
 
-.nav-dropdown-item {
-    display: block;
-    width: 100%;
-    padding: 0;
+.nav-dropdown-menu li {
     margin: 0;
+    padding: 0;
     list-style: none;
 }
 
-.nav-dropdown-link {
+.nav-dropdown-item {
     display: block;
     padding: 12px 20px;
     color: #495057;
@@ -315,21 +313,21 @@
     border-left: 3px solid transparent;
 }
 
-.nav-dropdown-link:hover {
+.nav-dropdown-item:hover {
     background: #f8f9fa;
     color: #004AAD;
     border-left-color: #004AAD;
     text-decoration: none;
 }
 
-.nav-dropdown-link.active {
+.nav-dropdown-item.active {
     background: #004AAD;
     color: white;
     border-left-color: #4CAF50;
     font-weight: 600;
 }
 
-.nav-dropdown-link.active:hover {
+.nav-dropdown-item.active:hover {
     background: #003d8a;
     color: white;
 }
@@ -345,7 +343,7 @@
 }
 
 /* Active state for dropdown parent when child is active */
-.nav-dropdown:has(.nav-dropdown-link.active) .nav-dropdown-toggle {
+.nav-dropdown:has(.nav-dropdown-item.active) .nav-dropdown-toggle {
     background: rgba(255,255,255,0.15);
     border-bottom-color: #4CAF50;
     font-weight: 600;
@@ -371,7 +369,7 @@
 /* Focus States for Accessibility */
 .nav-link:focus,
 .home-icon-link:focus,
-.nav-dropdown-link:focus {
+.nav-dropdown-item:focus {
     outline: 2px solid #FFC107;
     outline-offset: -2px;
 }
@@ -550,7 +548,7 @@
 .btn-outline-light,
 .search-btn,
 .login-btn,
-.nav-dropdown-link {
+.nav-dropdown-item {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -592,7 +590,7 @@
     .btn-outline-light,
     .search-btn,
     .login-btn,
-    .nav-dropdown-link,
+    .nav-dropdown-item,
     .nav-dropdown-menu,
     .dropdown-arrow {
         transition: none;
@@ -615,7 +613,7 @@
     }
     
     .nav-link.active,
-    .nav-dropdown-link.active {
+    .nav-dropdown-item.active {
         background: #000;
         color: #fff;
     }
