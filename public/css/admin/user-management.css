@@ -1,0 +1,392 @@
+/* User Management Clean Styles */
+
+/* Card Styling */
+.card {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+}
+
+.card-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    border-radius: 8px 8px 0 0 !important;
+    padding: 1rem 1.5rem;
+}
+
+.card-header h6 {
+    font-weight: 600;
+    color: #495057;
+    margin: 0;
+}
+
+/* Add User Button */
+.btn-add-user {
+    background: #28a745;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn-add-user:hover {
+    background: #218838;
+    color: white;
+}
+
+/* Table Styling */
+.table {
+    margin-bottom: 0;
+}
+
+.table-header th {
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: 600;
+    font-size: 14px;
+    color: #495057;
+    padding: 1rem 1.5rem;
+    border-top: none;
+}
+
+.table-header th:first-child {
+    border-left: none;
+}
+
+.table-header th:last-child {
+    border-right: none;
+}
+
+/* User Row Styling */
+.user-row {
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.user-row:hover {
+    background-color: #f8f9fa;
+}
+
+.user-row td {
+    padding: 1rem 1.5rem;
+    vertical-align: middle;
+    border-top: 1px solid #f1f3f4;
+    border-bottom: none;
+}
+
+/* User Info */
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-name {
+    font-weight: 500;
+    color: #212529;
+    font-size: 14px;
+}
+
+/* Role Badge */
+.user-role-badge {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-admin {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.badge-user {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+}
+
+/* Last Active */
+.last-active {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.btn-edit {
+    background: transparent;
+    border: none;
+    color: #007bff;
+    padding: 0.4rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-edit:hover {
+    background: #e3f2fd;
+    color: #0056b3;
+}
+
+.btn-delete {
+    background: transparent;
+    border: none;
+    color: #dc3545;
+    padding: 0.4rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-delete:hover {
+    background: #ffebee;
+    color: #c62828;
+}
+
+/* Checkbox Styling */
+.form-check-input {
+    border-radius: 3px;
+    border: 1px solid #ced4da;
+}
+
+.form-check-input:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.form-check-input:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Empty State */
+.empty-state {
+    padding: 3rem 2rem;
+}
+
+.empty-state i {
+    opacity: 0.5;
+}
+
+.empty-state h5 {
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: #adb5bd;
+    margin: 0;
+}
+
+/* Modal Styles */
+.modal-content {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+}
+
+.modal-header {
+    border-bottom: 1px solid #e9ecef;
+    border-radius: 8px 8px 0 0;
+    padding: 1.5rem;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #e9ecef;
+    border-radius: 0 0 8px 8px;
+    padding: 1rem 1.5rem;
+}
+
+/* Form Styles */
+.form-control {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-select {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-size: 14px;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    font-size: 14px;
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+    border-color: #545b62;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #218838;
+}
+
+/* Alert Styles */
+.alert {
+    border: none;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Input Group */
+.input-group .btn {
+    border-left: none;
+    border-radius: 0 6px 6px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card-header {
+        padding: 1rem;
+    }
+    
+    .table-header th,
+    .user-row td {
+        padding: 0.75rem 1rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .btn-edit,
+    .btn-delete {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+    
+    .user-name {
+        font-size: 13px;
+    }
+    
+    .user-role-badge {
+        font-size: 11px;
+        padding: 0.3rem 0.6rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .card-header h6 {
+        font-size: 14px;
+    }
+    
+    .btn-add-user {
+        font-size: 12px;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    .table-header th,
+    .user-row td {
+        padding: 0.5rem 0.75rem;
+        font-size: 13px;
+    }
+    
+    .action-buttons {
+        gap: 0.2rem;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 1rem;
+    }
+}
+
+/* Animation */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus and Accessibility */
+.btn:focus,
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+    outline: none;
+}
