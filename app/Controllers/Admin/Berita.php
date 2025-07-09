@@ -71,7 +71,8 @@ class Berita extends BaseController
                 'judul' => $this->request->getPost('judul'),
                 'isi_berita' => $this->request->getPost('isi_berita'),
                 'tanggal_publikasi' => $this->request->getPost('tanggal_publikasi') ?: date('Y-m-d H:i:s'),
-                'created_by_user_id' => $this->session->get('user_id') ?? 1
+                'created_by_user_id' => $this->session->get('user_id') ?? 1,
+                'status' => $this->request->getPost('status') ?: 'draft'
             ];
             
             // Handle file upload
@@ -123,7 +124,8 @@ class Berita extends BaseController
             $data = [
                 'judul' => $this->request->getPost('judul'),
                 'isi_berita' => $this->request->getPost('isi_berita'),
-                'tanggal_publikasi' => $this->request->getPost('tanggal_publikasi') ?: $berita['tanggal_publikasi']
+                'tanggal_publikasi' => $this->request->getPost('tanggal_publikasi') ?: $berita['tanggal_publikasi'],
+                'status' => $this->request->getPost('status') ?: $berita['status']
             ];
             
             // Handle file upload
@@ -183,36 +185,25 @@ class Berita extends BaseController
         return [
             [
                 'id_berita' => 1,
-                'judul' => 'Peluncuran Program Digitalisasi Perpustakaan Nasional 2025',
+                'judul' => 'Pelestarian warisan dokumenter budaya Nusantara',
                 'isi_berita' => 'Perpustakaan Nasional meluncurkan program digitalisasi besar-besaran untuk meningkatkan akses informasi bagi seluruh masyarakat Indonesia. Program ini diharapkan dapat mempermudah akses ke koleksi digital perpustakaan.',
                 'gambar' => 'berita1.jpg',
-                'tanggal_publikasi' => '2025-01-15 10:00:00',
+                'tanggal_publikasi' => '2026-08-14 10:00:00',
                 'created_by_user_id' => 1,
-                'created_at' => '2025-01-15 09:30:00',
-                'updated_at' => '2025-01-15 09:30:00',
-                'status' => 'published'
+                'created_at' => '2026-08-14 09:30:00',
+                'updated_at' => '2026-08-14 09:30:00',
+                'status' => 'draft'
             ],
             [
                 'id_berita' => 2,
-                'judul' => 'Kerjasama Perpustakaan Nasional dengan Universitas Terkemuka',
+                'judul' => 'Pelestarian warisan dokumenter budaya Nusantara',
                 'isi_berita' => 'Perpustakaan Nasional menjalin kerjasama strategis dengan berbagai universitas terkemuka untuk meningkatkan literasi dan akses informasi akademik di Indonesia.',
                 'gambar' => 'berita2.jpg',
-                'tanggal_publikasi' => '2025-01-10 14:30:00',
+                'tanggal_publikasi' => '2026-08-13 14:30:00',
                 'created_by_user_id' => 1,
-                'created_at' => '2025-01-10 14:00:00',
-                'updated_at' => '2025-01-10 14:00:00',
+                'created_at' => '2026-08-13 14:00:00',
+                'updated_at' => '2026-08-13 14:00:00',
                 'status' => 'published'
-            ],
-            [
-                'id_berita' => 3,
-                'judul' => 'Workshop Literasi Digital untuk Masyarakat',
-                'isi_berita' => 'Perpustakaan Nasional mengadakan workshop literasi digital gratis untuk meningkatkan kemampuan masyarakat dalam menggunakan teknologi informasi dan komunikasi.',
-                'gambar' => null,
-                'tanggal_publikasi' => null,
-                'created_by_user_id' => 1,
-                'created_at' => '2025-01-05 16:00:00',
-                'updated_at' => '2025-01-05 16:00:00',
-                'status' => 'draft'
             ]
         ];
     }

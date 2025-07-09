@@ -2,10 +2,11 @@
 
 <?= $this->section('title') ?>Manajemen Berita<?= $this->endSection() ?>
 
-<?= $this->section('page-title') ?>Manajemen Berita<?= $this->endSection() ?>
+<?= $this->section('page-title') ?>Admin / Kelola Berita<?= $this->endSection() ?>
 
 <?= $this->section('styles') ?>
-<link href="<?= base_url('css/berita-management.css') ?>" rel="stylesheet">
+<link href="<?= base_url('css/berita-management-new.css') ?>" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -65,151 +66,111 @@ if (!isset($berita)) {
     </div>
 <?php endif; ?>
 
-<!-- Berita Management Card -->
-<div class="card">
-    <div class="card-header">
-        <div class="d-flex justify-content-between align-items-center">
-            <h6 class="mb-0">Kelola Berita</h6>
-            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addBeritaModal">
+<!-- Berita Management Section -->
+<div class="row">
+    <div class="col-12">
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex align-items-center">
+                <div class="input-group" style="width: 300px;">
+                    <input type="text" class="form-control" id="searchBerita" placeholder="Cari Berita">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                </div>
+            </div>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addBeritaModal">
                 Tambah Berita
             </button>
         </div>
-    </div>
-    <div class="card-body">
-        <!-- Search and Filter -->
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <div class="input-group">
-                    <input type="text" class="form-control" id="searchBerita" placeholder="Cari berita...">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <select class="form-select" id="filterStatus">
-                    <option value="">Semua Status</option>
-                    <option value="published">Published</option>
-                    <option value="draft">Draft</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <select class="form-select" id="filterMonth">
-                    <option value="">Semua Bulan</option>
-                    <option value="2025-01">Januari 2025</option>
-                    <option value="2024-12">Desember 2024</option>
-                    <option value="2024-11">November 2024</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <button class="btn btn-outline-secondary w-100" onclick="resetFilters()">Reset</button>
-            </div>
+
+        <!-- Filter Section -->
+        <div class="d-flex align-items-center mb-3">
+            <button class="btn btn-outline-secondary dropdown-toggle me-2" type="button" data-bs-toggle="dropdown">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" onclick="filterByStatus('all')">Semua Status</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByStatus('published')">Published</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByStatus('draft')">Draft</a></li>
+            </ul>
         </div>
 
         <!-- Berita Table -->
         <?php if (isset($berita) && !empty($berita)): ?>
-        <div class="table-responsive">
-            <table class="table table-hover align-middle" id="beritaTable">
-                <thead class="table-light">
-                    <tr>
-                        <th width="5%">
-                            <input type="checkbox" class="form-check-input" id="selectAll">
-                        </th>
-                        <th width="10%">Gambar</th>
-                        <th width="35%">Judul</th>
-                        <th width="15%">Status</th>
-                        <th width="15%">Tanggal Publikasi</th>
-                        <th width="10%">Dibuat</th>
-                        <th width="10%" class="text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($berita as $item): ?>
-                    <tr data-berita-id="<?= $item['id_berita'] ?>" class="berita-row">
-                        <td>
-                            <input type="checkbox" class="form-check-input berita-checkbox" value="<?= $item['id_berita'] ?>">
-                        </td>
-                        <td>
-                            <div class="berita-image">
-                                <?php if ($item['gambar']): ?>
-                                    <img src="<?= base_url('uploads/berita/' . $item['gambar']) ?>" alt="Berita Image" class="img-thumbnail">
-                                <?php else: ?>
-                                    <div class="no-image">
-                                        <span>No Image</span>
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="beritaTable">
+                        <thead style="background-color: #f8f9fa;">
+                            <tr>
+                                <th width="15%">Gambar</th>
+                                <th width="40%">Judul Berita</th>
+                                <th width="15%">Status</th>
+                                <th width="20%">Tanggal Publikasi</th>
+                                <th width="10%" class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($berita as $item): ?>
+                            <tr data-berita-id="<?= $item['id_berita'] ?>" class="berita-row">
+                                <td class="p-3">
+                                    <div class="berita-image" style="width: 80px; height: 60px;">
+                                        <?php if ($item['gambar']): ?>
+                                            <img src="<?= base_url('uploads/berita/' . $item['gambar']) ?>" alt="Berita Image" 
+                                                 class="img-fluid rounded" style="width: 100%; height: 100%; object-fit: cover;">
+                                        <?php else: ?>
+                                            <div class="bg-light d-flex align-items-center justify-content-center rounded" 
+                                                 style="width: 100%; height: 100%;">
+                                                <i class="fas fa-image text-muted"></i>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
-                                <?php endif; ?>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="berita-content">
-                                <h6 class="berita-title mb-1"><?= esc($item['judul']) ?></h6>
-                                <small class="text-muted berita-excerpt">
-                                    <?= esc(substr(strip_tags($item['isi_berita']), 0, 100)) ?>...
-                                </small>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="badge bg-<?= $item['status'] === 'published' ? 'success' : 'warning' ?> berita-status">
-                                <?= ucfirst($item['status']) ?>
-                            </span>
-                        </td>
-                        <td>
-                            <small class="text-muted berita-publish-date">
-                                <?= $item['tanggal_publikasi'] ? date('d/m/Y H:i', strtotime($item['tanggal_publikasi'])) : 'Belum dipublikasi' ?>
-                            </small>
-                        </td>
-                        <td>
-                            <small class="text-muted berita-created-date">
-                                <?= date('d/m/Y', strtotime($item['created_at'])) ?>
-                            </small>
-                        </td>
-                        <td class="text-center">
-                            <div class="btn-group" role="group">
-                                <button class="btn btn-sm btn-outline-info" onclick="viewBerita(<?= $item['id_berita'] ?>)" title="Lihat Detail">
-                                    Lihat
-                                </button>
-                                <button class="btn btn-sm btn-outline-warning" onclick="editBerita(<?= $item['id_berita'] ?>)" title="Edit Berita">
-                                    Edit
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="deleteBerita(<?= $item['id_berita'] ?>)" title="Hapus Berita">
-                                    Hapus
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pagination -->
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <div>
-                <small class="text-muted">
-                    Menampilkan <?= count($berita) ?> dari <?= count($berita) ?> berita
-                </small>
+                                </td>
+                                <td class="p-3">
+                                    <div class="berita-content">
+                                        <h6 class="berita-title mb-1 text-dark"><?= esc($item['judul']) ?></h6>
+                                        <small class="text-muted berita-excerpt">
+                                            <?= esc(substr(strip_tags($item['isi_berita']), 0, 80)) ?>...
+                                        </small>
+                                    </div>
+                                </td>
+                                <td class="p-3">
+                                    <?php if ($item['status'] === 'published'): ?>
+                                        <span class="badge bg-success">Published</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-warning text-dark">Draft</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="p-3">
+                                    <small class="text-muted">
+                                        <?= $item['tanggal_publikasi'] ? date('d/m/Y', strtotime($item['tanggal_publikasi'])) : '-' ?>
+                                    </small>
+                                </td>
+                                <td class="text-center p-3">
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        <button class="btn btn-sm btn-outline-success" onclick="viewBerita(<?= $item['id_berita'] ?>)" title="Lihat">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-warning" onclick="editBerita(<?= $item['id_berita'] ?>)" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteBerita(<?= $item['id_berita'] ?>)" title="Hapus">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <nav aria-label="Berita pagination">
-                <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                    </li>
-                    <li class="page-item active">
-                        <a class="page-link" href="#">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
         </div>
         <?php else: ?>
-        <div class="empty-state text-center py-5">
-            <h5>Belum ada berita</h5>
-            <p class="text-muted">Tambahkan berita pertama dengan klik tombol "Tambah Berita"</p>
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <h5>Belum ada berita</h5>
+                <p class="text-muted">Tambahkan berita pertama dengan klik tombol "Tambah Berita"</p>
+            </div>
         </div>
         <?php endif; ?>
     </div>
@@ -409,7 +370,7 @@ if (!isset($berita)) {
     const base_url = '<?= base_url() ?>';
 </script>
 <!-- Berita Management JS -->
-<script src="<?= base_url('js/berita-management.js') ?>"></script>
+<script src="<?= base_url('js/berita-management-new.js') ?>"></script>
 <!-- CKEditor for rich text editing -->
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <script>

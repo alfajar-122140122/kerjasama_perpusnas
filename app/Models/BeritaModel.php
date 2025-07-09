@@ -18,7 +18,8 @@ class BeritaModel extends Model
         'isi_berita',
         'gambar',
         'tanggal_publikasi',
-        'created_by_user_id'
+        'created_by_user_id',
+        'status'
     ];
 
     // Dates

@@ -5,12 +5,6 @@
 <?= $this->section('page-title') ?>Pengaturan Akun<?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<div class="row">
-    <div class="col-12">
-        <h2 class="page-title">Pengaturan Akun</h2>
-        <p class="text-muted mb-4">Kelola profil dan pengaturan akun Anda</p>
-    </div>
-</div>
 
 <!-- Alert Container -->
 <div id="alertContainer"></div>

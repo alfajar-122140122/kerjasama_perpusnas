@@ -195,11 +195,11 @@
 
 /* Hover effects untuk social media icons */
 .footer-section ul li a[href*="facebook"]:hover {
-    color: #1877f2;
+    color: #004aad;
 }
 
 .footer-section ul li a[href*="twitter"]:hover {
-    color: #1da1f2;
+    color: #004aad;
 }
 
 .footer-section ul li a[href*="instagram"]:hover {
