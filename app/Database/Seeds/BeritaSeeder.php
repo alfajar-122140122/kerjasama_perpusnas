@@ -89,6 +89,7 @@ class BeritaSeeder extends Seeder
                 'isi_berita' => $content,
                 'gambar' => $imageName,
                 'tanggal_publikasi' => $publishDate->format('Y-m-d H:i:s'),
+                'status' => $faker->randomElement(['draft', 'published']),
                 'created_by_user_id' => $faker->randomElement($userIds),
                 'created_at' => $createdDate->format('Y-m-d H:i:s'),
                 'updated_at' => $faker->dateTimeBetween($createdDate, 'now')->format('Y-m-d H:i:s'),

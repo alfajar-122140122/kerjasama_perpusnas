@@ -45,6 +45,11 @@ class CreateBeritaTable extends Migration
                 'type'       => 'DATETIME',
                 'null'       => true,
             ],
+            'status'      => [
+                'type'       => 'VARCHAR',
+                'constraint' => 20,
+                'default'    => 'draft',
+            ],
         ]);
 
         $this->forge->addPrimaryKey('id_berita');
