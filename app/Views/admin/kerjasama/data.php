@@ -242,7 +242,7 @@ document.getElementById('selectAll').addEventListener('change', function() {
 // Search functionality
 document.getElementById('searchInput').addEventListener('keyup', function() {
     const searchTerm = this.value.toLowerCase();
-    const tableRows = document.querySelectorAll('#kerjasamaTableBody tr');
+    const tableRows = document.querySelectorAll('tbody tr');
     
     tableRows.forEach(row => {
         const namaMitra = row.cells[1].textContent.toLowerCase();
@@ -261,7 +261,7 @@ document.querySelectorAll('[data-filter]').forEach(filterBtn => {
     filterBtn.addEventListener('click', function(e) {
         e.preventDefault();
         const filter = this.dataset.filter;
-        const tableRows = document.querySelectorAll('#kerjasamaTableBody tr');
+        const tableRows = document.querySelectorAll('tbody tr');
         
         tableRows.forEach(row => {
             if (filter === 'all') {
