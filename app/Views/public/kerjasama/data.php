@@ -14,7 +14,7 @@
 
 <?= $this->section('content') ?>
 
-<!-- Main Content Wrapper -->
+<!-- Main Content Wrappers -->
 <div class="kerjasama-data-wrapper">
     <div class="container">
         
@@ -81,7 +81,7 @@
                 </div>
             </div>
         </div>
-
+        
         <!-- Pagination Section -->
         <div class="kerjasama-pagination-section" data-aos="fade-up" data-aos-delay="400">
             <nav class="pagination-nav" aria-label="Navigation halaman">
