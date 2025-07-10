@@ -26,7 +26,6 @@
                     <li><i class="fas fa-map-marker-alt"></i> Jl. Salemba Raya No. 28A, Jakarta Pusat</li>
                     <li><i class="fas fa-phone"></i> (021) 3192 6666</li>
                     <li><i class="fas fa-envelope"></i> kerjasama@perpusnas.go.id</li>
-                    <li><a href="<?= base_url('kontak') ?>">Hubungi Kami</a></li>
                 </ul>
             </div>
             <div class="footer-section">

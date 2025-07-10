@@ -64,16 +64,6 @@
                         <a href="mailto:kerjasama@gmail.com">kerjasama@gmail.com</a>
                     </p>
                 </div>
-                
-                <div class="contact-detail">
-                    <span class="contact-label">
-                        <i class="fas fa-clock contact-icon"></i>Jam Operasional:
-                    </span>
-                    <p class="contact-value">
-                        Senin - Jumat: 08:00 - 16:00 WIB<br>
-                        Sabtu - Minggu: Tutup
-                    </p>
-                </div>
             </div>
         </div>
     </div>
