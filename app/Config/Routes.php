@@ -49,14 +49,24 @@ $routes->group('admin', function($routes) {
     $routes->post('users/reset-password/(:num)', 'Admin\UserController::resetPassword/$1');
     $routes->get('users/data/(:num)', 'Admin\UserController::getUserData/$1');
     
-    // Kerjasama management routes
-    $routes->get('kerjasama', 'Admin\Kerjasama::index');
-    $routes->get('kerjasama/getAll', 'Admin\Kerjasama::getAll');
-    $routes->get('kerjasama/getOne', 'Admin\Kerjasama::getOne');
-    $routes->post('kerjasama/create', 'Admin\Kerjasama::create');
-    $routes->post('kerjasama/update', 'Admin\Kerjasama::update');
-    $routes->post('kerjasama/delete', 'Admin\Kerjasama::delete');
-    $routes->get('kerjasama/getStats', 'Admin\Kerjasama::getStats');
+    // Admin Kerjasama Routes
+    $routes->get('kerjasama/data', 'Admin\KerjasamaController::data');
+
+    $routes->get('kerjasama/implementasi', 'Admin\KerjasamaController::implementasi');
+    $routes->get('kerjasama/implementasi/tambah', 'Admin\KerjasamaController::tambahImplementasi');
+    $routes->get('kerjasama/implementasi/edit/(:num)', 'Admin\KerjasamaController::editImplementasi/$1');
+
+    $routes->get('kerjasama/akan-berakhir', 'Admin\KerjasamaController::akanBerakhir');
+
+    $routes->get('kerjasama/progress', 'Admin\KerjasamaController::progress');
+
+    $routes->get('kerjasama/pengajuan', 'Admin\KerjasamaController::pengajuan');
+
+    $routes->get('kerjasama/tambah', 'Admin\KerjasamaController::tambah');
+    $routes->get('kerjasama/edit/(:num)', 'Admin\KerjasamaController::edit/$1');
+    $routes->post('kerjasama/store', 'Admin\KerjasamaController::store');
+    $routes->post('kerjasama/update/(:num)', 'Admin\KerjasamaController::update/$1');
+    $routes->delete('kerjasama/delete/(:num)', 'Admin\KerjasamaController::delete/$1');
     
     // Berita management routes
     $routes->get('berita', 'Admin\Berita::index');
