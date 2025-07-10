@@ -34,7 +34,7 @@
                     </div>
                     <h3 class="news-title">Penguatan Kelembagaan Perpustakaan, Pemkab Asmat Konsultasi ke Perpusnas</h3>
                     <p class="news-excerpt">JAKARTA - Perpustakaan Nasional Republik Indonesia (Perpusnas) menerima kunjungan konsultasi dari Pemerintah Kabupaten Asmat terkait penguatan kelembagaan perpustakaan daerah. Kegiatan ini merupakan bagian dari upaya meningkatkan kualitas layanan perpustakaan di daerah.</p>
-                    <a href="#" class="btn-read-more">Baca Selengkapnya</a>
+                    <a href="<?= base_url('aktivitas/detail/' . ($news_id ?? '1')) ?>" class="btn-read-more">Baca Selengkapnya</a>
                 </div>
             </article>
 

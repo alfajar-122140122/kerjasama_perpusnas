@@ -14,6 +14,7 @@ $routes->group('', function($routes) {
     // Public routes
     $routes->get('tentang', 'Public\Home::tentang');
     $routes->get('aktivitas', 'Public\Home::aktivitas');
+    $routes->get('aktivitas/detail/(:num)', 'Public\AktivitasController::detail/$1');
 
     // Kerja Sama routes - pastikan namespace dan method benar
     $routes->get('kerja-sama', 'Public\KerjaSama::index');
