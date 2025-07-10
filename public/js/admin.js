@@ -369,3 +369,25 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateClock, 1000);
     updateClock(); // Initial call
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Kerjasama dropdown with smooth toggle
+    const kerjasamaToggle = document.querySelector('a[data-target="kerjasamaSubmenu"]');
+    const kerjasamaSubmenu = document.getElementById('kerjasamaSubmenu');
+    
+    if (kerjasamaToggle && kerjasamaSubmenu) {
+        kerjasamaToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const isOpen = kerjasamaSubmenu.classList.contains('open');
+            
+            if (isOpen) {
+                kerjasamaSubmenu.classList.remove('open');
+                kerjasamaToggle.classList.remove('expanded');
+            } else {
+                kerjasamaSubmenu.classList.add('open');
+                kerjasamaToggle.classList.add('expanded');
+            }
+        });
+    }
+});

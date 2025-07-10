@@ -146,6 +146,52 @@ body {
     margin-left: 0;
 }
 
+/* Dropdown Arrow */
+.sidebar ul li a.dropdown-toggle {
+    position: relative;
+}
+
+.dropdown-arrow {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.3s ease;
+    font-size: 0.8rem;
+}
+
+.dropdown-toggle.expanded .dropdown-arrow {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Submenu */
+.sidebar ul li .submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: rgba(0, 0, 0, 0.2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar ul li .submenu.open {
+    max-height: 300px;
+}
+
+.sidebar ul li .submenu li a {
+    padding: 12px 20px 12px 50px;
+    font-size: 0.9rem;
+    margin: 0;
+    border-radius: 0;
+}
+
+.sidebar ul li .submenu li a i {
+    margin-right: 8px;
+    width: 16px;
+    font-size: 0.8rem;
+}
+
 /* Top Navbar */
 .navbar {
     border-bottom: 1px solid #e3e6f0;

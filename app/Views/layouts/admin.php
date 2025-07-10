@@ -40,9 +40,17 @@
                     </a>
                 </li>
                 <li class="<?= (strpos(current_url(), 'admin/kerjasama') !== false) ? 'active' : '' ?>">
-                    <a href="<?= base_url('admin/kerjasama') ?>">
+                    <a href="#" class="dropdown-toggle" data-target="kerjasamaSubmenu">
                         <i class="fas fa-handshake"></i> <span>Kerjasama</span>
+                        <i class="fas fa-chevron-down dropdown-arrow"></i>
                     </a>
+                    <ul class="submenu" id="kerjasamaSubmenu">
+                        <li><a href="<?= base_url('admin/kerjasama/data') ?>"><i class="fas fa-folder"></i> Data</a></li>
+                        <li><a href="<?= base_url('admin/kerjasama/implementasi') ?>"><i class="fas fa-cogs"></i> Implementasi</a></li>
+                        <li><a href="<?= base_url('admin/kerjasama/akan-berakhir') ?>"><i class="fas fa-clock"></i> Akan Berakhir</a></li>
+                        <li><a href="<?= base_url('admin/kerjasama/progress') ?>"><i class="fas fa-chart-line"></i> Progress</a></li>
+                        <li><a href="<?= base_url('admin/kerjasama/pengajuan') ?>"><i class="fas fa-edit"></i> Pengajuan</a></li>
+                    </ul>
                 </li>
                 <li class="<?= (strpos(current_url(), 'admin/berita') !== false) ? 'active' : '' ?>">
                     <a href="<?= base_url('admin/berita') ?>">
