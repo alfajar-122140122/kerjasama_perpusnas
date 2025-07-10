@@ -14,7 +14,7 @@
 
 <?= $this->section('content') ?>
 
-<!-- Main Content Wrapper -->
+<!-- Main Content Wrappers -->
 <div class="kerjasama-data-wrapper">
     <div class="container">
         
