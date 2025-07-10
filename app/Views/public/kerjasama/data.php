@@ -95,7 +95,7 @@
             ]) ?>
         </div>
         
-        <!-- Pagination Sections -->
+        <!-- Pagination Section -->
         <div class="kerjasama-pagination-section" data-aos="fade-up" data-aos-delay="400">
             <nav class="pagination-nav" aria-label="Navigation halaman">
                 <ul class="kerjasama-pagination" id="paginationList">
