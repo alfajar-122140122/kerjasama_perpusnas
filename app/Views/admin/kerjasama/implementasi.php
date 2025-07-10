@@ -1,130 +1,159 @@
 <?= $this->extend('layouts/admin') ?>
 
-<?= $this->section('title') ?>Kelola Implementasi<?= $this->endSection() ?>
-
-<?= $this->section('page-title') ?>Kelola Implementasi<?= $this->endSection() ?>
-
-<?= $this->section('styles') ?>
-<link href="<?= base_url('css/kerjasama-management.css') ?>" rel="stylesheet">
+<?= $this->section('title') ?>
+Implementasi Kerjasama
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 <div class="container-fluid">
-    <!-- Alert Container -->
-    <div id="alertContainer"></div>
-    
-    <!-- Flash Messages -->
-    <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-2"></i><?= session()->getFlashdata('success') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="h4 mb-0 text-gray-800">Admin / Kelola Implementasi</h2>
         </div>
-        <a href="<?= base_url('admin/kerjasama/implementasi/tambah') ?>" class="btn btn-success">
+        <a href="<?= base_url('admin/kerjasama/implementasi/tambah') ?>" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#tambahImplementasiModal">
             <i class="fas fa-plus me-2"></i>Tambah Implementasi
         </a>
     </div>
 
-    <!-- Main Content Card -->
+    <!-- Data Table Card -->
     <div class="card shadow mb-4">
-        <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">Kelola Implementasi</h6>
-            <button type="button" class="btn btn-success" id="addImplementasiBtn" data-bs-toggle="modal" data-bs-target="#implementasiModal">
-                <i class="fas fa-plus me-1"></i> Tambah Implementasi
-            </button>
-        </div>
         <div class="card-body">
-            <!-- Search and Filter Section -->
-            <div class="filter-section mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <button class="btn btn-sm btn-link text-decoration-none collapsed p-0" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
-                        <i class="fas fa-filter me-1"></i> Filter <i class="fas fa-chevron-down ms-1 small"></i>
-                    </button>
-                    
-                    <div class="d-flex gap-2">
-                        <div class="input-group input-group-sm" style="width: 250px;">
-                            <input type="text" class="form-control" id="searchInput" placeholder="Cari Data...">
-                            <button class="btn btn-primary" id="searchBtn">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
+            <!-- Search and Filter -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Cari Data" id="searchInput">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="collapse" id="filterCollapse">
-                    <div class="card-body py-3">
-                        <div class="row g-3">
-                            <div class="col-md-3">
-                                <label for="filterMitra" class="form-label small">Nama Mitra</label>
-                                <select class="form-select form-select-sm" id="filterMitra">
-                                    <option value="">Semua Mitra</option>
-                                    <option value="fulan">Fulan</option>
-                                    <option value="fulana">Fulana</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="filterImplementasi" class="form-label small">Implementasi</label>
-                                <select class="form-select form-select-sm" id="filterImplementasi">
-                                    <option value="">Semua Implementasi</option>
-                                    <option value="dokumenter">Dokumenter Budaya</option>
-                                    <option value="perpanjangan">Perpanjangan</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="filterUnitKerja" class="form-label small">Unit Kerja</label>
-                                <select class="form-select form-select-sm" id="filterUnitKerja">
-                                    <option value="">Semua Unit</option>
-                                    <option value="pustakawan">Pustakawan</option>
-                                    <option value="lainnya">Lainnya</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3 d-flex align-items-end">
-                                <button class="btn btn-secondary btn-sm" id="resetFilterBtn">
-                                    <i class="fas fa-sync-alt me-1"></i> Reset
-                                </button>
-                            </div>
-                        </div>
+                <div class="col-md-6 text-end">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-filter me-2"></i>Filter
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" data-filter="all">Semua</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="berjalan">Sedang Berjalan</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="selesai">Selesai</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="pending">Pending</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
             <!-- Data Table -->
             <div class="table-responsive">
-                <table class="table table-bordered" id="implementasiTable" width="100%" cellspacing="0">
-                    <thead>
+                <table class="table table-hover">
+                    <thead class="table-light">
                         <tr>
-                            <th style="width: 5%;">
+                            <th width="40">
                                 <input type="checkbox" id="selectAll" class="form-check-input">
                             </th>
-                            <th style="width: 15%;">Nama Mitra</th>
-                            <th style="width: 15%;">Masa Berlaku</th>
-                            <th style="width: 25%;">Implementasi</th>
-                            <th style="width: 15%;">Lingkup</th>
-                            <th style="width: 15%;">Unit Kerja</th>
-                            <th style="width: 10%;">Aksi</th>
+                            <th>Nama Mitra</th>
+                            <th>Masa Berlaku</th>
+                            <th>Implementasi</th>
+                            <th>Lingkup</th>
+                            <th>Unit Kerja</th>
+                            <th width="120" class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Sample data row for demonstration -->
+                        <?php 
+                        // Sample data - nanti diganti dengan data dari database
+                        $implementasiData = [
+                            [
+                                'id' => 1,
+                                'nama_mitra' => 'Fulan',
+                                'masa_berlaku_mulai' => '14/08/2025',
+                                'masa_berlaku_akhir' => '15/08/2025',
+                                'implementasi' => 'Pelestarian warisan dokumenter budaya Nusantara....',
+                                'lingkup' => 'Dokumenter Budaya',
+                                'unit_kerja' => 'Pustakawan',
+                                'status' => 'berjalan'
+                            ],
+                            [
+                                'id' => 2,
+                                'nama_mitra' => 'Fulana',
+                                'masa_berlaku_mulai' => '10/08/2025',
+                                'masa_berlaku_akhir' => '12/08/2025',
+                                'implementasi' => 'Pelestarian warisan dokumenter budaya Nusantara....',
+                                'lingkup' => 'Digitalisasi Arsip',
+                                'unit_kerja' => 'IT Support',
+                                'status' => 'selesai'
+                            ],
+                            [
+                                'id' => 3,
+                                'nama_mitra' => 'Fulani',
+                                'masa_berlaku_mulai' => '20/08/2025',
+                                'masa_berlaku_akhir' => '25/08/2025',
+                                'implementasi' => 'Pelestarian warisan dokumenter budaya Nusantara....',
+                                'lingkup' => 'Pelatihan SDM',
+                                'unit_kerja' => 'HRD',
+                                'status' => 'pending'
+                            ]
+                        ];
+                        ?>
+                        
+                        <?php foreach ($implementasiData as $implementasi): ?>
                         <tr>
-                            <td><input type="checkbox" class="form-check-input row-checkbox"></td>
-                            <td>Fulan</td>
-                            <td>14/08/2025 - 15/08/2026</td>
-                            <td>Pelestarian warisan dokumen budaya Nusantara</td>
-                            <td>Dokumenter Budaya</td>
-                            <td>Pustakawan</td>
                             <td>
-                                <button class="btn btn-sm btn-success btn-action" title="View">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-primary btn-action" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger btn-action" title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                <input type="checkbox" class="form-check-input row-checkbox" value="<?= $implementasi['id'] ?>">
+                            </td>
+                            <td><?= $implementasi['nama_mitra'] ?></td>
+                            <td>
+                                <small class="text-muted">
+                                    <?= $implementasi['masa_berlaku_mulai'] ?> - <?= $implementasi['masa_berlaku_akhir'] ?>
+                                </small>
+                            </td>
+                            <td>
+                                <span class="text-muted"><?= substr($implementasi['implementasi'], 0, 35) ?>...</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-info"><?= $implementasi['lingkup'] ?></span>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary"><?= $implementasi['unit_kerja'] ?></span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-success btn-sm" title="Lihat">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm" title="Edit" onclick="editImplementasi(<?= $implementasi['id'] ?>)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm" title="Hapus" onclick="deleteImplementasi(<?= $implementasi['id'] ?>)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div class="text-muted">
+                    Menampilkan 1-3 dari 3 data
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                        <li class="page-item active">
+                            <span class="page-link">1</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
@@ -283,6 +312,62 @@ document.querySelectorAll('[data-filter]').forEach(filterBtn => {
         // Update filter button text
         document.getElementById('filterDropdown').innerHTML = `<i class="fas fa-filter me-2"></i>${this.textContent}`;
     });
+});
+
+// Form submission handler for Implementasi
+document.getElementById('formTambahImplementasi').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Validate dates
+    const masaBerlakuMulai = new Date(document.getElementById('masa_berlaku_mulai').value);
+    const masaBerlakuAkhir = new Date(document.getElementById('masa_berlaku_akhir').value);
+    const targetSelesai = new Date(document.getElementById('target_selesai').value);
+    
+    if (masaBerlakuAkhir <= masaBerlakuMulai) {
+        alert('Masa berlaku berakhir harus lebih besar dari masa berlaku mulai!');
+        return;
+    }
+    
+    if (targetSelesai < masaBerlakuMulai) {
+        alert('Target selesai tidak boleh lebih kecil dari masa berlaku mulai!');
+        return;
+    }
+    
+    // Show loading
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
+    submitBtn.disabled = true;
+    
+    // Simulate form submission (replace with actual AJAX call)
+    setTimeout(function() {
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('tambahImplementasiModal'));
+        modal.hide();
+        
+        // Reset form
+        document.getElementById('formTambahImplementasi').reset();
+        
+        // Reset button
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        
+        // Show success message
+        showAlert('success', 'Data implementasi berhasil ditambahkan!');
+        
+        // Reload page to show new data (or use AJAX to update table)
+        setTimeout(function() {
+            location.reload();
+        }, 1500);
+    }, 2000);
+});
+
+// Reset form when modal is closed
+document.getElementById('tambahImplementasiModal').addEventListener('hidden.bs.modal', function() {
+    document.getElementById('formTambahImplementasi').reset();
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = 'Simpan Implementasi';
+    submitBtn.disabled = false;
 });
 
 // Edit function
