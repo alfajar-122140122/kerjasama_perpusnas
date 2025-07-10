@@ -11,7 +11,7 @@ Implementasi Kerjasama
         <div>
             <h2 class="h4 mb-0 text-gray-800">Admin / Kelola Implementasi</h2>
         </div>
-        <a href="<?= base_url('admin/kerjasama/implementasi/tambah') ?>" class="btn btn-success">
+        <a href="<?= base_url('admin/kerjasama/implementasi/tambah') ?>" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#tambahImplementasiModal">
             <i class="fas fa-plus me-2"></i>Tambah Implementasi
         </a>
     </div>
@@ -158,6 +158,106 @@ Implementasi Kerjasama
         </div>
     </div>
 </div>
+
+<!-- Modal Tambah Implementasi -->
+<div class="modal fade" id="tambahImplementasiModal" tabindex="-1" aria-labelledby="tambahImplementasiModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tambahImplementasiModalLabel">Tambah Implementasi Baru</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formTambahImplementasi" method="POST" action="<?= base_url('admin/kerjasama/implementasi/store') ?>">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nama_mitra" class="form-label">Nama Mitra</label>
+                            <select class="form-select" id="nama_mitra" name="nama_mitra" required>
+                                <option value="">Pilih Mitra Kerjasama</option>
+                                <option value="Fulan">Fulan</option>
+                                <option value="Fulana">Fulana</option>
+                                <option value="Fulani">Fulani</option>
+                                <option value="Fulano">Fulano</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="lingkup" class="form-label">Lingkup</label>
+                            <select class="form-select" id="lingkup" name="lingkup" required>
+                                <option value="">Pilih Lingkup</option>
+                                <option value="Dokumenter Budaya">Dokumenter Budaya</option>
+                                <option value="Digitalisasi Arsip">Digitalisasi Arsip</option>
+                                <option value="Pelatihan SDM">Pelatihan SDM</option>
+                                <option value="Penelitian">Penelitian</option>
+                                <option value="Pengembangan Teknologi">Pengembangan Teknologi</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="implementasi" class="form-label">Deskripsi Implementasi</label>
+                        <textarea class="form-control" id="implementasi" name="implementasi" rows="3" placeholder="Masukkan deskripsi implementasi..." required></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="masa_berlaku_mulai" class="form-label">Masa Berlaku Mulai</label>
+                            <input type="date" class="form-control" id="masa_berlaku_mulai" name="masa_berlaku_mulai" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="masa_berlaku_akhir" class="form-label">Masa Berlaku Berakhir</label>
+                            <input type="date" class="form-control" id="masa_berlaku_akhir" name="masa_berlaku_akhir" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="unit_kerja" class="form-label">Unit Kerja</label>
+                            <select class="form-select" id="unit_kerja" name="unit_kerja" required>
+                                <option value="">Pilih Unit Kerja</option>
+                                <option value="Pustakawan">Pustakawan</option>
+                                <option value="IT Support">IT Support</option>
+                                <option value="HRD">HRD</option>
+                                <option value="Research">Research</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="">Pilih Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="berjalan">Sedang Berjalan</option>
+                                <option value="selesai">Selesai</option>
+                                <option value="ditunda">Ditunda</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="pic_implementasi" class="form-label">PIC Implementasi</label>
+                            <input type="text" class="form-control" id="pic_implementasi" name="pic_implementasi" placeholder="Nama PIC yang bertanggung jawab" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="target_selesai" class="form-label">Target Selesai</label>
+                            <input type="date" class="form-control" id="target_selesai" name="target_selesai" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="catatan_implementasi" class="form-label">Catatan</label>
+                        <textarea class="form-control" id="catatan_implementasi" name="catatan_implementasi" rows="2" placeholder="Catatan implementasi (opsional)"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Simpan Implementasi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
@@ -212,6 +312,62 @@ document.querySelectorAll('[data-filter]').forEach(filterBtn => {
         // Update filter button text
         document.getElementById('filterDropdown').innerHTML = `<i class="fas fa-filter me-2"></i>${this.textContent}`;
     });
+});
+
+// Form submission handler for Implementasi
+document.getElementById('formTambahImplementasi').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Validate dates
+    const masaBerlakuMulai = new Date(document.getElementById('masa_berlaku_mulai').value);
+    const masaBerlakuAkhir = new Date(document.getElementById('masa_berlaku_akhir').value);
+    const targetSelesai = new Date(document.getElementById('target_selesai').value);
+    
+    if (masaBerlakuAkhir <= masaBerlakuMulai) {
+        alert('Masa berlaku berakhir harus lebih besar dari masa berlaku mulai!');
+        return;
+    }
+    
+    if (targetSelesai < masaBerlakuMulai) {
+        alert('Target selesai tidak boleh lebih kecil dari masa berlaku mulai!');
+        return;
+    }
+    
+    // Show loading
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
+    submitBtn.disabled = true;
+    
+    // Simulate form submission (replace with actual AJAX call)
+    setTimeout(function() {
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('tambahImplementasiModal'));
+        modal.hide();
+        
+        // Reset form
+        document.getElementById('formTambahImplementasi').reset();
+        
+        // Reset button
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        
+        // Show success message
+        showAlert('success', 'Data implementasi berhasil ditambahkan!');
+        
+        // Reload page to show new data (or use AJAX to update table)
+        setTimeout(function() {
+            location.reload();
+        }, 1500);
+    }, 2000);
+});
+
+// Reset form when modal is closed
+document.getElementById('tambahImplementasiModal').addEventListener('hidden.bs.modal', function() {
+    document.getElementById('formTambahImplementasi').reset();
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = 'Simpan Implementasi';
+    submitBtn.disabled = false;
 });
 
 // Edit function
