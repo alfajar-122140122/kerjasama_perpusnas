@@ -39,7 +39,7 @@ helper('navigation');
                     <!-- Search -->
                     <div class="search-container">
                         <div class="input-group">
-                            <input type="text" class="form-control search-input" placeholder="Cari" id="headerSearchInput">
+                            <input type="text" class="search-box search-input" placeholder="Cari" id="headerSearchInput">
                             <button class="btn btn-outline-light search-btn" type="button" onclick="performHeaderSearch()">
                                 <i class="fas fa-search"></i>
                             </button>
