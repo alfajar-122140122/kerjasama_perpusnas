@@ -43,9 +43,25 @@ Data Kerjasama
                 </div>
             </div>
 
-            <!-- Shared Table Component -->
-            <?= view('components/kerjasama_table', [
-                'data' => $kerjasamaData ?? [
+            <!-- Data Table -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th width="40">
+                                <input type="checkbox" id="selectAll" class="form-check-input">
+                            </th>
+                            <th>Nama Mitra</th>
+                            <th>Lingkup</th>
+                            <th>Tanggal Mulai</th>
+                            <th>Tanggal Berakhir</th>
+                            <th width="120" class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                // Sample data - nanti diganti dengan data dari database
+                $kerjasamaData = [
                     [
                         'id' => 1,
                         'nama_mitra' => 'Fulan',
@@ -78,20 +94,38 @@ Data Kerjasama
                         'tanggal_berakhir' => '05/08/2026',
                         'status' => 'aktif'
                     ]
-                ],
-                'show_checkbox' => true,
-                'show_actions' => true,
-                'table_class' => 'table table-hover',
-                'thead_class' => 'table-light',
-                'container_class' => 'table-responsive',
-                'truncate_scope' => true,
-                'show_empty' => true,
-                'empty_title' => 'Tidak ada data kerjasama',
-                'empty_text' => 'Belum ada data kerjasama yang tersedia',
-                'view_function' => 'viewKerjasama',
-                'edit_function' => 'editKerjasama',
-                'delete_function' => 'deleteKerjasama'
-            ]) ?>
+                ];
+                        ?>
+                        
+                        <?php foreach ($kerjasamaData as $kerjasama): ?>
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="form-check-input row-checkbox" value="<?= $kerjasama['id'] ?>">
+                            </td>
+                            <td><?= $kerjasama['nama_mitra'] ?></td>
+                            <td>
+                                <span class="text-muted"><?= substr($kerjasama['lingkup'], 0, 50) ?>...</span>
+                            </td>
+                            <td><?= $kerjasama['tanggal_mulai'] ?></td>
+                            <td><?= $kerjasama['tanggal_berakhir'] ?></td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-success btn-sm" title="Lihat">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm" title="Edit" onclick="editKerjasama(<?= $kerjasama['id'] ?>)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm" title="Hapus" onclick="deleteKerjasama(<?= $kerjasama['id'] ?>)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
 
             <!-- Pagination -->
             <div class="d-flex justify-content-between align-items-center mt-4">

@@ -48,51 +48,38 @@
 
         <!-- Data Table Section -->
         <div class="kerjasama-table-section" data-aos="fade-up" data-aos-delay="300">
-            <!-- Shared Table Component -->
-            <?= view('components/kerjasama_table', [
-                'data' => $cooperation_data ?? [
-                    [
-                        'id' => 1,
-                        'nama_mitra' => 'Fulan',
-                        'lingkup' => 'Pelestarian warisan dokumenter budaya Nusantara dan pengembangan sistem informasi perpustakaan digital untuk mendukung akses informasi yang lebih luas',
-                        'tanggal_mulai' => '14/08/2025',
-                        'tanggal_berakhir' => '14/08/2026'
-                    ],
-                    [
-                        'id' => 2,
-                        'nama_mitra' => 'Fulana',
-                        'lingkup' => 'Pelestarian warisan dokumenter budaya Nusantara dan digitalisasi koleksi naskah kuno untuk kepentingan penelitian dan edukasi',
-                        'tanggal_mulai' => '13/08/2025',
-                        'tanggal_berakhir' => '13/08/2026'
-                    ]
-                ],
-                'show_checkbox' => false,
-                'show_actions' => false,
-                'table_class' => 'kerjasama-table',
-                'thead_class' => '',
-                'container_class' => 'kerjasama-table-container',
-                'table_id' => 'cooperationTable',
-                'tbody_id' => 'cooperationTableBody',
-                'col_partner_class' => 'kerjasama-col-partner',
-                'col_scope_class' => 'kerjasama-col-scope',
-                'col_start_class' => 'kerjasama-col-start',
-                'col_end_class' => 'kerjasama-col-end',
-                'scope_label' => 'Ruang Lingkup',
-                'truncate_scope' => false,
-                'show_loading' => true,
-                'loading_class' => 'kerjasama-loading-state',
-                'loading_id' => 'loadingState',
-                'loading_spinner_class' => 'kerjasama-loading-spinner',
-                'loading_text' => 'Memuat data kerja sama...',
-                'show_empty' => true,
-                'empty_class' => 'kerjasama-empty-state',
-                'empty_id' => 'emptyState',
-                'empty_icon_class' => 'kerjasama-empty-icon',
-                'empty_icon' => 'search',
-                'empty_title_level' => '4',
-                'empty_title' => 'Tidak ada data ditemukan',
-                'empty_text' => 'Coba ubah kriteria pencarian Anda'
-            ]) ?>
+                        <div class="kerjasama-table-container">
+                <table class="kerjasama-table" id="cooperationTable">
+                    <thead>
+                        <tr>
+                            <th class="kerjasama-col-partner">Nama Mitra</th>
+                            <th class="kerjasama-col-scope">Ruang Lingkup</th>
+                            <th class="kerjasama-col-start">Tanggal Mulai</th>
+                            <th class="kerjasama-col-end">Tanggal Berakhir</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cooperationTableBody">
+                        <!-- Data will be loaded here -->
+                    </tbody>
+                </table>
+                
+                <!-- Loading State -->
+                <div class="kerjasama-loading-state" id="loadingState" style="display: none;">
+                    <div class="kerjasama-loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                    <p>Memuat data kerja sama...</p>
+                </div>
+                
+                <!-- Empty State -->
+                <div class="kerjasama-empty-state" id="emptyState" style="display: none;">
+                    <div class="kerjasama-empty-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h4>Tidak ada data ditemukan</h4>
+                    <p>Coba ubah kriteria pencarian Anda</p>
+                </div>
+            </div>
         </div>
         
         <!-- Pagination Section -->
