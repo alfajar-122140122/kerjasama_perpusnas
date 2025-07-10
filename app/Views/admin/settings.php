@@ -199,7 +199,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('styles') ?>
-<link rel="stylesheet" href="<?= base_url('css/settings-management.css') ?>">
+<link rel="stylesheet" href="<?= base_url('css/admin/settings-management.css') ?>">
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>

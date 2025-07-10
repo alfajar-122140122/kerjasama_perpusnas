@@ -29,17 +29,17 @@
 }
 
 .profile-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #3c55c4;
     color: white;
 }
 
 .account-info-header {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    background: #11998e;
     color: white;
 }
 
 .security-header {
-    background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%);
+    background: #fc4a1a;
     color: white;
 }
 
@@ -71,12 +71,12 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #4A6CF7, #667eea);
+    background: #4A6CF7;
     border: none;
 }
 
 .btn-warning {
-    background: linear-gradient(135deg, #fc4a1a, #f7b733);
+    background: #fc4a1a;
     border: none;
     color: white;
 }
