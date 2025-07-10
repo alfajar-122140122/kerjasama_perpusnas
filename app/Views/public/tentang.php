@@ -26,7 +26,7 @@
         <div class="about-container">
             <!-- About Image -->
             <div class="about-image">
-                <img src="<?= base_url('assets/images/public/about-kerjasama.jpg') ?>" 
+                <img src="<?= base_url('assets/images/about-kerjasama.jpeg') ?>" 
                      alt="Kegiatan Kerjasama Perpustakaan Nasional" 
                      loading="lazy">
             </div>
@@ -40,16 +40,16 @@
                 
                 <h3 class="section-title">Fungsi:</h3>
                 <ul class="functions-list">
-                    <li class="function-item">
+                    <li>
                         <span class="function-letter">a)</span> Pelaksanaan kerja sama perpustakaan dalam dan luar negeri
                     </li>
-                    <li class="function-item">
+                    <li>
                         <span class="function-letter">b)</span> Penerima dan mengelola permohonan inisiasi kerja sama
                     </li>
-                    <li class="function-item">
+                    <li>
                         <span class="function-letter">c)</span> Pelaksanaan penanda tanganan naskah Kesepahaman Bersama atau Memorandum of Understanding (MoU)
                     </li>
-                    <li class="function-item">
+                    <li>
                         <span class="function-letter">d)</span> Mengelola dan mengevaluasi implementasi kerja sama.
                     </li>
                 </ul>

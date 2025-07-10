@@ -53,7 +53,7 @@
 }
 
 .page-title {
-    color: var(--text-dark, #333);
+    color: var(--text-dark, #000000);
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 0;
@@ -91,14 +91,14 @@
 }
 
 .section-title {
-    color: var(--text-dark, #333);
-    font-size: 1.75rem;
+    color: var(--text-dark, #000000);
+    font-size: 2rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
 }
 
 .about-text {
-    color: var(--text-light, #666);
+    color: #000000;
     font-size: 1rem;
     line-height: 1.6;
     margin-bottom: 1.5rem;
@@ -112,7 +112,7 @@
 }
 
 .function-item {
-    color: var(--text-light, #666);
+    color: var(--text-light, #000000);
     font-size: 1rem;
     line-height: 1.6;
     margin-bottom: 0.75rem;
@@ -133,7 +133,7 @@
 
 .function-letter {
     font-weight: 600;
-    color: var(--text-dark, #333);
+    color: var(--text-dark, #000000);
 }
 
 /* Responsive design */

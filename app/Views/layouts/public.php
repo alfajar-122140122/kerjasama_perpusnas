@@ -11,7 +11,7 @@
     <meta name="author" content="Perpustakaan Nasional Republik Indonesia">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="<?= base_url('assets/images/favicon.ico') ?>">
+    <link rel="icon" type="image/png" href="<?= base_url('assets/images/icon-perpusnas.png') ?>">
     
     <!-- Bootstrap CSS (dari existing structure) -->
     <link href="<?= base_url('css/bootstrap.min.css') ?>" rel="stylesheet">
