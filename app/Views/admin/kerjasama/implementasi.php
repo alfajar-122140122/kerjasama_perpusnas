@@ -11,9 +11,11 @@ Implementasi Kerjasama
         <div>
             <h2 class="h4 mb-0 text-gray-800">Admin / Kelola Implementasi</h2>
         </div>
-        <a href="<?= base_url('admin/kerjasama/implementasi/tambah') ?>" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#tambahImplementasiModal">
-            <i class="fas fa-plus me-2"></i>Tambah Implementasi
-        </a>
+        <div>
+            <a href="<?= base_url('admin/kerjasama/implementasi/tambah') ?>" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#tambahImplementasiModal">
+                <i class="fas fa-plus me-2"></i>Tambah Implementasi
+            </a>
+        </div>
     </div>
 
     <!-- Data Table Card -->
@@ -36,9 +38,12 @@ Implementasi Kerjasama
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#" data-filter="all">Semua</a></li>
-                            <li><a class="dropdown-item" href="#" data-filter="berjalan">Sedang Berjalan</a></li>
-                            <li><a class="dropdown-item" href="#" data-filter="selesai">Selesai</a></li>
-                            <li><a class="dropdown-item" href="#" data-filter="pending">Pending</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="dokumen">Dokumen</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="arsip">Arsip</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="pelatihan">Pelatihan</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="penelitian">Penelitian</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="teknologi">Teknologi</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="pengembangan">Pengembangan</a></li>
                         </ul>
                     </div>
                 </div>
@@ -62,64 +67,55 @@ Implementasi Kerjasama
                     </thead>
                     <tbody>
                         <?php 
-                        // Sample data - nanti diganti dengan data dari database
-                        $implementasiData = [
-                            [
-                                'id' => 1,
-                                'nama_mitra' => 'Fulan',
-                                'masa_berlaku_mulai' => '14/08/2025',
-                                'masa_berlaku_akhir' => '15/08/2025',
-                                'implementasi' => 'Pelestarian warisan dokumenter budaya Nusantara....',
-                                'lingkup' => 'Dokumenter Budaya',
-                                'unit_kerja' => 'Pustakawan',
-                                'status' => 'berjalan'
-                            ],
-                            [
-                                'id' => 2,
-                                'nama_mitra' => 'Fulana',
-                                'masa_berlaku_mulai' => '10/08/2025',
-                                'masa_berlaku_akhir' => '12/08/2025',
-                                'implementasi' => 'Pelestarian warisan dokumenter budaya Nusantara....',
-                                'lingkup' => 'Digitalisasi Arsip',
-                                'unit_kerja' => 'IT Support',
-                                'status' => 'selesai'
-                            ],
-                            [
-                                'id' => 3,
-                                'nama_mitra' => 'Fulani',
-                                'masa_berlaku_mulai' => '20/08/2025',
-                                'masa_berlaku_akhir' => '25/08/2025',
-                                'implementasi' => 'Pelestarian warisan dokumenter budaya Nusantara....',
-                                'lingkup' => 'Pelatihan SDM',
-                                'unit_kerja' => 'HRD',
-                                'status' => 'pending'
-                            ]
-                        ];
-                        ?>
+                        // Data from database via controller
+                        if (empty($implementasiData)) {
+                            $implementasiData = [];
+                        }
                         
-                        <?php foreach ($implementasiData as $implementasi): ?>
+                        if (count($implementasiData) > 0): ?>
+                            <?php foreach ($implementasiData as $implementasi): ?>
                         <tr>
                             <td>
                                 <input type="checkbox" class="form-check-input row-checkbox" value="<?= $implementasi['id'] ?>">
                             </td>
-                            <td><?= $implementasi['nama_mitra'] ?></td>
+                            <td><?= esc($implementasi['nama_mitra']) ?></td>
                             <td>
                                 <small class="text-muted">
-                                    <?= $implementasi['masa_berlaku_mulai'] ?> - <?= $implementasi['masa_berlaku_akhir'] ?>
+                                    <?php 
+                                    // Display masa_berlaku directly if it exists
+                                    if (!empty($implementasi['masa_berlaku'])) {
+                                        echo esc($implementasi['masa_berlaku']);
+                                    }
+                                    // Otherwise calculate from dates if available
+                                    else if (!empty($implementasi['tanggal_mulai']) && !empty($implementasi['tanggal_berakhir'])) {
+                                        $startDate = new DateTime($implementasi['tanggal_mulai']);
+                                        $endDate = new DateTime($implementasi['tanggal_berakhir']);
+                                        $interval = $endDate->diff($startDate);
+                                        
+                                        $duration = '';
+                                        if ($interval->y > 0) $duration .= $interval->y . ' tahun ';
+                                        if ($interval->m > 0 || $interval->y > 0) $duration .= $interval->m . ' bulan ';
+                                        $duration .= $interval->d . ' hari';
+                                        
+                                        echo esc($duration);
+                                    } else {
+                                        echo '-';
+                                    }
+                                    ?>
                                 </small>
                             </td>
                             <td>
-                                <span class="text-muted"><?= substr($implementasi['implementasi'], 0, 35) ?>...</span>
+                                <span class="text-muted"><?= substr(esc($implementasi['implementasi']), 0, 35) ?>...</span>
                             </td>
                             <td>
-                                <span class="badge bg-info"><?= $implementasi['lingkup'] ?></span>
+                                <span class="badge bg-info"><?= esc($implementasi['lingkup']) ?></span>
                             </td>
                             <td>
-                                <span class="badge bg-secondary"><?= $implementasi['unit_kerja'] ?></span>
+                                <span class="badge bg-secondary"><?= esc($implementasi['unit_kerja_terkait']) ?></span>
                             </td>
                             <td class="text-center">
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-success btn-sm" title="Lihat">
+                                    <button type="button" class="btn btn-success btn-sm" title="Lihat" onclick="viewImplementasi(<?= $implementasi['id'] ?>)">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                     <button type="button" class="btn btn-primary btn-sm" title="Edit" onclick="editImplementasi(<?= $implementasi['id'] ?>)">
@@ -132,6 +128,11 @@ Implementasi Kerjasama
                             </td>
                         </tr>
                         <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="7" class="text-center py-3">Tidak ada data implementasi kerjasama</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -139,7 +140,11 @@ Implementasi Kerjasama
             <!-- Pagination -->
             <div class="d-flex justify-content-between align-items-center mt-4">
                 <div class="text-muted">
-                    Menampilkan 1-3 dari 3 data
+                    <?php
+                    $count = count($implementasiData);
+                    $start = $count > 0 ? 1 : 0;
+                    echo "Menampilkan {$start}-{$count} dari {$count} data";
+                    ?>
                 </div>
                 <nav>
                     <ul class="pagination pagination-sm mb-0">
@@ -171,25 +176,22 @@ Implementasi Kerjasama
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="nama_mitra" class="form-label">Nama Mitra</label>
-                            <select class="form-select" id="nama_mitra" name="nama_mitra" required>
+                            <label for="kerjasama_id" class="form-label">Nama Mitra</label>
+                            <select class="form-select" id="kerjasama_id" name="kerjasama_id" required>
                                 <option value="">Pilih Mitra Kerjasama</option>
-                                <option value="Fulan">Fulan</option>
-                                <option value="Fulana">Fulana</option>
-                                <option value="Fulani">Fulani</option>
-                                <option value="Fulano">Fulano</option>
+                                <?php 
+                                // Load kerjasama data
+                                $kerjasamaModel = new \App\Models\KerjasamaModel();
+                                $kerjasamaList = $kerjasamaModel->orderBy('nama_mitra', 'ASC')->findAll();
+                                
+                                foreach ($kerjasamaList as $kerjasama): ?>
+                                    <option value="<?= $kerjasama['id'] ?>"><?= esc($kerjasama['nama_mitra']) ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="lingkup" class="form-label">Lingkup</label>
-                            <select class="form-select" id="lingkup" name="lingkup" required>
-                                <option value="">Pilih Lingkup</option>
-                                <option value="Dokumenter Budaya">Dokumenter Budaya</option>
-                                <option value="Digitalisasi Arsip">Digitalisasi Arsip</option>
-                                <option value="Pelatihan SDM">Pelatihan SDM</option>
-                                <option value="Penelitian">Penelitian</option>
-                                <option value="Pengembangan Teknologi">Pengembangan Teknologi</option>
-                            </select>
+                            <input type="text" class="form-control" id="lingkup" name="lingkup" placeholder="Masukkan lingkup implementasi" required>
                         </div>
                     </div>
                     
@@ -200,19 +202,26 @@ Implementasi Kerjasama
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="masa_berlaku_mulai" class="form-label">Masa Berlaku Mulai</label>
-                            <input type="date" class="form-control" id="masa_berlaku_mulai" name="masa_berlaku_mulai" required>
+                            <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
+                            <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="masa_berlaku_akhir" class="form-label">Masa Berlaku Berakhir</label>
-                            <input type="date" class="form-control" id="masa_berlaku_akhir" name="masa_berlaku_akhir" required>
+                            <label for="tanggal_berakhir" class="form-label">Tanggal Berakhir</label>
+                            <input type="date" class="form-control" id="tanggal_berakhir" name="tanggal_berakhir" required>
+                            <small class="text-muted">Masa berlaku akan otomatis dihitung</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mb-3" id="duration_preview_container" style="display: none;">
+                            <label class="form-label">Durasi Masa Berlaku:</label>
+                            <p class="text-primary fw-bold" id="duration_preview"></p>
                         </div>
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="unit_kerja" class="form-label">Unit Kerja</label>
-                            <select class="form-select" id="unit_kerja" name="unit_kerja" required>
+                        <div class="col-md-12 mb-3">
+                            <label for="unit_kerja_terkait" class="form-label">Unit Kerja</label>
+                            <select class="form-select" id="unit_kerja_terkait" name="unit_kerja_terkait" required>
                                 <option value="">Pilih Unit Kerja</option>
                                 <option value="Pustakawan">Pustakawan</option>
                                 <option value="IT Support">IT Support</option>
@@ -222,32 +231,6 @@ Implementasi Kerjasama
                                 <option value="Admin">Admin</option>
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="status" class="form-label">Status</label>
-                            <select class="form-select" id="status" name="status" required>
-                                <option value="">Pilih Status</option>
-                                <option value="pending">Pending</option>
-                                <option value="berjalan">Sedang Berjalan</option>
-                                <option value="selesai">Selesai</option>
-                                <option value="ditunda">Ditunda</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="pic_implementasi" class="form-label">PIC Implementasi</label>
-                            <input type="text" class="form-control" id="pic_implementasi" name="pic_implementasi" placeholder="Nama PIC yang bertanggung jawab" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="target_selesai" class="form-label">Target Selesai</label>
-                            <input type="date" class="form-control" id="target_selesai" name="target_selesai" required>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="catatan_implementasi" class="form-label">Catatan</label>
-                        <textarea class="form-control" id="catatan_implementasi" name="catatan_implementasi" rows="2" placeholder="Catatan implementasi (opsional)"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -258,10 +241,296 @@ Implementasi Kerjasama
         </div>
     </div>
 </div>
+
+<!-- Modal Lihat Implementasi -->
+<div class="modal fade" id="lihatImplementasiModal" tabindex="-1" aria-labelledby="lihatImplementasiModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lihatImplementasiModalLabel">Detail Implementasi Kerjasama</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">Nama Mitra</label>
+                        <p id="view_nama_mitra" class="border-bottom pb-2"></p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">Masa Berlaku</label>
+                        <p id="view_masa_berlaku" class="border-bottom pb-2"></p>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Tanggal Mulai</label>
+                        <p id="view_tanggal_mulai" class="border-bottom pb-2"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Tanggal Berakhir</label>
+                        <p id="view_tanggal_berakhir" class="border-bottom pb-2"></p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">Implementasi</label>
+                        <p id="view_implementasi" class="border-bottom pb-2"></p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Lingkup</label>
+                        <p id="view_lingkup" class="border-bottom pb-2"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Unit Kerja</label>
+                        <p id="view_unit_kerja_terkait" class="border-bottom pb-2"></p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">Tanggal Pembuatan</label>
+                        <p id="view_created_at" class="border-bottom pb-2"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Implementasi -->
+<div class="modal fade" id="editImplementasiModal" tabindex="-1" aria-labelledby="editImplementasiModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editImplementasiModalLabel">Edit Implementasi Kerjasama</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formEditImplementasi" method="POST">
+                <input type="hidden" id="edit_implementasi_id" name="implementasi_id">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_kerjasama_id" class="form-label">Nama Mitra</label>
+                            <select class="form-select" id="edit_kerjasama_id" name="kerjasama_id" required>
+                                <option value="">Pilih Mitra Kerjasama</option>
+                                <?php 
+                                // Load kerjasama data
+                                $kerjasamaModel = new \App\Models\KerjasamaModel();
+                                $kerjasamaList = $kerjasamaModel->orderBy('nama_mitra', 'ASC')->findAll();
+                                
+                                foreach ($kerjasamaList as $kerjasama): ?>
+                                    <option value="<?= $kerjasama['id'] ?>"><?= esc($kerjasama['nama_mitra']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_lingkup" class="form-label">Lingkup</label>
+                            <input type="text" class="form-control" id="edit_lingkup" name="lingkup" placeholder="Masukkan lingkup implementasi" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="edit_implementasi" class="form-label">Deskripsi Implementasi</label>
+                        <textarea class="form-control" id="edit_implementasi" name="implementasi" rows="3" placeholder="Masukkan deskripsi implementasi..." required></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_tanggal_mulai" class="form-label">Tanggal Mulai</label>
+                            <input type="date" class="form-control" id="edit_tanggal_mulai" name="tanggal_mulai" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_tanggal_berakhir" class="form-label">Tanggal Berakhir</label>
+                            <input type="date" class="form-control" id="edit_tanggal_berakhir" name="tanggal_berakhir" required>
+                            <small class="text-muted">Masa berlaku akan otomatis dihitung</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mb-3" id="edit_duration_preview_container" style="display: none;">
+                            <label class="form-label">Durasi Masa Berlaku:</label>
+                            <p class="text-primary fw-bold" id="edit_duration_preview"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="edit_unit_kerja_terkait" class="form-label">Unit Kerja</label>
+                            <select class="form-select" id="edit_unit_kerja_terkait" name="unit_kerja_terkait" required>
+                                <option value="">Pilih Unit Kerja</option>
+                                <option value="Pustakawan">Pustakawan</option>
+                                <option value="IT Support">IT Support</option>
+                                <option value="HRD">HRD</option>
+                                <option value="Research">Research</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
 <script>
+// Function to calculate duration between two dates in years, months, days format
+function calculateDuration(startDate, endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    // Return empty string if invalid dates
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        return '';
+    }
+    
+    // Calculate the difference in milliseconds
+    let diff = end - start;
+    
+    // Check if end date is before start date
+    if (diff < 0) {
+        return 'Tanggal tidak valid';
+    }
+    
+    // Convert to days
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    
+    // Calculate years, months and remaining days
+    const years = Math.floor(days / 365);
+    let remainingDays = days % 365;
+    const months = Math.floor(remainingDays / 30);
+    remainingDays = remainingDays % 30;
+    
+    // Build the duration string
+    let duration = '';
+    if (years > 0) {
+        duration += years + ' tahun ';
+    }
+    if (months > 0 || years > 0) {
+        duration += months + ' bulan ';
+    }
+    duration += remainingDays + ' hari';
+    
+    return duration.trim();
+}
+
+// Function to update the duration preview
+function updateDurationPreview(startId, endId, previewId) {
+    const startDate = document.getElementById(startId).value;
+    const endDate = document.getElementById(endId).value;
+    
+    if (startDate && endDate) {
+        const duration = calculateDuration(startDate, endDate);
+        if (document.getElementById(previewId)) {
+            document.getElementById(previewId).textContent = duration;
+            document.getElementById(previewId + '_container').style.display = '';
+        }
+    }
+}
+
+// Add event listeners for date changes
+document.addEventListener('DOMContentLoaded', function() {
+    // For Add form
+    const startDateInput = document.getElementById('tanggal_mulai');
+    const endDateInput = document.getElementById('tanggal_berakhir');
+    
+    if (startDateInput && endDateInput) {
+        startDateInput.addEventListener('change', function() {
+            if (endDateInput.value) {
+                updateDurationPreview('tanggal_mulai', 'tanggal_berakhir', 'duration_preview');
+            }
+        });
+        
+        endDateInput.addEventListener('change', function() {
+            if (startDateInput.value) {
+                updateDurationPreview('tanggal_mulai', 'tanggal_berakhir', 'duration_preview');
+            }
+        });
+    }
+    
+    // For Edit form
+    const editStartDateInput = document.getElementById('edit_tanggal_mulai');
+    const editEndDateInput = document.getElementById('edit_tanggal_berakhir');
+    
+    if (editStartDateInput && editEndDateInput) {
+        editStartDateInput.addEventListener('change', function() {
+            if (editEndDateInput.value) {
+                updateDurationPreview('edit_tanggal_mulai', 'edit_tanggal_berakhir', 'edit_duration_preview');
+            }
+        });
+        
+        editEndDateInput.addEventListener('change', function() {
+            if (editStartDateInput.value) {
+                updateDurationPreview('edit_tanggal_mulai', 'edit_tanggal_berakhir', 'edit_duration_preview');
+            }
+        });
+    }
+    
+    // Initialize modal events
+    const tambahModal = document.getElementById('tambahImplementasiModal');
+    if (tambahModal) {
+        tambahModal.addEventListener('shown.bs.modal', function() {
+            // Reset fields
+            document.getElementById('tanggal_mulai').value = '';
+            document.getElementById('tanggal_berakhir').value = '';
+            document.getElementById('duration_preview_container').style.display = 'none';
+        });
+    }
+    
+    // Initialize edit modal events
+    const editModal = document.getElementById('editImplementasiModal');
+    if (editModal) {
+        editModal.addEventListener('shown.bs.modal', function() {
+            const startDate = document.getElementById('edit_tanggal_mulai').value;
+            const endDate = document.getElementById('edit_tanggal_berakhir').value;
+            
+            if (startDate && endDate) {
+                updateDurationPreview('edit_tanggal_mulai', 'edit_tanggal_berakhir', 'edit_duration_preview');
+            } else {
+                document.getElementById('edit_duration_preview_container').style.display = 'none';
+            }
+        });
+    }
+});
+
+// Function to show alerts
+function showAlert(type, message) {
+    // Create alert element
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.top = '20px';
+    alertDiv.style.right = '20px';
+    alertDiv.style.zIndex = '9999';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    
+    // Append to body
+    document.body.appendChild(alertDiv);
+    
+    // Auto dismiss after 5 seconds
+    setTimeout(() => {
+        const bsAlert = new bootstrap.Alert(alertDiv);
+        bsAlert.close();
+    }, 5000);
+}
+
 // Select All Checkbox
 document.getElementById('selectAll').addEventListener('change', function() {
     const checkboxes = document.querySelectorAll('.row-checkbox');
@@ -278,9 +547,9 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
     tableRows.forEach(row => {
         const namaMitra = row.cells[1].textContent.toLowerCase();
         const implementasi = row.cells[3].textContent.toLowerCase();
-        const unitKerja = row.cells[5].textContent.toLowerCase();
+        const lingkup = row.cells[4].textContent.toLowerCase();
         
-        if (namaMitra.includes(searchTerm) || implementasi.includes(searchTerm) || unitKerja.includes(searchTerm)) {
+        if (namaMitra.includes(searchTerm) || implementasi.includes(searchTerm) || lingkup.includes(searchTerm)) {
             row.style.display = '';
         } else {
             row.style.display = 'none';
@@ -299,9 +568,9 @@ document.querySelectorAll('[data-filter]').forEach(filterBtn => {
             if (filter === 'all') {
                 row.style.display = '';
             } else {
-                // Filter berdasarkan status (contoh implementasi filter)
-                const rowData = row.getAttribute('data-status') || 'berjalan';
-                if (rowData === filter) {
+                // Filter berdasarkan lingkup (lebih fleksibel untuk text input)
+                const lingkupElement = row.querySelector('td:nth-child(5) .badge');
+                if (lingkupElement && lingkupElement.textContent.toLowerCase().includes(filter.toLowerCase())) {
                     row.style.display = '';
                 } else {
                     row.style.display = 'none';
@@ -314,24 +583,15 @@ document.querySelectorAll('[data-filter]').forEach(filterBtn => {
     });
 });
 
-// Form submission handler for Implementasi
+// Error handling function for debugging
+function handleApiError(error) {
+    console.error('API Error:', error);
+    showAlert('danger', 'Terjadi kesalahan pada server. Silakan cek konsol untuk detail.');
+}
+
+// Form submission handler
 document.getElementById('formTambahImplementasi').addEventListener('submit', function(e) {
     e.preventDefault();
-    
-    // Validate dates
-    const masaBerlakuMulai = new Date(document.getElementById('masa_berlaku_mulai').value);
-    const masaBerlakuAkhir = new Date(document.getElementById('masa_berlaku_akhir').value);
-    const targetSelesai = new Date(document.getElementById('target_selesai').value);
-    
-    if (masaBerlakuAkhir <= masaBerlakuMulai) {
-        alert('Masa berlaku berakhir harus lebih besar dari masa berlaku mulai!');
-        return;
-    }
-    
-    if (targetSelesai < masaBerlakuMulai) {
-        alert('Target selesai tidak boleh lebih kecil dari masa berlaku mulai!');
-        return;
-    }
     
     // Show loading
     const submitBtn = this.querySelector('button[type="submit"]');
@@ -339,8 +599,27 @@ document.getElementById('formTambahImplementasi').addEventListener('submit', fun
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
     submitBtn.disabled = true;
     
-    // Simulate form submission (replace with actual AJAX call)
-    setTimeout(function() {
+    // Get form data
+    const formData = new FormData(this);
+    
+    // Calculate and add masa_berlaku from date inputs
+    const startDate = document.getElementById('tanggal_mulai').value;
+    const endDate = document.getElementById('tanggal_berakhir').value;
+    if (startDate && endDate) {
+        const duration = calculateDuration(startDate, endDate);
+        formData.set('masa_berlaku', duration);
+    }
+    
+    // Submit via AJAX
+    fetch(this.getAttribute('action'), {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
         // Close modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('tambahImplementasiModal'));
         modal.hide();
@@ -352,36 +631,208 @@ document.getElementById('formTambahImplementasi').addEventListener('submit', fun
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
         
-        // Show success message
-        showAlert('success', 'Data implementasi berhasil ditambahkan!');
-        
-        // Reload page to show new data (or use AJAX to update table)
-        setTimeout(function() {
-            location.reload();
-        }, 1500);
-    }, 2000);
+        if (data.status) {
+            // Show success message
+            showAlert('success', data.message || 'Data implementasi berhasil ditambahkan!');
+            
+            // Reload page to show new data
+            setTimeout(function() {
+                location.reload();
+            }, 1500);
+        } else {
+            // Show error message
+            showAlert('danger', data.message || 'Gagal menyimpan data implementasi');
+            
+            // Display validation errors if available
+            if (data.errors) {
+                const errorMessages = Object.values(data.errors).join('<br>');
+                showAlert('danger', errorMessages);
+            }
+        }
+    })
+    .catch(error => {
+        handleApiError(error);
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
 });
 
-// Reset form when modal is closed
-document.getElementById('tambahImplementasiModal').addEventListener('hidden.bs.modal', function() {
-    document.getElementById('formTambahImplementasi').reset();
-    const submitBtn = this.querySelector('button[type="submit"]');
-    submitBtn.innerHTML = 'Simpan Implementasi';
-    submitBtn.disabled = false;
-});
-
-// Edit function
-function editImplementasi(id) {
-    window.location.href = `<?= base_url('admin/kerjasama/implementasi/edit/') ?>${id}`;
+// View Implementasi function
+function viewImplementasi(id) {
+    // Fetch implementasi data by ID
+    fetch(`<?= base_url('admin/kerjasama/implementasi/get/') ?>${id}`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status) {
+            // Populate modal fields
+            document.getElementById('view_nama_mitra').textContent = data.data.nama_mitra;
+            
+            // Format dates and calculate duration
+            const startDate = data.data.tanggal_mulai ? new Date(data.data.tanggal_mulai) : null;
+            const endDate = data.data.tanggal_berakhir ? new Date(data.data.tanggal_berakhir) : null;
+            
+            // Display formatted dates
+            document.getElementById('view_tanggal_mulai').textContent = startDate ? startDate.toLocaleDateString('id-ID') : '-';
+            document.getElementById('view_tanggal_berakhir').textContent = endDate ? endDate.toLocaleDateString('id-ID') : '-';
+            
+            // Display masa_berlaku (prioritize stored value)
+            if (data.data.masa_berlaku) {
+                document.getElementById('view_masa_berlaku').textContent = data.data.masa_berlaku;
+            } else if (startDate && endDate) {
+                const duration = calculateDuration(startDate, endDate);
+                document.getElementById('view_masa_berlaku').textContent = duration;
+            } else {
+                document.getElementById('view_masa_berlaku').textContent = '-';
+            }
+            
+            document.getElementById('view_implementasi').textContent = data.data.implementasi;
+            document.getElementById('view_lingkup').textContent = data.data.lingkup;
+            document.getElementById('view_unit_kerja_terkait').textContent = data.data.unit_kerja_terkait;
+            document.getElementById('view_created_at').textContent = new Date(data.data.created_at).toLocaleString('id-ID');
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('lihatImplementasiModal'));
+            modal.show();
+        } else {
+            showAlert('danger', data.message || 'Gagal memuat data implementasi');
+        }
+    })
+    .catch(error => {
+        handleApiError(error);
+    });
 }
 
-// Delete function
+// Edit Implementasi function
+function editImplementasi(id) {
+    // Fetch implementasi data by ID
+    fetch(`<?= base_url('admin/kerjasama/implementasi/get/') ?>${id}`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status) {
+            // Populate edit form fields
+            document.getElementById('edit_implementasi_id').value = data.data.id;
+            document.getElementById('edit_kerjasama_id').value = data.data.kerjasama_id;
+            document.getElementById('edit_lingkup').value = data.data.lingkup;
+            document.getElementById('edit_implementasi').value = data.data.implementasi;
+            document.getElementById('edit_tanggal_mulai').value = data.data.tanggal_mulai || '';
+            document.getElementById('edit_tanggal_berakhir').value = data.data.tanggal_berakhir || '';
+            document.getElementById('edit_unit_kerja_terkait').value = data.data.unit_kerja_terkait;
+            
+            // Show edit modal
+            const modal = new bootstrap.Modal(document.getElementById('editImplementasiModal'));
+            modal.show();
+        } else {
+            showAlert('danger', data.message || 'Gagal memuat data implementasi untuk diedit');
+        }
+    })
+    .catch(error => {
+        handleApiError(error);
+    });
+}
+
+// Delete Implementasi function
 function deleteImplementasi(id) {
     if (confirm('Apakah Anda yakin ingin menghapus data implementasi ini?')) {
-        // Add AJAX delete request here
-        console.log('Deleting implementasi with ID:', id);
-        showAlert('success', 'Data implementasi berhasil dihapus');
+        fetch(`<?= base_url('admin/kerjasama/implementasi/delete/') ?>${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                showAlert('success', data.message || 'Data implementasi berhasil dihapus');
+                // Reload page to update table
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            } else {
+                showAlert('danger', data.message || 'Gagal menghapus data implementasi');
+            }
+        })
+        .catch(error => {
+            handleApiError(error);
+        });
     }
 }
+
+// Edit Implementasi form submission handler
+document.getElementById('formEditImplementasi').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Show loading
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
+    submitBtn.disabled = true;
+    
+    // Get form data
+    const formData = new FormData(this);
+    
+    // Calculate and add masa_berlaku from date inputs
+    const startDate = document.getElementById('edit_tanggal_mulai').value;
+    const endDate = document.getElementById('edit_tanggal_berakhir').value;
+    if (startDate && endDate) {
+        const duration = calculateDuration(startDate, endDate);
+        formData.set('masa_berlaku', duration);
+    }
+    
+    // Get the implementasi ID from the hidden field
+    const implementasiId = document.getElementById('edit_implementasi_id').value;
+    
+    // Submit via AJAX
+    fetch(`<?= base_url('admin/kerjasama/implementasi/update') ?>/${implementasiId}`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editImplementasiModal'));
+        modal.hide();
+        
+        // Reset button
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        
+        if (data.status) {
+            // Show success message
+            showAlert('success', data.message || 'Data implementasi berhasil diperbarui!');
+            
+            // Reload page to show updated data
+            setTimeout(function() {
+                location.reload();
+            }, 1500);
+        } else {
+            // Show error message
+            showAlert('danger', data.message || 'Gagal memperbarui data implementasi');
+            
+            // Display validation errors if available
+            if (data.errors) {
+                const errorMessages = Object.values(data.errors).join('<br>');
+                showAlert('danger', errorMessages);
+            }
+        }
+    })
+    .catch(error => {
+        handleApiError(error);
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+});
 </script>
 <?= $this->endSection() ?>

@@ -19,7 +19,7 @@ $routes->group('', function($routes) {
     // Kerja Sama routes - gunakan controller baru
     $routes->get('kerja-sama', 'Public\KerjaSama::index');
     $routes->get('kerja-sama/data', 'Public\KerjaSamaController::data');
-    $routes->get('kerja-sama/implementasi', 'Public\KerjaSama::implementasi');
+    $routes->get('kerja-sama/implementasi', 'Public\KerjaSamaController::implementasi');
     $routes->get('kerja-sama/akan-berakhir', 'Public\KerjaSama::akanBerakhir');
     $routes->get('kerja-sama/progress', 'Public\KerjaSama::progress');
     $routes->get('kerja-sama/pengajuan', 'Public\KerjaSama::pengajuan');
@@ -57,6 +57,10 @@ $routes->group('admin', function($routes) {
     $routes->get('kerjasama/implementasi', 'Admin\KerjasamaController::implementasi');
     $routes->get('kerjasama/implementasi/tambah', 'Admin\KerjasamaController::tambahImplementasi');
     $routes->get('kerjasama/implementasi/edit/(:num)', 'Admin\KerjasamaController::editImplementasi/$1');
+    $routes->post('kerjasama/implementasi/store', 'Admin\KerjasamaController::storeImplementasi');
+    $routes->post('kerjasama/implementasi/update/(:num)', 'Admin\KerjasamaController::updateImplementasi/$1');
+    $routes->delete('kerjasama/implementasi/delete/(:num)', 'Admin\KerjasamaController::deleteImplementasi/$1');
+    $routes->get('kerjasama/implementasi/get/(:num)', 'Admin\KerjasamaController::getImplementasi/$1');
 
     $routes->get('kerjasama/akan-berakhir', 'Admin\KerjasamaController::akanBerakhir');
 

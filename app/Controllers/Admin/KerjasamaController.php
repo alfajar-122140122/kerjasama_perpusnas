@@ -28,8 +28,12 @@ class KerjasamaController extends BaseController
     
     public function implementasi()
     {
+        $implementasiKerjasamaModel = new \App\Models\ImplementasiKerjasamaModel();
+        $implementasiData = $implementasiKerjasamaModel->getImplementasiWithKerjasama();
+        
         $data = [
-            'title' => 'Implementasi Kerjasama'
+            'title' => 'Implementasi Kerjasama',
+            'implementasiData' => $implementasiData
         ];
         
         return view('admin/kerjasama/implementasi', $data);
@@ -249,6 +253,170 @@ class KerjasamaController extends BaseController
                 return $this->response->setJSON([
                     'status' => false,
                     'message' => 'Gagal menghapus data kerjasama'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ]);
+        }
+    }
+    
+    public function storeImplementasi()
+    {
+        // Validasi input sesuai skema database
+        $rules = [
+            'kerjasama_id' => 'required|numeric',
+            'implementasi' => 'required',
+            'lingkup' => 'required',
+            'masa_berlaku' => 'required',
+            'unit_kerja_terkait' => 'required'
+        ];
+        
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $this->validator->getErrors()
+            ]);
+        }
+        
+        // Prepare data untuk disimpan
+        $data = [
+            'kerjasama_id' => $this->request->getPost('kerjasama_id'),
+            'implementasi' => $this->request->getPost('implementasi'),
+            'lingkup' => $this->request->getPost('lingkup'),
+            'masa_berlaku' => $this->request->getPost('masa_berlaku'),
+            'unit_kerja_terkait' => $this->request->getPost('unit_kerja_terkait'),
+            'created_at' => date('Y-m-d H:i:s') // Set created_at manually
+        ];
+        
+        try {
+            $implementasiKerjasamaModel = new \App\Models\ImplementasiKerjasamaModel();
+            
+            // Simpan data
+            if ($implementasiKerjasamaModel->insert($data)) {
+                return $this->response->setJSON([
+                    'status' => true,
+                    'message' => 'Data implementasi berhasil ditambahkan'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Gagal menambahkan data implementasi'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ]);
+        }
+    }
+    
+    public function updateImplementasi($id)
+    {
+        // Validasi input sesuai skema database
+        $rules = [
+            'kerjasama_id' => 'required|numeric',
+            'implementasi' => 'required',
+            'lingkup' => 'required',
+            'masa_berlaku' => 'required',
+            'unit_kerja_terkait' => 'required'
+        ];
+        
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $this->validator->getErrors()
+            ]);
+        }
+        
+        // Check if record exists
+        $implementasiKerjasamaModel = new \App\Models\ImplementasiKerjasamaModel();
+        $implementasi = $implementasiKerjasamaModel->find($id);
+        
+        if (!$implementasi) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Data implementasi tidak ditemukan'
+            ]);
+        }
+        
+        // Prepare data untuk update
+        $data = [
+            'kerjasama_id' => $this->request->getPost('kerjasama_id'),
+            'implementasi' => $this->request->getPost('implementasi'),
+            'lingkup' => $this->request->getPost('lingkup'),
+            'masa_berlaku' => $this->request->getPost('masa_berlaku'),
+            'unit_kerja_terkait' => $this->request->getPost('unit_kerja_terkait')
+        ];
+        
+        try {
+            // Update data
+            if ($implementasiKerjasamaModel->update($id, $data)) {
+                return $this->response->setJSON([
+                    'status' => true,
+                    'message' => 'Data implementasi berhasil diperbarui'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Gagal memperbarui data implementasi'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ]);
+        }
+    }
+    
+    public function getImplementasi($id)
+    {
+        $implementasiKerjasamaModel = new \App\Models\ImplementasiKerjasamaModel();
+        $implementasi = $implementasiKerjasamaModel->getImplementasiWithKerjasama($id);
+        
+        if (!$implementasi) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Data implementasi tidak ditemukan'
+            ]);
+        }
+        
+        return $this->response->setJSON([
+            'status' => true,
+            'data' => $implementasi
+        ]);
+    }
+    
+    public function deleteImplementasi($id)
+    {
+        try {
+            $implementasiKerjasamaModel = new \App\Models\ImplementasiKerjasamaModel();
+            
+            // Check if record exists
+            $implementasi = $implementasiKerjasamaModel->find($id);
+            if (!$implementasi) {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Data implementasi tidak ditemukan'
+                ]);
+            }
+            
+            // Delete data
+            if ($implementasiKerjasamaModel->delete($id)) {
+                return $this->response->setJSON([
+                    'status' => true,
+                    'message' => 'Data implementasi berhasil dihapus'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Gagal menghapus data implementasi'
                 ]);
             }
         } catch (\Exception $e) {

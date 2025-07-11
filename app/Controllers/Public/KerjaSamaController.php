@@ -4,14 +4,17 @@ namespace App\Controllers\Public;
 
 use App\Controllers\BaseController;
 use App\Models\KerjasamaModel;
+use App\Models\ImplementasiKerjasamaModel;
 
 class KerjaSamaController extends BaseController
 {
     protected $kerjasamaModel;
+    protected $implementasiModel;
     
     public function __construct()
     {
         $this->kerjasamaModel = new KerjasamaModel();
+        $this->implementasiModel = new ImplementasiKerjasamaModel();
     }
     
     public function data()
@@ -39,6 +42,22 @@ class KerjaSamaController extends BaseController
         ];
         
         return view('public/kerjasama/data', $data);
+    }
+    
+    public function implementasi()
+    {
+        $data = [
+            'page_title' => 'Implementasi Kerja Sama',
+            'meta_description' => 'Data implementasi kerja sama Perpustakaan Nasional RI dengan berbagai mitra institusi.',
+            'current_section' => 'implementasi',
+            'implementasi_data' => $this->getImplementasiData(),
+            'implementasi_stats' => [
+                'total_implementations' => $this->implementasiModel->countAllResults()
+            ],
+            'filter_options' => $this->getFilterOptions()
+        ];
+        
+        return view('public/kerjasama/implementasi', $data);
     }
     
     // Helper methods for data calculations
@@ -82,6 +101,44 @@ class KerjaSamaController extends BaseController
             ],
             'year' => range(date('Y'), 2015)
         ];
+    }
+    
+    private function getImplementasiData()
+    {
+        // Ambil data implementasi kerjasama dari database dengan data tambahan
+        $implementasiData = $this->implementasiModel->getImplementasiForPublic();
+        
+        // Transform data ke format yang dibutuhkan oleh view
+        $transformedData = [];
+        foreach ($implementasiData as $item) {
+            // Gunakan masa_berlaku dari database jika ada, atau hitung dari tanggal jika diperlukan
+            $period = !empty($item['masa_berlaku']) ? $item['masa_berlaku'] : '';
+            
+            // Jika masa_berlaku kosong tetapi tanggal ada, format seperti admin view
+            if (empty($period) && !empty($item['tanggal_mulai']) && !empty($item['tanggal_berakhir'])) {
+                $startDate = new \DateTime($item['tanggal_mulai']);
+                $endDate = new \DateTime($item['tanggal_berakhir']);
+                $interval = $endDate->diff($startDate);
+                
+                $duration = '';
+                if ($interval->y > 0) $duration .= $interval->y . ' tahun ';
+                if ($interval->m > 0 || $interval->y > 0) $duration .= $interval->m . ' bulan ';
+                $duration .= $interval->d . ' hari';
+                
+                $period = $duration;
+            }
+            
+            $transformedData[] = [
+                'id' => $item['id'],
+                'partner' => $item['nama_mitra'],
+                'period' => $period,
+                'implementation' => $item['implementasi'],
+                'scope' => $item['lingkup'],
+                'unit' => $item['unit_kerja_terkait'] ?: 'null'
+            ];
+        }
+        
+        return $transformedData;
     }
     
     private function getCooperationData()

@@ -9,6 +9,7 @@
 <?= $this->section('styles') ?>
 <link href="<?= base_url('css/public.css') ?>" rel="stylesheet">
 <link href="<?= base_url('css/public/kerjasama/implementasi.css') ?>" rel="stylesheet">
+<link href="<?= base_url('css/public/kerjasama/implementasi-modal.css') ?>" rel="stylesheet">
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <?= $this->endSection() ?>
 

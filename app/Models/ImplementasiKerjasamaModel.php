@@ -7,25 +7,64 @@ use CodeIgniter\Model;
 class ImplementasiKerjasamaModel extends Model
 {
     protected $table            = 'implementasi_kerjasama';
-    protected $primaryKey       = 'id_implementasi';
+    protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
 
     // Kolom yang diizinkan untuk diisi, disesuaikan dengan migrasi
     protected $allowedFields    = [
-        'id_kerjasama',
-        'nama_kegiatan',
-        'tanggal_mulai',
-        'tanggal_selesai',
-        'lingkup_implementasi',
-        'hasil_kegiatan',
-        'created_by_user_id'
+        'kerjasama_id',
+        'masa_berlaku',
+        'implementasi',
+        'lingkup',
+        'unit_kerja_terkait'
     ];
 
     // Dates
-    protected $useTimestamps = true;
+    protected $useTimestamps = false; // No timestamps in DB schema, we handle created_at manually
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    
+    // Mendapatkan data implementasi kerjasama dengan informasi mitra
+    public function getImplementasiWithKerjasama($id = null)
+    {
+        if ($id === null) {
+            return $this->select('implementasi_kerjasama.*, kerjasama.nama_mitra')
+                ->join('kerjasama', 'kerjasama.id = implementasi_kerjasama.kerjasama_id')
+                ->orderBy('implementasi_kerjasama.id', 'DESC')
+                ->findAll();
+        }
+        
+        return $this->select('implementasi_kerjasama.*, kerjasama.nama_mitra')
+            ->join('kerjasama', 'kerjasama.id = implementasi_kerjasama.kerjasama_id')
+            ->where('implementasi_kerjasama.id', $id)
+            ->first();
+    }
+    
+    // Mendapatkan data implementasi kerjasama untuk tampilan publik
+    public function getImplementasiForPublic($id = null)
+    {
+        if ($id === null) {
+            return $this->select('
+                implementasi_kerjasama.*, 
+                kerjasama.nama_mitra,
+                kerjasama.tanggal_mulai,
+                kerjasama.tanggal_berakhir
+            ')
+            ->join('kerjasama', 'kerjasama.id = implementasi_kerjasama.kerjasama_id')
+            ->orderBy('implementasi_kerjasama.id', 'DESC')
+            ->findAll();
+        }
+        
+        return $this->select('
+            implementasi_kerjasama.*, 
+            kerjasama.nama_mitra,
+            kerjasama.tanggal_mulai,
+            kerjasama.tanggal_berakhir
+        ')
+        ->join('kerjasama', 'kerjasama.id = implementasi_kerjasama.kerjasama_id')
+        ->where('implementasi_kerjasama.id', $id)
+        ->first();
+    }
 }

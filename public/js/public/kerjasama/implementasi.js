@@ -17,41 +17,13 @@ class ImplementasiKerjasamaManager {
     }
     
     loadInitialData() {
-        // Sample data based on the UI design
-        this.allData = [
-            {
-                id: 1,
-                partner: "Akademi Kebidanan Nusantara Lubuklinggau",
-                period: "30 Mar 2016 - 30 Mar 2021",
-                implementation: "Telah menerima bantuan buku sap layan tahun 2017 sebanyak 500 judul, 1000 eks.",
-                scope: "a. Pengembangan SDM bidang Perpustakaan; b. Perteman ilmiah, penelitian dan publikasi bersama koleksi perpustakaan; c. Pertukaran data katalog induk perpustakaan; d. Pengembangan dan pemanfaatan bersama koleksi perpustakaan; e. Penghimpunan dan pelestarian karya cetak Karya Rekam (KCKR); f. Pertukaran jejaring perpustakaan lingkup nasional dan internasional.",
-                unit: "null"
-            },
-            {
-                id: 2,
-                partner: "Akademi Kebidanan Nusantara Palembang",
-                period: "30 Mar 2016 - 30 Mar 2021",
-                implementation: "",
-                scope: "a. Pengembangan SDM bidang Perpustakaan; b. Perteman ilmiah, penelitian dan publikasi bersama koleksi perpustakaan; c. Pertukaran data katalog induk perpustakaan; d. Pengembangan dan pemanfaatan bersama koleksi perpustakaan; e. Penghimpunan dan pelestarian karya cetak Karya Rekam (KCKR); f. Pertukaran jejaring perpustakaan lingkup nasional dan internasional.",
-                unit: "null"
-            },
-            {
-                id: 3,
-                partner: "ARSIP NASIONAL",
-                period: "null",
-                implementation: "Workshop kearsipaer di lingkungan Perpustakaan Nasional RI, 5 Maret 2018",
-                scope: "a. Perteman ilmiah mengenai kearsipar dan perpustakaan; b. Perteman ilmiah dan pelestarian arsip dan bahan perpustakaan; c. Pengembangan sumber daya manusia kearsipar dan perpustakaan; d. Pengembangan sistem preservasi; e. Penyusunan dan pengembangan jabatan fungsional konservator.",
-                unit: "Inspektorat, Pusat Jasa Informasi perpustakaan dan Pengelolaan Naskah Nusantara, Pusat Pendidikan dan Pelatihan"
-            },
-            {
-                id: 4,
-                partner: "Badan Informasi Geospasial (BIG)",
-                period: "null",
-                implementation: "Belum terimplementasikan",
-                scope: "a. Pengembangan informasi geospasial tentang bidang kepustakawanan; b. Perteman ilmiah berbasis sumber informasi dan koleksi perpustakaan; c. Pengembangan koleksi perpustakaan; d. Pemeliharaan informasi geospasial tentang bidang kepustakawanan dan jamasi geospasial pada masyarakat; e. Kajian, publikasi, dan penelitian bidang informasi geospasial; f. Peningkatan sumber daya manusia di bidang kepustakawanan dan informasi geospasial; g. Penggunaan bersama data koleksi elektronik nasional dan internasional; h. Penghimpunan dan pelestarian Karya Cetak Karya Rekam (KCKR); i. Penyerahan duplikat informasi geospasiatistik berupa peta dan atlas; j. Pengembangan Simplurlingan Informasi Geospasial Nasional; k. Pertukaran Karya Katalog Induk Nasional Perpustakaan.",
-                unit: "Biro SDM dan Umum, Pusat Bibliografi dan Pengolahan Bahan Perpustakaan, Pusat Pengembangan Koleksi Perpustakaan"
-            }
-        ];
+        // Check if there's data passed from PHP
+        if (window.implementasiInitialData && Array.isArray(window.implementasiInitialData)) {
+            this.allData = window.implementasiInitialData;
+        } else {
+            // Fallback to empty array if no data available
+            this.allData = [];
+        }
         
         this.filteredData = [...this.allData];
     }
@@ -77,6 +49,72 @@ class ImplementasiKerjasamaManager {
                 this.filterData();
             }
         });
+        
+        // Delegate event for "read more" links
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('implementasi-read-more')) {
+                e.preventDefault();
+                const itemId = parseInt(e.target.dataset.id);
+                this.showImplementasiDetail(itemId);
+            }
+        });
+    }
+    
+    showImplementasiDetail(id) {
+        const item = this.allData.find(item => item.id === id);
+        if (!item) return;
+        
+        // Create modal for displaying full details
+        const modalHtml = `
+        <div class="implementasi-detail-modal" id="implementasiDetailModal">
+            <div class="implementasi-modal-content">
+                <span class="implementasi-modal-close">&times;</span>
+                <h3>${item.partner}</h3>
+                <div class="implementasi-modal-section">
+                    <h4>Masa Berlaku</h4>
+                    <p>${item.period || '-'}</p>
+                </div>
+                <div class="implementasi-modal-section">
+                    <h4>Implementasi Kerja Sama</h4>
+                    <p>${item.implementation || 'Belum ada implementasi'}</p>
+                </div>
+                <div class="implementasi-modal-section">
+                    <h4>Lingkup</h4>
+                    <p>${item.scope}</p>
+                </div>
+                <div class="implementasi-modal-section">
+                    <h4>Unit Kerja</h4>
+                    <p>${item.unit === 'null' ? '-' : item.unit}</p>
+                </div>
+            </div>
+        </div>`;
+        
+        // Append modal to body
+        const modalWrapper = document.createElement('div');
+        modalWrapper.innerHTML = modalHtml;
+        document.body.appendChild(modalWrapper.firstElementChild);
+        
+        // Add modal functionality
+        const modal = document.getElementById('implementasiDetailModal');
+        const closeBtn = modal.querySelector('.implementasi-modal-close');
+        
+        modal.style.display = 'block';
+        
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+            setTimeout(() => {
+                modal.remove();
+            }, 300);
+        };
+        
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                setTimeout(() => {
+                    modal.remove();
+                }, 300);
+            }
+        };
     }
     
     debounceSearch() {
@@ -127,10 +165,14 @@ class ImplementasiKerjasamaManager {
                     <div class="implementasi-partner-name">${item.partner}</div>
                 </td>
                 <td>
-                    <div class="implementasi-period-text">${item.period === 'null' || !item.period ? '<span class="implementasi-null-value">null</span>' : item.period}</div>
+                    <div class="implementasi-period-text">${item.period ? item.period : '<span class="implementasi-null-value">-</span>'}</div>
                 </td>
                 <td>
-                    <div class="implementasi-detail-text">${item.implementation || '<span class="implementasi-null-value">Belum ada implementasi</span>'}</div>
+                    <div class="implementasi-detail-text">${item.implementation ? 
+                        (item.implementation.length > 100 ? 
+                            `${item.implementation.substring(0, 100)}... <a href="#" class="implementasi-read-more" data-id="${item.id}">Selengkapnya</a>` : 
+                            item.implementation) : 
+                        '<span class="implementasi-null-value">Belum ada implementasi</span>'}</div>
                 </td>
                 <td>
                     <div class="implementasi-scope-text">${item.scope}</div>
