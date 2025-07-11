@@ -53,7 +53,7 @@ class CreateBeritaTable extends Migration
         ]);
 
         $this->forge->addPrimaryKey('id_berita');
-        $this->forge->addForeignKey('created_by_user_id', 'users', 'id_user', 'SET NULL', 'SET NULL');
+        $this->forge->addForeignKey('created_by_user_id', 'users', 'id', 'SET NULL', 'SET NULL');
         $this->forge->createTable('berita');
     }
 
