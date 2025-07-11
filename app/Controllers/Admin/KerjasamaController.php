@@ -209,6 +209,24 @@ class KerjasamaController extends BaseController
         }
     }
     
+    public function get($id)
+    {
+        $kerjasama = $this->kerjasamaModel->find($id);
+        
+        if (!$kerjasama) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Data kerjasama tidak ditemukan'
+            ]);
+        }
+        
+        // No need to modify dates - just return as is
+        return $this->response->setJSON([
+            'status' => true,
+            'data' => $kerjasama
+        ]);
+    }
+    
     public function delete($id)
     {
         try {

@@ -52,6 +52,7 @@ $routes->group('admin', function($routes) {
     
     // Admin Kerjasama Routes
     $routes->get('kerjasama/data', 'Admin\KerjasamaController::data');
+    $routes->get('kerjasama/get/(:num)', 'Admin\KerjasamaController::get/$1');
 
     $routes->get('kerjasama/implementasi', 'Admin\KerjasamaController::implementasi');
     $routes->get('kerjasama/implementasi/tambah', 'Admin\KerjasamaController::tambahImplementasi');

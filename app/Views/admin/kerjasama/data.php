@@ -80,7 +80,7 @@ Data Kerjasama
                                 <td><?= date('d/m/Y', strtotime($kerjasama['tanggal_berakhir'])) ?></td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-success btn-sm" title="Lihat">
+                                        <button type="button" class="btn btn-success btn-sm" title="Lihat" onclick="viewKerjasama(<?= $kerjasama['id'] ?>)">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                         <button type="button" class="btn btn-primary btn-sm" title="Edit" onclick="editKerjasama(<?= $kerjasama['id'] ?>)">
@@ -172,6 +172,107 @@ Data Kerjasama
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-success">Simpan Kerjasama</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Lihat Kerjasama -->
+<div class="modal fade" id="lihatKerjasamaModal" tabindex="-1" aria-labelledby="lihatKerjasamaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lihatKerjasamaModalLabel">Detail Kerjasama</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">Nama Mitra</label>
+                        <p id="view_nama_mitra" class="border-bottom pb-2"></p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">Lingkup Kerjasama</label>
+                        <p id="view_lingkup" class="border-bottom pb-2"></p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Tanggal Mulai</label>
+                        <p id="view_tanggal_mulai" class="border-bottom pb-2"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Tanggal Berakhir</label>
+                        <p id="view_tanggal_berakhir" class="border-bottom pb-2"></p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Tanggal Pembuatan</label>
+                        <p id="view_created_at" class="border-bottom pb-2"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Terakhir Diperbarui</label>
+                        <p id="view_updated_at" class="border-bottom pb-2"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Kerjasama -->
+<div class="modal fade" id="editKerjasamaModal" tabindex="-1" aria-labelledby="editKerjasamaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editKerjasamaModalLabel">Edit Kerjasama</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formEditKerjasama" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" id="edit_id" name="id">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="edit_nama_mitra" class="form-label">Nama Mitra</label>
+                            <input type="text" class="form-control" id="edit_nama_mitra" name="nama_mitra" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="edit_lingkup" class="form-label">Lingkup Kerjasama</label>
+                        <textarea class="form-control" id="edit_lingkup" name="lingkup" rows="3" placeholder="Masukkan lingkup kerjasama..." required></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_tanggal_mulai" class="form-label">Tanggal Mulai</label>
+                            <input type="date" class="form-control" id="edit_tanggal_mulai" name="tanggal_mulai" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_tanggal_berakhir" class="form-label">Tanggal Berakhir</label>
+                            <input type="date" class="form-control" id="edit_tanggal_berakhir" name="tanggal_berakhir" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="alert alert-info">
+                            <small><i class="fas fa-info-circle me-2"></i>Perbarui data kerjasama sesuai dengan formulir ini.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Perbarui Kerjasama</button>
                 </div>
             </form>
         </div>
@@ -334,13 +435,134 @@ function handleApiError(error) {
 
 // Functions for table actions
 function viewKerjasama(id) {
-    window.location.href = `<?= base_url('admin/kerjasama/view/') ?>${id}`;
+    // Show loading
+    const viewModal = new bootstrap.Modal(document.getElementById('lihatKerjasamaModal'));
+    
+    // Fetch data
+    fetch(`<?= base_url('admin/kerjasama/get/') ?>${id}`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.status) {
+            const data = result.data;
+            
+            // Format dates - handle various date formats
+            const formatDate = (dateStr) => {
+                if (!dateStr) return '-';
+                // Try to parse the date
+                const date = new Date(dateStr);
+                if (isNaN(date.getTime())) return dateStr; // Return original if invalid
+                
+                // Format date options
+                const options = { 
+                    day: 'numeric', 
+                    month: 'long', 
+                    year: 'numeric' 
+                };
+                
+                return date.toLocaleDateString('id-ID', options);
+            };
+            
+            const formatDateTime = (dateStr) => {
+                if (!dateStr) return '-';
+                // Try to parse the date
+                const date = new Date(dateStr);
+                if (isNaN(date.getTime())) return dateStr; // Return original if invalid
+                
+                // Format date options
+                const options = { 
+                    day: 'numeric', 
+                    month: 'long', 
+                    year: 'numeric' 
+                };
+                
+                return date.toLocaleDateString('id-ID', options) + ' ' + date.toLocaleTimeString('id-ID');
+            };
+            
+            // Set values
+            document.getElementById('view_nama_mitra').textContent = data.nama_mitra;
+            document.getElementById('view_lingkup').textContent = data.ruang_lingkup;
+            document.getElementById('view_tanggal_mulai').textContent = formatDate(data.tanggal_mulai);
+            document.getElementById('view_tanggal_berakhir').textContent = formatDate(data.tanggal_berakhir);
+            document.getElementById('view_created_at').textContent = formatDateTime(data.created_at);
+            document.getElementById('view_updated_at').textContent = formatDateTime(data.updated_at);
+            
+            // Show modal
+            viewModal.show();
+        } else {
+            showAlert('danger', result.message || 'Gagal mengambil data kerjasama');
+        }
+    })
+    .catch(error => {
+        handleApiError(error);
+    })
+    .catch(error => {
+        handleApiError(error);
+    });
 }
 
 function editKerjasama(id) {
-    window.location.href = `<?= base_url('admin/kerjasama/edit/') ?>${id}`;
+    // Show loading
+    const editModal = new bootstrap.Modal(document.getElementById('editKerjasamaModal'));
+    
+    // Fetch data
+    fetch(`<?= base_url('admin/kerjasama/get/') ?>${id}`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.status) {
+            const data = result.data;
+            
+            // Format date for input fields (YYYY-MM-DD)
+            const formatDateForInput = (dateStr) => {
+                if (!dateStr) return '';
+                // Try to parse the date
+                const date = new Date(dateStr);
+                if (isNaN(date.getTime())) {
+                    // Try to extract date part if it's a datetime string
+                    if (typeof dateStr === 'string' && dateStr.includes(' ')) {
+                        return dateStr.split(' ')[0];
+                    }
+                    return '';
+                }
+                
+                // Format as YYYY-MM-DD
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            // Populate fields
+            document.getElementById('edit_id').value = data.id;
+            document.getElementById('edit_nama_mitra').value = data.nama_mitra;
+            document.getElementById('edit_lingkup').value = data.ruang_lingkup;
+            document.getElementById('edit_tanggal_mulai').value = formatDateForInput(data.tanggal_mulai);
+            document.getElementById('edit_tanggal_berakhir').value = formatDateForInput(data.tanggal_berakhir);
+            
+            // Set form action
+            document.getElementById('formEditKerjasama').setAttribute('action', `<?= base_url('admin/kerjasama/update/') ?>${data.id}`);
+            
+            // Show modal
+            editModal.show();
+        } else {
+            showAlert('danger', result.message || 'Gagal memuat data kerjasama');
+        }
+    })
+    .catch(error => {
+        handleApiError(error);
+    });
 }
 
+// Delete function with confirmation
 function deleteKerjasama(id) {
     if (confirm('Apakah Anda yakin ingin menghapus data kerjasama ini?')) {
         fetch(`<?= base_url('admin/kerjasama/delete/') ?>${id}`, {
@@ -366,5 +588,84 @@ function deleteKerjasama(id) {
         });
     }
 }
+
+// Edit form submission handler
+document.getElementById('formEditKerjasama').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Validate dates
+    const tanggalMulai = new Date(document.getElementById('edit_tanggal_mulai').value);
+    const tanggalBerakhir = new Date(document.getElementById('edit_tanggal_berakhir').value);
+    
+    if (tanggalBerakhir <= tanggalMulai) {
+        alert('Tanggal berakhir harus lebih besar dari tanggal mulai!');
+        return;
+    }
+    
+    // Show loading
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
+    submitBtn.disabled = true;
+    
+    // Get form data
+    const formData = new FormData(this);
+    
+    // Submit via AJAX
+    fetch(this.getAttribute('action'), {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editKerjasamaModal'));
+        modal.hide();
+        
+        // Reset form
+        document.getElementById('formEditKerjasama').reset();
+        
+        // Reset button
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        
+        if (data.status) {
+            // Show success message
+            showAlert('success', data.message || 'Data kerjasama berhasil diperbarui!');
+            
+            // Reload page to show updated data
+            setTimeout(function() {
+                location.reload();
+            }, 1500);
+        } else {
+            // Show error message
+            showAlert('danger', data.message || 'Gagal memperbarui data kerjasama');
+            
+            // Display validation errors if available
+            if (data.errors) {
+                const errorMessages = Object.values(data.errors).join('<br>');
+                showAlert('danger', errorMessages);
+            }
+        }
+    })
+    .catch(error => {
+        handleApiError(error);
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+});
+
+// Reset edit form when modal is closed
+document.getElementById('editKerjasamaModal').addEventListener('hidden.bs.modal', function() {
+    document.getElementById('formEditKerjasama').reset();
+    const submitBtn = this.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.innerHTML = 'Perbarui Kerjasama';
+        submitBtn.disabled = false;
+    }
+});
 </script>
 <?= $this->endSection() ?>
