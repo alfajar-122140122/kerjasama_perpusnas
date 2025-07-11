@@ -18,6 +18,9 @@ Progress Kerjasama
         </div>
     </div>
 
+    <!-- Alert container for messages -->
+    <div id="alertContainer" class="mb-4"></div>
+
     <!-- Data Table Card -->
     <div class="card shadow mb-4">
         <div class="card-body">
@@ -62,7 +65,32 @@ Progress Kerjasama
                             <th width="120" class="text-center">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="progressTableBody">
+                    <tbody>
+                        <?php 
+                        // Check if progressData is passed from controller
+                        if (!isset($progressData) || empty($progressData)) {
+                            // Sample data for preview only if no data from database
+                            $progressData = [
+                                [
+                                    'id' => 1,
+                                    'tanggal_pengajuan' => '2025-07-14',
+                                    'lembaga' => 'Perpustakaan Nasional',
+                                    'jenis' => 'Baru',
+                                    'progress' => 'Dokumentasi',
+                                    'created_at' => '2025-07-10 08:30:00'
+                                ],
+                                [
+                                    'id' => 2,
+                                    'tanggal_pengajuan' => '2025-07-16',
+                                    'lembaga' => 'Dinas Kearsipan',
+                                    'jenis' => 'Perpanjangan',
+                                    'progress' => 'Finishing',
+                                    'created_at' => '2025-07-11 10:15:00'
+                                ]
+                            ];
+                        }
+                        ?>
+                        
                         <?php foreach ($progressData as $progress): ?>
                         <tr data-jenis="<?= $progress['jenis'] ?>">
                             <td>
@@ -152,15 +180,26 @@ Progress Kerjasama
                 <nav>
                     <?= $pager->links() ?>
                 </nav>
+                <?php else: ?>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                        <li class="page-item active">
+                            <span class="page-link">1</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                    </ul>
+                </nav>
                 <?php endif; ?>
             </div>
             <?php endif; ?>
         </div>
     </div>
 </div>
-
-<!-- Alert Container -->
-<div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1100"></div>
 
 <!-- Add Progress Modal -->
 <div class="modal fade" id="addProgressModal" tabindex="-1" aria-labelledby="addProgressModalLabel" aria-hidden="true">
@@ -171,7 +210,6 @@ Progress Kerjasama
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="addProgressForm">
-                <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="add-lembaga" class="form-label">Lembaga</label>
@@ -208,8 +246,6 @@ Progress Kerjasama
                         </select>
                         <div id="add-progress-error" class="invalid-feedback"></div>
                     </div>
-                    
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -229,7 +265,6 @@ Progress Kerjasama
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="editProgressForm">
-                <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
                 <div class="modal-body">
                     <input type="hidden" id="edit-id" name="id">
                     
@@ -268,8 +303,6 @@ Progress Kerjasama
                         </select>
                         <div id="edit-progress-error" class="invalid-feedback"></div>
                     </div>
-                    
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -308,6 +341,11 @@ Progress Kerjasama
                     <h6 class="fw-bold">Progress</h6>
                     <span id="view-progress-badge" class="badge"></span>
                 </div>
+
+                <div class="mb-3">
+                    <h6 class="fw-bold">Tanggal Dibuat</h6>
+                    <p id="view-created-at"></p>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -319,19 +357,6 @@ Progress Kerjasama
 
 <?= $this->section('scripts') ?>
 <script>
-// CSRF token handling for AJAX requests
-const csrfToken = $('input[name="<?= csrf_token() ?>"]').val();
-const csrfName = '<?= csrf_token() ?>';
-
-// Setup AJAX with CSRF token
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
-            xhr.setRequestHeader(csrfName, csrfToken);
-        }
-    }
-});
-
 // Select All Checkbox
 document.getElementById('selectAll').addEventListener('change', function() {
     const checkboxes = document.querySelectorAll('.row-checkbox');
@@ -385,10 +410,6 @@ document.querySelectorAll('[data-filter]').forEach(filterBtn => {
 
 // View function
 function viewProgress(id) {
-    // Reset form and clear validation errors
-    $('#viewProgressModal').find('.is-invalid').removeClass('is-invalid');
-    $('#viewProgressModal').find('.invalid-feedback').html('');
-    
     // Get progress data
     $.ajax({
         url: `<?= base_url('admin/kerjasama/progress/get/') ?>/${id}`,
@@ -404,11 +425,19 @@ function viewProgress(id) {
                     year: 'numeric'
                 });
                 
+                const createdDate = new Date(data.created_at);
+                const formattedCreatedDate = createdDate.toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
                 // Set data in the modal
                 $('#view-lembaga').text(data.lembaga);
                 $('#view-tanggal').text(formattedDate);
-                $('#view-jenis').text(data.jenis);
-                $('#view-progress').text(data.progress);
+                $('#view-created-at').text(formattedCreatedDate);
                 
                 // Set badge colors
                 let jenisBadgeClass = 'bg-secondary';
@@ -463,7 +492,6 @@ function editProgress(id) {
                 $('#edit-tanggal-pengajuan').val(data.tanggal_pengajuan);
                 $('#edit-jenis').val(data.jenis);
                 $('#edit-progress').val(data.progress);
-
                 
                 // Show the modal
                 $('#editProgressModal').modal('show');
@@ -482,10 +510,7 @@ function deleteProgress(id) {
     if (confirm('Apakah Anda yakin ingin menghapus data progress ini?')) {
         $.ajax({
             url: `<?= base_url('admin/kerjasama/progress/delete/') ?>/${id}`,
-            method: 'POST', // Using POST instead of DELETE for better browser compatibility
-            headers: {
-                'X-CSRF-TOKEN': csrfToken
-            },
+            method: 'DELETE',
             success: function(response) {
                 if (response.status) {
                     showAlert('success', response.message || 'Data progress berhasil dihapus');
@@ -504,42 +529,11 @@ function deleteProgress(id) {
     }
 }
 
-// Show alert function
-function showAlert(type, message) {
-    let alertClass = 'alert-info';
-    if (type === 'success') alertClass = 'alert-success';
-    if (type === 'error') alertClass = 'alert-danger';
-    
-    const alertHtml = `
-        <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    `;
-    
-    $('#alertContainer').html(alertHtml);
-    
-    // Auto hide after 3 seconds
-    setTimeout(function() {
-        $('.alert').alert('close');
-    }, 3000);
-}
 // Add Progress Form Submit
 $('#addProgressForm').on('submit', function(e) {
     e.preventDefault();
     
-    // Clear previous validation errors
-    $('#addProgressForm').find('.is-invalid').removeClass('is-invalid');
-    $('#addProgressForm').find('.invalid-feedback').html('');
-    
-    // Get form data
-    let formData = $(this).serialize();
-    
-    // Update CSRF token value in case it changed
-    $('input[name="<?= csrf_token() ?>"]').val(csrfToken);
-    
-    // Log the form data being sent
-    console.log("Sending form data:", formData);
+    const formData = $(this).serialize();
     
     $.ajax({
         url: '<?= base_url('admin/kerjasama/progress/store') ?>',
@@ -547,7 +541,6 @@ $('#addProgressForm').on('submit', function(e) {
         data: formData,
         dataType: 'json',
         success: function(response) {
-            console.log("Response:", response);
             if (response.status) {
                 $('#addProgressModal').modal('hide');
                 showAlert('success', response.message || 'Data progress berhasil ditambahkan');
@@ -569,9 +562,7 @@ $('#addProgressForm').on('submit', function(e) {
             }
         },
         error: function(xhr, status, error) {
-            console.error("AJAX Error:", status, error);
-            console.error("Response:", xhr.responseText);
-            showAlert('error', 'Terjadi kesalahan saat menyimpan data. Silakan cek konsol untuk detailnya.');
+            showAlert('error', 'Terjadi kesalahan saat menyimpan data');
         }
     });
 });
@@ -580,20 +571,8 @@ $('#addProgressForm').on('submit', function(e) {
 $('#editProgressForm').on('submit', function(e) {
     e.preventDefault();
     
-    // Clear previous validation errors
-    $('#editProgressForm').find('.is-invalid').removeClass('is-invalid');
-    $('#editProgressForm').find('.invalid-feedback').html('');
-    
     const id = $('#edit-id').val();
-    
-    // Update CSRF token value in case it changed
-    $('input[name="<?= csrf_token() ?>"]').val(csrfToken);
-    
     const formData = $(this).serialize();
-    
-    // Log the form data being sent
-    console.log("Editing ID:", id);
-    console.log("Sending form data:", formData);
     
     $.ajax({
         url: `<?= base_url('admin/kerjasama/progress/update/') ?>/${id}`,
@@ -601,7 +580,6 @@ $('#editProgressForm').on('submit', function(e) {
         data: formData,
         dataType: 'json',
         success: function(response) {
-            console.log("Response:", response);
             if (response.status) {
                 $('#editProgressModal').modal('hide');
                 showAlert('success', response.message || 'Data progress berhasil diperbarui');
@@ -623,9 +601,7 @@ $('#editProgressForm').on('submit', function(e) {
             }
         },
         error: function(xhr, status, error) {
-            console.error("AJAX Error:", status, error);
-            console.error("Response:", xhr.responseText);
-            showAlert('error', 'Terjadi kesalahan saat memperbarui data. Silakan cek konsol untuk detailnya.');
+            showAlert('error', 'Terjadi kesalahan saat memperbarui data');
         }
     });
 });
@@ -636,5 +612,26 @@ $('.modal').on('hidden.bs.modal', function() {
     $(this).find('.is-invalid').removeClass('is-invalid');
     $(this).find('.invalid-feedback').html('');
 });
+
+// Show alert function
+function showAlert(type, message) {
+    let alertClass = 'alert-info';
+    if (type === 'success') alertClass = 'alert-success';
+    if (type === 'error') alertClass = 'alert-danger';
+    
+    const alertHtml = `
+        <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+    
+    $('#alertContainer').html(alertHtml);
+    
+    // Auto hide after 3 seconds
+    setTimeout(function() {
+        $('.alert').alert('close');
+    }, 3000);
+}
 </script>
 <?= $this->endSection() ?>

@@ -5,16 +5,19 @@ namespace App\Controllers\Public;
 use App\Controllers\BaseController;
 use App\Models\KerjasamaModel;
 use App\Models\ImplementasiKerjasamaModel;
+use App\Models\ProgressKerjasamaModel;
 
 class KerjaSamaController extends BaseController
 {
     protected $kerjasamaModel;
     protected $implementasiModel;
+    protected $progressModel; // Add this line
     
     public function __construct()
     {
         $this->kerjasamaModel = new KerjasamaModel();
         $this->implementasiModel = new ImplementasiKerjasamaModel();
+        $this->progressModel = new \App\Models\ProgressKerjasamaModel(); // Add this line
     }
     
     public function data()
@@ -112,6 +115,41 @@ class KerjaSamaController extends BaseController
         ];
         
         return view('public/kerjasama/akan_berakhir', $data);
+    }
+    
+    public function progress()
+    {
+        // Get progress data from database
+        $progressData = $this->progressModel->getProgressForPublic();
+        
+        // Format data for the view
+        $formattedData = [];
+        foreach ($progressData as $item) {
+            // Format date from YYYY-MM-DD to d/m/Y
+            $date = new \DateTime($item['tanggal_pengajuan']);
+            
+            $formattedData[] = [
+                'id' => $item['id'],
+                'date' => $date->format('d M Y'),
+                'institution' => $item['lembaga'],
+                'type' => strtolower($item['jenis']),
+                'progress' => $item['progress']
+            ];
+        }
+        
+        // Statistics for progress
+        $stats = $this->progressModel->getProgressStats();
+        
+        $data = [
+            'page_title' => 'Progress Kerja Sama',
+            'meta_description' => 'Informasi terkini mengenai progres kerja sama Perpustakaan Nasional RI dengan berbagai mitra.',
+            'current_section' => 'progress',
+            'progress_data' => $formattedData,
+            'progress_stats' => $stats,
+            'filter_options' => $this->getFilterOptions()
+        ];
+        
+        return view('public/kerjasama/progress', $data);
     }
     
     // Helper methods for data calculations

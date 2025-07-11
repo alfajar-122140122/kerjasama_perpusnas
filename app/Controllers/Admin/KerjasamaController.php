@@ -4,14 +4,17 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\KerjasamaModel;
+use App\Models\ProgressKerjasamaModel; // Add this line
 
 class KerjasamaController extends BaseController
 {
     protected $kerjasamaModel;
+    protected $progressKerjasamaModel; // Add this line
     
     public function __construct()
     {
         $this->kerjasamaModel = new KerjasamaModel();
+        $this->progressKerjasamaModel = new ProgressKerjasamaModel(); // Add this line
     }
     
     public function data()
@@ -92,11 +95,8 @@ class KerjasamaController extends BaseController
     
     public function progress()
     {
-        $data = [
-            'title' => 'Progress Kerjasama'
-        ];
-        
-        return view('admin/kerjasama/progress', $data);
+        // Redirect to the new Progress Kerjasama Controller
+        return redirect()->to(base_url('admin/kerjasama/progress'));
     }
     
     public function pengajuan()
@@ -440,6 +440,174 @@ class KerjasamaController extends BaseController
                 return $this->response->setJSON([
                     'status' => false,
                     'message' => 'Gagal menghapus data implementasi'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ]);
+        }
+    }
+    
+    // Progress Kerjasama CRUD operations
+    public function storeProgress()
+    {
+        // Validasi input sesuai skema database
+        $rules = [
+            'nama_mitra' => 'required', // Field comes from form as nama_mitra but stored as lembaga
+            'tanggal_pengajuan' => 'required|valid_date',
+            'jenis' => 'required',
+            'progress' => 'required'
+        ];
+        
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $this->validator->getErrors()
+            ]);
+        }
+        
+        // Prepare data untuk disimpan
+        $data = [
+            'tanggal_pengajuan' => $this->request->getPost('tanggal_pengajuan'),
+            'lembaga' => $this->request->getPost('nama_mitra'), // Field in DB is 'lembaga'
+            'jenis' => $this->request->getPost('jenis'),
+            'progress' => $this->request->getPost('progress'),
+            'status' => $this->request->getPost('status') ?? 'published',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+        
+        // If kerjasama_id is provided and not empty
+        if ($this->request->getPost('kerjasama_id')) {
+            $data['kerjasama_id'] = $this->request->getPost('kerjasama_id');
+        }
+        
+        try {
+            // Simpan data
+            if ($this->progressKerjasamaModel->insert($data)) {
+                return $this->response->setJSON([
+                    'status' => true,
+                    'message' => 'Data progress kerjasama berhasil ditambahkan'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Gagal menambahkan data progress kerjasama'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ]);
+        }
+    }
+    
+    public function getProgress($id)
+    {
+        $progress = $this->progressKerjasamaModel->find($id);
+        
+        if (!$progress) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Data progress kerjasama tidak ditemukan'
+            ]);
+        }
+        
+        return $this->response->setJSON([
+            'status' => true,
+            'data' => $progress
+        ]);
+    }
+    
+    public function updateProgress($id)
+    {
+        // Validasi input sesuai skema database
+        $rules = [
+            'nama_mitra' => 'required', // Field comes from form as nama_mitra but stored as lembaga
+            'tanggal_pengajuan' => 'required|valid_date',
+            'jenis' => 'required',
+            'progress' => 'required'
+        ];
+        
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $this->validator->getErrors()
+            ]);
+        }
+        
+        // Check if record exists
+        $progress = $this->progressKerjasamaModel->find($id);
+        if (!$progress) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Data progress kerjasama tidak ditemukan'
+            ]);
+        }
+        
+        // Prepare data untuk update
+        $data = [
+            'tanggal_pengajuan' => $this->request->getPost('tanggal_pengajuan'),
+            'lembaga' => $this->request->getPost('nama_mitra'), // Field in DB is 'lembaga'
+            'jenis' => $this->request->getPost('jenis'),
+            'progress' => $this->request->getPost('progress'),
+            'status' => $this->request->getPost('status') ?? 'published',
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+        
+        // If kerjasama_id is provided and not empty
+        if ($this->request->getPost('kerjasama_id')) {
+            $data['kerjasama_id'] = $this->request->getPost('kerjasama_id');
+        }
+        
+        try {
+            // Update data
+            if ($this->progressKerjasamaModel->update($id, $data)) {
+                return $this->response->setJSON([
+                    'status' => true,
+                    'message' => 'Data progress kerjasama berhasil diperbarui'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Gagal memperbarui data progress kerjasama'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ]);
+        }
+    }
+    
+    public function deleteProgress($id)
+    {
+        try {
+            // Check if record exists
+            $progress = $this->progressKerjasamaModel->find($id);
+            if (!$progress) {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Data progress kerjasama tidak ditemukan'
+                ]);
+            }
+            
+            // Delete data
+            if ($this->progressKerjasamaModel->delete($id)) {
+                return $this->response->setJSON([
+                    'status' => true,
+                    'message' => 'Data progress kerjasama berhasil dihapus'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Gagal menghapus data progress kerjasama'
                 ]);
             }
         } catch (\Exception $e) {

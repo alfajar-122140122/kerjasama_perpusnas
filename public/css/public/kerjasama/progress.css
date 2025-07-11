@@ -202,14 +202,59 @@
 
 .progress-type-badge {
     display: inline-block;
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
     font-weight: 600;
-    text-transform: lowercase;
-    background-color: #e3f2fd;
-    color: #1565c0;
-    border: 1px solid #bbdefb;
+    text-transform: capitalize;
+    color: #fff;
+    background-color: #6c757d; /* Default color */
+}
+
+.progress-type-badge-new {
+    background-color: #28a745; /* Green for new */
+}
+
+.progress-type-badge-extension {
+    background-color: #17a2b8; /* Blue for extension/perpanjangan */
+}
+
+.progress-type-badge-documentation {
+    background-color: #ffc107; /* Yellow for documentation */
+    color: #212529;
+}
+
+.progress-type-badge-finishing {
+    background-color: #007bff; /* Primary blue for finishing */
+}
+
+/* Status badges */
+.progress-status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: #fff;
+    background-color: #6c757d; /* Default color */
+}
+
+.progress-status-badge-documentation {
+    background-color: #ffc107; /* Yellow for documentation */
+    color: #212529;
+}
+
+.progress-status-badge-finishing {
+    background-color: #28a745; /* Green for finishing */
+}
+
+.progress-status-badge-review {
+    background-color: #17a2b8; /* Blue for review */
+}
+
+.progress-status-badge-approval {
+    background-color: #007bff; /* Primary blue for approval */
 }
 
 .progress-status-text {

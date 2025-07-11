@@ -14,8 +14,8 @@ class ProgressKerjasamaSeeder extends Seeder
         // Prepare data
         $data = [];
         
-        // Lembaga options
-        $lembagaOptions = [
+        // Mitra options
+        $mitraOptions = [
             'Universitas Indonesia',
             'Perpustakaan Nasional Malaysia',
             'Dinas Kearsipan dan Perpustakaan DKI Jakarta',
@@ -30,27 +30,22 @@ class ProgressKerjasamaSeeder extends Seeder
             'Kementerian Pendidikan dan Kebudayaan'
         ];
         
+        // Jenis options
+        $jenisOptions = ['Baru', 'Perpanjangan', 'Dokumentasi', 'Finishing'];
+        
         // Progress options
         $progressOptions = [
-            'Pembahasan MOU',
-            'Revisi PKS',
-            'Tanda tangan',
-            'Penyusunan draft perjanjian',
-            'Konsultasi dengan biro hukum',
-            'Klarifikasi lingkup kerjasama',
-            'Penandatanganan naskah final',
-            'Presentasi program kerjasama',
-            'Evaluasi implementasi',
-            'Persiapan perpanjangan'
+            'Dokumentasi',
+            'Finishing',
+            'Review',
+            'Approval'
         ];
         
-        // Generate 10 random progress
+        // Generate 10 random progress records
         for ($i = 0; $i < 10; $i++) {
-            $jenisOptions = ['baru', 'lanjutan'];
-            
             $data[] = [
                 'tanggal_pengajuan' => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
-                'lembaga'           => $faker->randomElement($lembagaOptions),
+                'lembaga'           => $faker->randomElement($mitraOptions),
                 'jenis'             => $faker->randomElement($jenisOptions),
                 'progress'          => $faker->randomElement($progressOptions),
                 'created_at'        => $faker->dateTimeBetween('-3 months', 'now')->format('Y-m-d H:i:s'),

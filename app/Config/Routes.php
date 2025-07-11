@@ -21,7 +21,7 @@ $routes->group('', function($routes) {
     $routes->get('kerja-sama/data', 'Public\KerjaSamaController::data');
     $routes->get('kerja-sama/implementasi', 'Public\KerjaSamaController::implementasi');
     $routes->get('kerja-sama/akan-berakhir', 'Public\KerjaSamaController::akanBerakhir');
-    $routes->get('kerja-sama/progress', 'Public\KerjaSama::progress');
+    $routes->get('kerja-sama/progress', 'Public\KerjaSamaController::progress');
     $routes->get('kerja-sama/pengajuan', 'Public\KerjaSama::pengajuan');
     $routes->post('kerja-sama/pengajuan', 'Public\KerjaSama::submitPengajuan');
 
@@ -64,7 +64,15 @@ $routes->group('admin', function($routes) {
 
     $routes->get('kerjasama/akan-berakhir', 'Admin\KerjasamaController::akanBerakhir');
 
-    $routes->get('kerjasama/progress', 'Admin\KerjasamaController::progress');
+    // Progress Kerjasama Routes
+    $routes->group('kerjasama/progress', function($routes) {
+        $routes->get('', 'Admin\ProgressKerjasamaController::index');
+        $routes->post('store', 'Admin\ProgressKerjasamaController::store');
+        $routes->post('update/(:num)', 'Admin\ProgressKerjasamaController::update/$1');
+        $routes->delete('delete/(:num)', 'Admin\ProgressKerjasamaController::delete/$1');
+        $routes->post('delete/(:num)', 'Admin\ProgressKerjasamaController::delete/$1'); // Fallback for browsers that don't support DELETE
+        $routes->get('get/(:num)', 'Admin\ProgressKerjasamaController::getProgress/$1');
+    });
 
     $routes->get('kerjasama/pengajuan', 'Admin\KerjasamaController::pengajuan');
 

@@ -17,48 +17,33 @@ class ProgressKerjasamaManager {
     }
     
     loadInitialData() {
-        // Data sesuai dengan gambar yang diberikan
-        this.allData = [
-            {
-                id: 1,
-                date: "8 Jan 2021",
-                institution: "Yayasan Perpustakaan Nurul Hasanah",
-                type: "baru",
-                progress: "Pembahasan MOU/PKS"
-            },
-            {
-                id: 2,
-                date: "14 Jan 2021",
-                institution: "Yayasan IQRO Semesta",
-                type: "baru",
-                progress: "Pembahasan MOU/PKS"
-            },
-            {
-                id: 3,
-                date: "23 Jan 2021",
-                institution: "LEMBAGA SWADAYA MASYARAKAT PUSAT KEGIATAN BELAJAR MASYARAKAT ELANG MUDA TEMBARA'I",
-                type: "baru",
-                progress: "Pembahasan MOU/PKS"
-            },
-            {
-                id: 4,
-                date: "4 Feb 2021",
-                institution: "PT Infiniti Digital Indonesia",
-                type: "baru",
-                progress: "Pembahasan MOU/PKS"
-            },
-            {
-                id: 5,
-                date: "26 Feb 2021",
-                institution: "UNIVERSITAS MEGA BUANA PALOPO",
-                type: "baru",
-                progress: "Pembahasan MOU/PKS"
-            }
-        ];
+        // Check if there's data passed from PHP
+        if (window.progressInitialData && Array.isArray(window.progressInitialData)) {
+            this.allData = window.progressInitialData;
+        } else {
+            // Fallback to empty array if no data available
+            this.allData = [];
+        }
         
         // Sort by date (newest first)
-        this.allData.sort((a, b) => new Date(b.date) - new Date(a.date));
+        this.allData.sort((a, b) => {
+            const dateA = this.parseDate(a.date);
+            const dateB = this.parseDate(b.date);
+            return dateB - dateA;
+        });
+        
         this.filteredData = [...this.allData];
+    }
+    
+    parseDate(dateStr) {
+        // Parse date in format "d M Y" (e.g. "14 Jan 2021")
+        const parts = dateStr.split(' ');
+        const months = {
+            'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
+            'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
+        };
+        
+        return new Date(parts[2], months[parts[1]], parseInt(parts[0]));
     }
     
     bindEvents() {
@@ -126,7 +111,46 @@ class ProgressKerjasamaManager {
         
         this.hideEmptyState();
         
-        tbody.innerHTML = pageData.map(item => `
+        tbody.innerHTML = pageData.map(item => {
+            // Set badge class based on type
+            let typeBadgeClass = '';
+            switch(item.type.toLowerCase()) {
+                case 'baru':
+                    typeBadgeClass = 'progress-type-badge-new';
+                    break;
+                case 'perpanjangan':
+                    typeBadgeClass = 'progress-type-badge-extension';
+                    break;
+                case 'dokumentasi':
+                    typeBadgeClass = 'progress-type-badge-documentation';
+                    break;
+                case 'finishing':
+                    typeBadgeClass = 'progress-type-badge-finishing';
+                    break;
+                default:
+                    typeBadgeClass = 'progress-type-badge-default';
+            }
+            
+            // Set badge class based on progress
+            let progressBadgeClass = '';
+            switch(item.progress.toLowerCase()) {
+                case 'dokumentasi':
+                    progressBadgeClass = 'progress-status-badge-documentation';
+                    break;
+                case 'finishing':
+                    progressBadgeClass = 'progress-status-badge-finishing';
+                    break;
+                case 'review':
+                    progressBadgeClass = 'progress-status-badge-review';
+                    break;
+                case 'approval':
+                    progressBadgeClass = 'progress-status-badge-approval';
+                    break;
+                default:
+                    progressBadgeClass = 'progress-status-badge-default';
+            }
+            
+            return `
             <tr>
                 <td>
                     <div class="progress-date-text">${item.date}</div>
@@ -135,13 +159,14 @@ class ProgressKerjasamaManager {
                     <div class="progress-institution-name">${item.institution}</div>
                 </td>
                 <td>
-                    <span class="progress-type-badge">${item.type}</span>
+                    <span class="progress-type-badge ${typeBadgeClass}">${item.type}</span>
                 </td>
                 <td>
-                    <div class="progress-status-text">${item.progress}</div>
+                    <span class="progress-status-badge ${progressBadgeClass}">${item.progress}</span>
                 </td>
             </tr>
-        `).join('');
+            `;
+        }).join('');
     }
     
     renderPagination() {
