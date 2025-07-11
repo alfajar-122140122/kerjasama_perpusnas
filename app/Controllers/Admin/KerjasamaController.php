@@ -60,8 +60,31 @@ class KerjasamaController extends BaseController
     
     public function akanBerakhir()
     {
+        $today = date('Y-m-d');
+        $threeMonthsLater = date('Y-m-d', strtotime('+3 months'));
+        
+        // Ambil kerjasama yang akan berakhir dalam 90 hari ke depan
+        $akanBerakhirData = $this->kerjasamaModel
+            ->where('tanggal_berakhir >=', $today)
+            ->where('tanggal_berakhir <=', $threeMonthsLater)
+            ->orderBy('tanggal_berakhir', 'ASC')
+            ->findAll();
+        
+        // Hitung sisa hari untuk setiap kerjasama
+        foreach ($akanBerakhirData as &$kerjasama) {
+            $endDate = new \DateTime($kerjasama['tanggal_berakhir']);
+            $currentDate = new \DateTime($today);
+            $interval = $currentDate->diff($endDate);
+            $kerjasama['sisa_hari'] = $interval->days;
+            
+            // Format tanggal untuk tampilan
+            $kerjasama['tanggal_mulai_formatted'] = date('d/m/Y', strtotime($kerjasama['tanggal_mulai']));
+            $kerjasama['tanggal_berakhir_formatted'] = date('d/m/Y', strtotime($kerjasama['tanggal_berakhir']));
+        }
+        
         $data = [
-            'title' => 'Kerjasama Akan Berakhir'
+            'title' => 'Kerjasama Akan Berakhir',
+            'akanBerakhirData' => $akanBerakhirData
         ];
         
         return view('admin/kerjasama/akan_berakhir', $data);

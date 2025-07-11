@@ -17,52 +17,15 @@ class AkanBerakhirManager {
     }
     
     loadInitialData() {
-        // Data sesuai dengan gambar yang diberikan
-        this.allData = [
-            {
-                id: 1,
-                partner: "ECOLE FRANCAISE D'EXTREME-ORIENT",
-                scope: "Pelestarian warisan dokumenter budaya Nusantara. Penyediaan akses warisan dokumenter budaya Nusantara. Peningkatan kualitas sumber daya manusia dalam pengelolaan warisan dokumenter budaya Nusantara. Penerbitan hasil penelitian warisan dokumenter budaya Nusantara.",
-                startDate: "2013-10-25",
-                endDate: "2016-10-25",
-                isExpired: true
-            },
-            {
-                id: 2,
-                partner: "The National Library and Archives of the Islamic Republic of Iran",
-                scope: "Sharing Information and Experiences; Exchange of Experts; Library resources and services; Arrangement of Courses, Workshops, Exhibitions, Seminars and Conferences; Research Collaborations.",
-                startDate: "2015-09-30",
-                endDate: "2020-09-30",
-                isExpired: true
-            },
-            {
-                id: 3,
-                partner: "THE NATIONAL LIBRARY OF KOREA",
-                scope: "Pertukaran informasi dan pengalaman. Pertukaran staf dan kunjungan. Pertukaran bahan perpustakaan. Kerja sama timbal balik.",
-                startDate: "2015-12-03",
-                endDate: "2018-12-03",
-                isExpired: true
-            },
-            {
-                id: 4,
-                partner: "TNI ANGKATAN LAUT",
-                scope: "Saling menunjang dalam pelaksanaan tugas kedua belah pihak sesuai dengan fungsi dan kewenangan masing-masing terkait dengan bidang pengembangan perpustakaan.",
-                startDate: "2012-01-26",
-                endDate: "2017-01-26",
-                isExpired: true
-            },
-            {
-                id: 5,
-                partner: "DEWAT KELAUTAN INDONESIA",
-                scope: "Pengembagan perpustakaan di lingkungan Dewan Kelautan, untuk menunjang tugas fungsi; Pengembangan repository, informasi, kajian/penelitian bidang kelautan dan perikanan; Tukar menukar data bidang kelautan dan perikanan.",
-                startDate: "2013-07-02",
-                endDate: "2018-07-02",
-                isExpired: true
-            }
-        ];
+        // Check if there's data passed from PHP
+        if (window.akanBerakhirInitialData && Array.isArray(window.akanBerakhirInitialData)) {
+            this.allData = window.akanBerakhirInitialData;
+        } else {
+            // Fallback to empty array if no data available
+            this.allData = [];
+        }
         
-        // Sort by end date (earliest expiration first)
-        this.allData.sort((a, b) => new Date(a.endDate) - new Date(b.endDate));
+        // Data is already sorted by tanggal_berakhir ASC from the controller
         this.filteredData = [...this.allData];
     }
     
@@ -85,6 +48,15 @@ class AkanBerakhirManager {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 this.filterData();
+            }
+        });
+        
+        // Add click event for table rows to show details
+        document.addEventListener('click', (e) => {
+            const row = e.target.closest('.akan-berakhir-row');
+            if (row) {
+                const id = parseInt(row.dataset.id);
+                this.showKerjasamaDetail(id);
             }
         });
     }
@@ -129,22 +101,37 @@ class AkanBerakhirManager {
         
         this.hideEmptyState();
         
-        tbody.innerHTML = pageData.map(item => `
-            <tr>
-                <td>
-                    <div class="akan-berakhir-partner-name">${item.partner}</div>
-                </td>
-                <td>
-                    <div class="akan-berakhir-scope-text">${item.scope}</div>
-                </td>
-                <td>
-                    <div class="akan-berakhir-date-cell">${this.formatDate(item.startDate)}</div>
-                </td>
-                <td>
-                    <div class="akan-berakhir-date-cell">${this.formatDate(item.endDate)}</div>
-                </td>
-            </tr>
-        `).join('');
+        tbody.innerHTML = pageData.map(item => {
+            let rowClass = '';
+            if (item.remainingDays <= 30) {
+                rowClass = 'akan-berakhir-urgent';
+            } else if (item.remainingDays <= 60) {
+                rowClass = 'akan-berakhir-warning';
+            }
+            
+            return `
+                <tr class="akan-berakhir-row ${rowClass}" data-id="${item.id}">
+                    <td>
+                        <div class="akan-berakhir-partner-name">${item.partner}</div>
+                    </td>
+                    <td>
+                        <div class="akan-berakhir-scope-text">${item.scope.length > 50 ? item.scope.substring(0, 50) + '...' : item.scope}</div>
+                    </td>
+                    <td>
+                        <div class="akan-berakhir-date-text">${item.startDate}</div>
+                    </td>
+                    <td>
+                        <div class="akan-berakhir-end-date">
+                            <span class="akan-berakhir-date-text text-danger fw-bold">${item.endDate}</span>
+                            <br>
+                            <small class="akan-berakhir-countdown text-warning">
+                                <i class="fas fa-clock me-1"></i>${item.remainingDays} hari lagi
+                            </small>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
     }
     
     renderPagination() {
@@ -257,6 +244,63 @@ class AkanBerakhirManager {
             behavior: 'smooth',
             block: 'start'
         });
+    }
+    
+    showKerjasamaDetail(id) {
+        const item = this.allData.find(item => item.id === id);
+        if (!item) return;
+        
+        // Create modal for displaying full details
+        const modalHtml = `
+        <div class="akan-berakhir-detail-modal" id="akanBerakhirDetailModal">
+            <div class="akan-berakhir-modal-content">
+                <span class="akan-berakhir-modal-close">&times;</span>
+                <h3>${item.partner}</h3>
+                <div class="akan-berakhir-modal-section">
+                    <h4>Periode</h4>
+                    <p>${item.startDate} - ${item.endDate}</p>
+                </div>
+                <div class="akan-berakhir-modal-section">
+                    <h4>Sisa Waktu</h4>
+                    <p class="text-danger"><i class="fas fa-clock me-1"></i> ${item.remainingDays} hari lagi</p>
+                </div>
+                <div class="akan-berakhir-modal-section">
+                    <h4>Ruang Lingkup</h4>
+                    <p>${item.scope}</p>
+                </div>
+                <div class="akan-berakhir-modal-section">
+                    <h4>Status</h4>
+                    <p><span class="badge bg-warning">Akan Berakhir</span></p>
+                </div>
+            </div>
+        </div>`;
+        
+        // Append modal to body
+        const modalWrapper = document.createElement('div');
+        modalWrapper.innerHTML = modalHtml;
+        document.body.appendChild(modalWrapper.firstElementChild);
+        
+        // Add modal functionality
+        const modal = document.getElementById('akanBerakhirDetailModal');
+        const closeBtn = modal.querySelector('.akan-berakhir-modal-close');
+        
+        modal.style.display = 'block';
+        
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+            setTimeout(() => {
+                modal.remove();
+            }, 300);
+        };
+        
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                setTimeout(() => {
+                    modal.remove();
+                }, 300);
+            }
+        };
     }
 }
 

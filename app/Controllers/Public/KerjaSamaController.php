@@ -60,6 +60,60 @@ class KerjaSamaController extends BaseController
         return view('public/kerjasama/implementasi', $data);
     }
     
+    public function akanBerakhir()
+    {
+        // Get kerjasama data that will expire in the next 90 days
+        $today = date('Y-m-d');
+        $threeMonthsLater = date('Y-m-d', strtotime('+3 months'));
+        
+        // Get kerjasama that will expire in 90 days
+        $akanBerakhirData = $this->kerjasamaModel
+            ->where('tanggal_berakhir >=', $today)
+            ->where('tanggal_berakhir <=', $threeMonthsLater)
+            ->orderBy('tanggal_berakhir', 'ASC')
+            ->findAll();
+        
+        // Calculate remaining days and format dates
+        $formattedData = [];
+        foreach ($akanBerakhirData as $kerjasama) {
+            $endDate = new \DateTime($kerjasama['tanggal_berakhir']);
+            $currentDate = new \DateTime($today);
+            $interval = $currentDate->diff($endDate);
+            
+            // Format dates for display
+            $startDate = new \DateTime($kerjasama['tanggal_mulai']);
+            
+            $formattedData[] = [
+                'id' => $kerjasama['id'],
+                'partner' => $kerjasama['nama_mitra'],
+                'scope' => $kerjasama['ruang_lingkup'],
+                'startDate' => $startDate->format('d/m/Y'),
+                'endDate' => $endDate->format('d/m/Y'),
+                'remainingDays' => $interval->days,
+                'status' => $this->getStatusKerjasama($kerjasama['tanggal_berakhir'])
+            ];
+        }
+        
+        // Statistics for akan berakhir
+        $stats = [
+            'total_ending_soon' => count($akanBerakhirData),
+            'ending_in_30_days' => $this->countEndingSoon(30),
+            'ending_in_60_days' => $this->countEndingSoon(60),
+            'ending_in_90_days' => $this->countEndingSoon(90),
+        ];
+        
+        $data = [
+            'page_title' => 'Kerja Sama yang Akan Berakhir',
+            'meta_description' => 'Daftar kerja sama Perpustakaan Nasional RI yang akan berakhir dalam waktu dekat.',
+            'current_section' => 'akan_berakhir',
+            'akan_berakhir_data' => $formattedData,
+            'akan_berakhir_stats' => $stats,
+            'filter_options' => $this->getFilterOptions()
+        ];
+        
+        return view('public/kerjasama/akan_berakhir', $data);
+    }
+    
     // Helper methods for data calculations
     private function countActiveKerjasama()
     {
@@ -177,5 +231,16 @@ class KerjaSamaController extends BaseController
         } else {
             return 'active';
         }
+    }
+    
+    private function countEndingSoon($days)
+    {
+        $today = date('Y-m-d');
+        $futureDate = date('Y-m-d', strtotime("+$days days"));
+        
+        return $this->kerjasamaModel
+            ->where('tanggal_berakhir >=', $today)
+            ->where('tanggal_berakhir <=', $futureDate)
+            ->countAllResults();
     }
 }

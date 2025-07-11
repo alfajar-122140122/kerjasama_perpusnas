@@ -1,0 +1,107 @@
+/* Modal styling for akan-berakhir detail */
+.akan-berakhir-detail-modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-x: hidden;
+    overflow-y: auto;
+    transition: opacity 0.3s ease;
+}
+
+.akan-berakhir-modal-content {
+    position: relative;
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 25px;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.akan-berakhir-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.akan-berakhir-modal-close:hover {
+    color: #555;
+}
+
+.akan-berakhir-modal-content h3 {
+    font-size: 1.5rem;
+    color: #0066cc;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.akan-berakhir-modal-section {
+    margin-bottom: 1.5rem;
+}
+
+.akan-berakhir-modal-section h4 {
+    font-size: 1.1rem;
+    color: #444;
+    margin-bottom: 0.5rem;
+}
+
+.akan-berakhir-modal-section p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Row styling */
+.akan-berakhir-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.akan-berakhir-row:hover {
+    background-color: #f8f9fa;
+}
+
+.akan-berakhir-urgent {
+    background-color: rgba(255, 0, 0, 0.05);
+}
+
+.akan-berakhir-warning {
+    background-color: rgba(255, 193, 7, 0.05);
+}
+
+.akan-berakhir-countdown {
+    color: #dc3545;
+    font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .akan-berakhir-modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 15px;
+    }
+}

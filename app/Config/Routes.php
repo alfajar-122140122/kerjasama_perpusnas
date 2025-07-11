@@ -20,7 +20,7 @@ $routes->group('', function($routes) {
     $routes->get('kerja-sama', 'Public\KerjaSama::index');
     $routes->get('kerja-sama/data', 'Public\KerjaSamaController::data');
     $routes->get('kerja-sama/implementasi', 'Public\KerjaSamaController::implementasi');
-    $routes->get('kerja-sama/akan-berakhir', 'Public\KerjaSama::akanBerakhir');
+    $routes->get('kerja-sama/akan-berakhir', 'Public\KerjaSamaController::akanBerakhir');
     $routes->get('kerja-sama/progress', 'Public\KerjaSama::progress');
     $routes->get('kerja-sama/pengajuan', 'Public\KerjaSama::pengajuan');
     $routes->post('kerja-sama/pengajuan', 'Public\KerjaSama::submitPengajuan');
