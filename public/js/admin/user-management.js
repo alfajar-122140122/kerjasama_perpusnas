@@ -14,8 +14,9 @@ function initializeUserManagement() {
             const userId = button.getAttribute('data-user-id');
             const username = button.getAttribute('data-username');
             const hakAkses = button.getAttribute('data-hak-akses');
+            const email = button.getAttribute('data-email');
             
-            editUser(userId, username, hakAkses);
+            editUser(userId, username, hakAkses, email);
         }
         
         if (e.target.closest('.btn-delete')) {
@@ -50,13 +51,14 @@ function initializeUserManagement() {
 }
 
 // Edit user function with data from attributes
-function editUser(userId, username, hakAkses) {
+function editUser(userId, username, hakAkses, email) {
     currentUserId = userId;
     
     // Populate edit form with data from attributes
     document.getElementById('edit_user_id').value = userId;
     document.getElementById('edit_username').value = username;
     document.getElementById('edit_hak_akses').value = hakAkses;
+    document.getElementById('edit_email').value = email || ''; // Handle email
     
     // Set form action
     document.getElementById('editUserForm').action = window.BASE_URL + '/admin/users/edit/' + userId;

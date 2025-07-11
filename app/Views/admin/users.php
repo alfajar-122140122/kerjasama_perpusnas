@@ -59,24 +59,43 @@
                 <tbody>
                     <?php if (isset($users) && !empty($users)): ?>
                         <?php foreach ($users as $user): ?>
-                        <tr class="user-row" data-user-id="<?= $user['id_user'] ?>">
+                        <?php $userId = isset($user['id']) ? $user['id'] : ''; ?>
+                        <tr class="user-row" data-user-id="<?= $userId ?>">
                             <td>
-                                <input type="checkbox" class="form-check-input user-checkbox" value="<?= $user['id_user'] ?>">
+                                <input type="checkbox" class="form-check-input user-checkbox" value="<?= $userId ?>">
                             </td>
                             <td>
                                 <div class="user-info">
-                                    <span class="user-name"><?= esc($user['username']) ?></span>
+                                    <span class="user-name"><?= esc($user['username'] ?? '') ?></span>
                                 </div>
                             </td>
                             <td>
-                                <span class="badge user-role-badge <?= $user['hak_akses'] === 'admin' ? 'badge-admin' : 'badge-user' ?>">
-                                    <?= ucfirst(esc($user['hak_akses'])) ?>
+                                <span class="badge user-role-badge <?= ($user['role'] ?? '') === 'admin' ? 'badge-admin' : 'badge-user' ?>">
+                                    <?= ucfirst(esc($user['role'] ?? '')) ?>
                                 </span>
                             </td>
                             <td>
                                 <span class="last-active">
                                     <?php if (isset($user['last_active']) && $user['last_active']): ?>
-                                        <?= date('d/m/Y', strtotime($user['last_active'])) ?>
+                                        <?php
+                                        $lastActive = new DateTime($user['last_active']);
+                                        $now = new DateTime();
+                                        $interval = $now->diff($lastActive);
+                                        
+                                        if ($interval->y > 0) {
+                                            echo $interval->y . ' tahun yang lalu';
+                                        } elseif ($interval->m > 0) {
+                                            echo $interval->m . ' bulan yang lalu';
+                                        } elseif ($interval->d > 0) {
+                                            echo $interval->d . ' hari yang lalu';
+                                        } elseif ($interval->h > 0) {
+                                            echo $interval->h . ' jam yang lalu';
+                                        } elseif ($interval->i > 0) {
+                                            echo $interval->i . ' menit yang lalu';
+                                        } else {
+                                            echo 'Baru saja';
+                                        }
+                                        ?>
                                     <?php else: ?>
                                         -
                                     <?php endif; ?>
@@ -85,15 +104,16 @@
                             <td class="text-center">
                                 <div class="action-buttons">
                                     <button class="btn btn-sm btn-edit" 
-                                            data-user-id="<?= $user['id_user'] ?>"
-                                            data-username="<?= esc($user['username']) ?>"
-                                            data-hak-akses="<?= esc($user['hak_akses']) ?>"
+                                            data-user-id="<?= $userId ?>"
+                                            data-username="<?= esc($user['username'] ?? '') ?>"
+                                            data-hak-akses="<?= esc($user['role'] ?? '') ?>"
+                                            data-email="<?= esc($user['email'] ?? '') ?>"
                                             title="Edit User">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button class="btn btn-sm btn-delete" 
-                                            data-user-id="<?= $user['id_user'] ?>"
-                                            data-username="<?= esc($user['username']) ?>"
+                                            data-user-id="<?= $userId ?>"
+                                            data-username="<?= esc($user['username'] ?? '') ?>"
                                             title="Hapus User">
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -133,8 +153,13 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username *</label>
-                        <input type="text" class="form-control" id="username" name="username" required minlength="3" maxlength="255" value="<?= old('username') ?>">
+                        <input type="text" class="form-control" id="username" name="username" required minlength="3" maxlength="50" value="<?= old('username') ?>">
                         <div class="form-text">Username minimal 3 karakter</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email *</label>
+                        <input type="email" class="form-control" id="email" name="email" required maxlength="100" value="<?= old('email') ?>">
                     </div>
                     
                     <div class="mb-3">
@@ -153,7 +178,7 @@
                         <select class="form-select" id="hak_akses" name="hak_akses" required>
                             <option value="">Pilih Hak Akses</option>
                             <option value="admin" <?= old('hak_akses') === 'admin' ? 'selected' : '' ?>>Admin</option>
-                            <option value="user" <?= old('hak_akses') === 'user' ? 'selected' : '' ?>>User</option>
+                            <option value="staff" <?= old('hak_akses') === 'staff' ? 'selected' : '' ?>>Staff</option>
                         </select>
                     </div>
                 </div>
@@ -186,7 +211,12 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="edit_username" class="form-label">Username *</label>
-                        <input type="text" class="form-control" id="edit_username" name="username" required minlength="3" maxlength="255">
+                        <input type="text" class="form-control" id="edit_username" name="username" required minlength="3" maxlength="50">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="edit_email" class="form-label">Email *</label>
+                        <input type="email" class="form-control" id="edit_email" name="email" required maxlength="100">
                     </div>
                     
                     <div class="mb-3">
@@ -205,7 +235,7 @@
                         <select class="form-select" id="edit_hak_akses" name="hak_akses" required>
                             <option value="">Pilih Hak Akses</option>
                             <option value="admin">Admin</option>
-                            <option value="user">User</option>
+                            <option value="staff">Staff</option>
                         </select>
                     </div>
                 </div>

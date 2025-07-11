@@ -7,13 +7,13 @@ use CodeIgniter\Model;
 class UserModel extends Model
 {
     protected $table            = 'users';
-    protected $primaryKey       = 'id_user'; // Disesuaikan dengan migrasi
+    protected $primaryKey       = 'id'; // Disesuaikan dengan migrasi
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
 
-    // Kolom yang diizinkan untuk diisi, disesuaikan dengan migrasi dan menambahkan last_active
-    protected $allowedFields    = ['username', 'password', 'hak_akses', 'last_active'];
+    // Kolom yang diizinkan untuk diisi, disesuaikan dengan migrasi
+    protected $allowedFields    = ['username', 'email', 'password_hash', 'role', 'last_active'];
 
     // Dates
     protected $useTimestamps = true;
@@ -23,9 +23,9 @@ class UserModel extends Model
 
     // Validation
     protected $validationRules = [
-        'username'  => 'required|min_length[3]|max_length[255]|is_unique[users.username,id_user,{id_user}]',
-        'password'  => 'required|min_length[8]',
-        'hak_akses' => 'required|in_list[admin,user]'
+        'username'  => 'required|min_length[3]|max_length[50]|is_unique[users.username,id,{id}]',
+        'password_hash'  => 'required|min_length[8]',
+        'role' => 'required|in_list[admin,staff]'
     ];
 
     protected $validationMessages = [

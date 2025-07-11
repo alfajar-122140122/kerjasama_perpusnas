@@ -28,9 +28,10 @@ class UserController extends BaseController
     {
         if ($this->request->getMethod() === 'POST') {
             $rules = [
-                'username' => 'required|min_length[3]|max_length[255]|is_unique[users.username]',
+                'username' => 'required|min_length[3]|max_length[50]|is_unique[users.username]',
+                'email' => 'required|valid_email|max_length[100]|is_unique[users.email]',
                 'password' => 'required|min_length[8]',
-                'hak_akses' => 'required|in_list[admin,user]'
+                'hak_akses' => 'required|in_list[admin,staff]'
             ];
 
             if (!$this->validate($rules)) {
@@ -41,8 +42,9 @@ class UserController extends BaseController
 
             $data = [
                 'username' => $this->request->getPost('username'),
-                'password' => $this->request->getPost('password'),
-                'hak_akses' => $this->request->getPost('hak_akses')
+                'email' => $this->request->getPost('email'),
+                'password_hash' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+                'role' => $this->request->getPost('hak_akses')
             ];
 
             if ($this->userModel->insert($data)) {
@@ -68,8 +70,9 @@ class UserController extends BaseController
             }
 
             $rules = [
-                'username' => "required|min_length[3]|max_length[255]|is_unique[users.username,id_user,{$id}]",
-                'hak_akses' => 'required|in_list[admin,user]'
+                'username' => "required|min_length[3]|max_length[50]|is_unique[users.username,id,{$id}]",
+                'email' => "required|valid_email|max_length[100]|is_unique[users.email,id,{$id}]",
+                'hak_akses' => 'required|in_list[admin,staff]'
             ];
 
             // Only validate password if provided
@@ -86,12 +89,13 @@ class UserController extends BaseController
 
             $data = [
                 'username' => $this->request->getPost('username'),
-                'hak_akses' => $this->request->getPost('hak_akses')
+                'email' => $this->request->getPost('email'),
+                'role' => $this->request->getPost('hak_akses')
             ];
 
             // Only update password if provided
             if (!empty($password)) {
-                $data['password'] = $password;
+                $data['password_hash'] = password_hash($password, PASSWORD_DEFAULT);
             }
 
             if ($this->userModel->update($id, $data)) {
