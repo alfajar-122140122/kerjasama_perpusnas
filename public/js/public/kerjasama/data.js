@@ -17,45 +17,8 @@ class CooperationDataManager {
     }
     
     loadInitialData() {
-        // Sample data structure matching the UI
-        this.allData = [
-            {
-                id: 1,
-                partner: "ECOLE FRANCAISE D'EXTREME-ORIENT",
-                scope: "Pelestarian warisan dokumenter budaya Nusantara. Penyediaan akses warisan dokumenter budaya Nusantara. Peningkatan kualitas sumber daya manusia dalam pengelolaan dan pengembangan warisan dokumenter budaya Nusantara. Penelitian hasil penelitian warisan dokumenter budaya Nusantara.",
-                startDate: "2013-10-25",
-                endDate: "2016-10-25"
-            },
-            {
-                id: 2,
-                partner: "The National Library and Archives of the Islamic Republic of Iran",
-                scope: "Sharing Information and Experiences; Exchange of Experts; Library resources and services; Arrangement of Courses, Workshops, Exhibitions, Seminars and Conferences; Research Collaboration.",
-                startDate: "2015-09-30",
-                endDate: "2020-09-30"
-            },
-            {
-                id: 3,
-                partner: "THE NATIONAL LIBRARY OF KOREA",
-                scope: "Pertukaran informasi dan pengalaman. Pertukaran staf dan kunjungan. Pertukaran bahan perpustakaan. Kerja sama timbal balik.",
-                startDate: "2015-12-03",
-                endDate: "2018-12-03"
-            },
-            {
-                id: 4,
-                partner: "TNI ANGKATAN LAUT",
-                scope: "Saling menukar/memberikan pelayanan kedua belah pihak sesuai dengan fungsi dan kewenangan masing-masing terkait dengan bidang pengembangan perpustakaan.",
-                startDate: "2012-01-26",
-                endDate: "2017-01-26"
-            },
-            {
-                id: 5,
-                partner: "DEWAN KELAUTAN INDONESIA",
-                scope: "Pengembangan perpustakaan di lingkungan Dewan Kelautan, untuk menunjang tugas fungsi; Pengembangan repository, informasi, kajian/penelitian bidang kelautan dan perikanan.",
-                startDate: "2013-07-02",
-                endDate: "2018-07-02"
-            }
-        ];
-        
+        // Use data from PHP server
+        this.allData = window.cooperationInitialData || [];
         this.filteredData = [...this.allData];
     }
     
@@ -223,6 +186,11 @@ class CooperationDataManager {
     }
     
     formatDate(dateString) {
+        // Use global formatDate function if it exists, or use our own implementation
+        if (window.formatDate) {
+            return window.formatDate(dateString);
+        }
+        
         const date = new Date(dateString);
         return date.toLocaleDateString('id-ID', {
             year: 'numeric',

@@ -112,6 +112,16 @@
     window.cooperationStats = <?= json_encode($cooperation_stats) ?>;
     window.filterOptions = <?= json_encode($filter_options) ?>;
     
+    // Format dates for display
+    window.formatDate = function(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    };
+    
     // Search functionality for public table
     document.getElementById('searchInput').addEventListener('keyup', function() {
         const searchTerm = this.value.toLowerCase();

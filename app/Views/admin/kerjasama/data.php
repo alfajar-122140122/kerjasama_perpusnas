@@ -60,69 +60,44 @@ Data Kerjasama
                     </thead>
                     <tbody>
                         <?php 
-                // Sample data - nanti diganti dengan data dari database
-                $kerjasamaData = [
-                    [
-                        'id' => 1,
-                        'nama_mitra' => 'Fulan',
-                        'lingkup' => 'Pelestarian warisan dokumenter budaya Nusantara dan pengembangan sistem informasi perpustakaan digital untuk mendukung akses informasi yang lebih luas',
-                        'tanggal_mulai' => '14/08/2025',
-                        'tanggal_berakhir' => '14/08/2026',
-                        'status' => 'aktif'
-                    ],
-                    [
-                        'id' => 2,
-                        'nama_mitra' => 'Fulana',
-                        'lingkup' => 'Pelestarian warisan dokumenter budaya Nusantara dan digitalisasi koleksi naskah kuno untuk kepentingan penelitian dan edukasi',
-                        'tanggal_mulai' => '13/08/2025',
-                        'tanggal_berakhir' => '13/08/2026',
-                        'status' => 'aktif'
-                    ],
-                    [
-                        'id' => 3,
-                        'nama_mitra' => 'Fulani',
-                        'lingkup' => 'Pelestarian warisan dokumenter budaya Nusantara dan pengembangan program literasi masyarakat melalui inovasi teknologi informasi',
-                        'tanggal_mulai' => '10/08/2025',
-                        'tanggal_berakhir' => '10/08/2026',
-                        'status' => 'aktif'
-                    ],
-                    [
-                        'id' => 4,
-                        'nama_mitra' => 'Fulano',
-                        'lingkup' => 'Pelestarian warisan dokumenter budaya Nusantara dan kolaborasi dalam pengembangan repository digital untuk arsip nasional',
-                        'tanggal_mulai' => '05/08/2025',
-                        'tanggal_berakhir' => '05/08/2026',
-                        'status' => 'aktif'
-                    ]
-                ];
+                // Data from database via controller
+                if (empty($kerjasamaData)) {
+                    $kerjasamaData = [];
+                }
                         ?>
                         
-                        <?php foreach ($kerjasamaData as $kerjasama): ?>
-                        <tr>
-                            <td>
-                                <input type="checkbox" class="form-check-input row-checkbox" value="<?= $kerjasama['id'] ?>">
-                            </td>
-                            <td><?= $kerjasama['nama_mitra'] ?></td>
-                            <td>
-                                <span class="text-muted"><?= substr($kerjasama['lingkup'], 0, 50) ?>...</span>
-                            </td>
-                            <td><?= $kerjasama['tanggal_mulai'] ?></td>
-                            <td><?= $kerjasama['tanggal_berakhir'] ?></td>
-                            <td class="text-center">
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-success btn-sm" title="Lihat">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-primary btn-sm" title="Edit" onclick="editKerjasama(<?= $kerjasama['id'] ?>)">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger btn-sm" title="Hapus" onclick="deleteKerjasama(<?= $kerjasama['id'] ?>)">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
+                        <?php if(count($kerjasamaData) > 0): ?>
+                            <?php foreach ($kerjasamaData as $kerjasama): ?>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="form-check-input row-checkbox" value="<?= $kerjasama['id'] ?>">
+                                </td>
+                                <td><?= esc($kerjasama['nama_mitra']) ?></td>
+                                <td>
+                                    <span class="text-muted"><?= substr(esc($kerjasama['ruang_lingkup'] ?? ''), 0, 50) ?>...</span>
+                                </td>
+                                <td><?= date('d/m/Y', strtotime($kerjasama['tanggal_mulai'])) ?></td>
+                                <td><?= date('d/m/Y', strtotime($kerjasama['tanggal_berakhir'])) ?></td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-success btn-sm" title="Lihat">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" title="Edit" onclick="editKerjasama(<?= $kerjasama['id'] ?>)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" title="Hapus" onclick="deleteKerjasama(<?= $kerjasama['id'] ?>)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6" class="text-center py-3">Tidak ada data kerjasama</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -130,7 +105,11 @@ Data Kerjasama
             <!-- Pagination -->
             <div class="d-flex justify-content-between align-items-center mt-4">
                 <div class="text-muted">
-                    Menampilkan 1-4 dari 4 data
+                    <?php
+                    $count = count($kerjasamaData);
+                    $start = $count > 0 ? 1 : 0;
+                    echo "Menampilkan {$start}-{$count} dari {$count} data";
+                    ?>
                 </div>
                 <nav>
                     <ul class="pagination pagination-sm mb-0">
@@ -161,18 +140,9 @@ Data Kerjasama
             <form id="formTambahKerjasama" method="POST" action="<?= base_url('admin/kerjasama/store') ?>">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
                             <label for="nama_mitra" class="form-label">Nama Mitra</label>
                             <input type="text" class="form-control" id="nama_mitra" name="nama_mitra" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="jenis_kerjasama" class="form-label">Jenis Kerjasama</label>
-                            <select class="form-select" id="jenis_kerjasama" name="jenis_kerjasama" required>
-                                <option value="">Pilih Jenis Kerjasama</option>
-                                <option value="MoU">MoU (Memorandum of Understanding)</option>
-                                <option value="PKS">PKS (Perjanjian Kerjasama)</option>
-                                <option value="IA">IA (Implementation Agreement)</option>
-                            </select>
                         </div>
                     </div>
                     
@@ -192,31 +162,11 @@ Data Kerjasama
                         </div>
                     </div>
                     
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="pic_internal" class="form-label">PIC Internal</label>
-                            <input type="text" class="form-control" id="pic_internal" name="pic_internal" placeholder="Nama PIC dari Perpusnas" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="pic_eksternal" class="form-label">PIC Eksternal</label>
-                            <input type="text" class="form-control" id="pic_eksternal" name="pic_eksternal" placeholder="Nama PIC dari Mitra" required>
-                        </div>
-                    </div>
-                    
+                    <!-- Hanya gunakan field yang ada dalam database -->
                     <div class="mb-3">
-                        <label for="status" class="form-label">Status</label>
-                        <select class="form-select" id="status" name="status" required>
-                            <option value="">Pilih Status</option>
-                            <option value="draft">Draft</option>
-                            <option value="aktif">Aktif</option>
-                            <option value="pending">Pending</option>
-                            <option value="berakhir">Berakhir</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="catatan" class="form-label">Catatan</label>
-                        <textarea class="form-control" id="catatan" name="catatan" rows="2" placeholder="Catatan tambahan (opsional)"></textarea>
+                        <div class="alert alert-info">
+                            <small><i class="fas fa-info-circle me-2"></i>Lengkapi data kerjasama sesuai dengan formulir ini.</small>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -231,6 +181,28 @@ Data Kerjasama
 
 <?= $this->section('scripts') ?>
 <script>
+// Function to show alerts
+function showAlert(type, message) {
+    // Create alert element
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.top = '20px';
+    alertDiv.style.right = '20px';
+    alertDiv.style.zIndex = '9999';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    
+    // Append to body
+    document.body.appendChild(alertDiv);
+    
+    // Auto dismiss after 5 seconds
+    setTimeout(() => {
+        const bsAlert = new bootstrap.Alert(alertDiv);
+        bsAlert.close();
+    }, 5000);
+}
 // Select All Checkbox
 document.getElementById('selectAll').addEventListener('change', function() {
     const checkboxes = document.querySelectorAll('.row-checkbox');
@@ -296,8 +268,19 @@ document.getElementById('formTambahKerjasama').addEventListener('submit', functi
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
     submitBtn.disabled = true;
     
-    // Simulate form submission (replace with actual AJAX call)
-    setTimeout(function() {
+    // Get form data
+    const formData = new FormData(this);
+    
+    // Submit via AJAX
+    fetch(this.getAttribute('action'), {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
         // Close modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('tambahKerjasamaModal'));
         modal.hide();
@@ -309,14 +292,30 @@ document.getElementById('formTambahKerjasama').addEventListener('submit', functi
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
         
-        // Show success message
-        showAlert('success', 'Data kerjasama berhasil ditambahkan!');
-        
-        // Reload page to show new data (or use AJAX to update table)
-        setTimeout(function() {
-            location.reload();
-        }, 1500);
-    }, 2000);
+        if (data.status) {
+            // Show success message
+            showAlert('success', data.message || 'Data kerjasama berhasil ditambahkan!');
+            
+            // Reload page to show new data
+            setTimeout(function() {
+                location.reload();
+            }, 1500);
+        } else {
+            // Show error message
+            showAlert('danger', data.message || 'Gagal menyimpan data kerjasama');
+            
+            // Display validation errors if available
+            if (data.errors) {
+                const errorMessages = Object.values(data.errors).join('<br>');
+                showAlert('danger', errorMessages);
+            }
+        }
+    })
+    .catch(error => {
+        handleApiError(error);
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
 });
 
 // Reset form when modal is closed
@@ -326,6 +325,12 @@ document.getElementById('tambahKerjasamaModal').addEventListener('hidden.bs.moda
     submitBtn.innerHTML = 'Simpan Kerjasama';
     submitBtn.disabled = false;
 });
+
+// Error handling function for debugging
+function handleApiError(error) {
+    console.error('API Error:', error);
+    showAlert('danger', 'Terjadi kesalahan pada server. Silakan cek konsol untuk detail.');
+}
 
 // Functions for table actions
 function viewKerjasama(id) {
@@ -338,9 +343,27 @@ function editKerjasama(id) {
 
 function deleteKerjasama(id) {
     if (confirm('Apakah Anda yakin ingin menghapus data kerjasama ini?')) {
-        // Add AJAX delete request here
-        console.log('Deleting kerjasama with ID:', id);
-        showAlert('success', 'Data kerjasama berhasil dihapus');
+        fetch(`<?= base_url('admin/kerjasama/delete/') ?>${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                showAlert('success', data.message || 'Data kerjasama berhasil dihapus');
+                // Reload page to update table
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            } else {
+                showAlert('danger', data.message || 'Gagal menghapus data kerjasama');
+            }
+        })
+        .catch(error => {
+            handleApiError(error);
+        });
     }
 }
 </script>

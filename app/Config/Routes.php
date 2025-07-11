@@ -16,9 +16,9 @@ $routes->group('', function($routes) {
     $routes->get('aktivitas', 'Public\Home::aktivitas');
     $routes->get('aktivitas/detail/(:num)', 'Public\AktivitasController::detail/$1');
 
-    // Kerja Sama routes - pastikan namespace dan method benar
+    // Kerja Sama routes - gunakan controller baru
     $routes->get('kerja-sama', 'Public\KerjaSama::index');
-    $routes->get('kerja-sama/data', 'Public\KerjaSama::data');
+    $routes->get('kerja-sama/data', 'Public\KerjaSamaController::data');
     $routes->get('kerja-sama/implementasi', 'Public\KerjaSama::implementasi');
     $routes->get('kerja-sama/akan-berakhir', 'Public\KerjaSama::akanBerakhir');
     $routes->get('kerja-sama/progress', 'Public\KerjaSama::progress');
