@@ -17,36 +17,39 @@ class CreatePermohonanKerjasamaTable extends Migration
             ],
             'jenis_permohonan' => [
                 'type'       => 'ENUM',
-                'constraint' => ['Baru', 'Perpanjangan'],
-                'default'    => 'Baru',
+                'constraint' => ['baru', 'perpanjangan'],
+                'default'    => 'baru',
             ],
-            'nama_instansi' => [
+            'lembaga' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
             ],
             'alamat' => [
                 'type' => 'TEXT',
             ],
-            'telp' => [
+            'telepon' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 20,
+                'constraint' => 50,
             ],
             'email' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 100,
+                'constraint' => 255,
             ],
             'unit_terkait' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
             ],
-            'kontak_dihubungi' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 255,
+            'kontak_dapat_dihubungi' => [
+                'type' => 'TEXT',
             ],
-            'upload_formulir' => [
+            'file_formulir' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
                 'null'       => true,
+            ],
+            'tanggal_pengajuan' => [
+                'type' => 'DATETIME',
+                'null' => true,
             ],
             // Kolom status workflow
             'status' => [
@@ -67,11 +70,11 @@ class CreatePermohonanKerjasamaTable extends Migration
                 'type' => 'DATETIME',
                 'null' => true,
             ],
-            'updated_at' => [
+            'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
-            'created_at' => [
+            'updated_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],

@@ -7,20 +7,21 @@ use CodeIgniter\Model;
 class PermohonanKerjasamaModel extends Model
 {
     protected $table            = 'permohonan_kerjasama';
-    protected $primaryKey       = 'id_permohonan';
+    protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
         'jenis_permohonan',
-        'nama_instansi',
+        'lembaga',
         'alamat',
-        'telp',
+        'telepon',
         'email',
         'unit_terkait',
-        'kontak_dihubungi',
-        'upload_formulir',
+        'kontak_dapat_dihubungi',
+        'file_formulir',
+        'tanggal_pengajuan',
         'status',
         'catatan',
         'reviewed_by',
@@ -44,16 +45,17 @@ class PermohonanKerjasamaModel extends Model
 
     // Validation
     protected $validationRules      = [
-        'jenis_permohonan'     => 'required|in_list[Baru,Perpanjangan]',
-        'nama_instansi'        => 'required|max_length[255]',
+        'jenis_permohonan'     => 'required|in_list[baru,perpanjangan]',
+        'lembaga'              => 'required|max_length[255]',
         'alamat'               => 'required',
-        'telp'                 => 'required|max_length[20]',
-        'email'                => 'required|valid_email|max_length[100]',
+        'telepon'              => 'required|max_length[50]',
+        'email'                => 'required|valid_email|max_length[255]',
         'unit_terkait'         => 'required|max_length[255]',
-        'kontak_dihubungi'     => 'required|max_length[255]',
-        'upload_formulir'      => 'permit_empty|max_length[255]',
+        'kontak_dapat_dihubungi' => 'required',
+        'file_formulir'        => 'permit_empty|max_length[255]',
+        'tanggal_pengajuan'    => 'permit_empty|valid_date',
         'status'               => 'permit_empty|in_list[pending,review,approved,rejected]',
-        'catatan'              => 'permit_empty|max_length[500]',
+        'catatan'              => 'permit_empty',
         'reviewed_by'          => 'permit_empty|integer',
         'reviewed_at'          => 'permit_empty|valid_date',
     ];

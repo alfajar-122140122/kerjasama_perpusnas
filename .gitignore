@@ -174,3 +174,13 @@ _modules/*
 /fuel/app/logs/*/*/*
 /fuel/app/cache/*/*
 /fuel/app/config/crypt.php
+
+# ignore pdf file in upload
+/fuel/app/uploads/*.pdf
+/fuel/app/uploads/*.docx
+/fuel/app/uploads/*.doc
+/fuel/app/uploads/*.xls
+/fuel/app/uploads/*.xlsx
+/fuel/app/uploads/*.ppt
+/fuel/app/uploads/*.pptx
+

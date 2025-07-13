@@ -30,7 +30,7 @@ class PermohonanKerjasamaSeeder extends Seeder
         
         // Generate 5 random permohonan
         for ($i = 0; $i < 5; $i++) {
-            $jenisPermohonanOptions = ['Baru', 'Perpanjangan'];
+            $jenisPermohonanOptions = ['baru', 'perpanjangan'];
             $statusOptions = ['pending', 'review', 'approved', 'rejected'];
             $status = $faker->randomElement($statusOptions);
             $reviewedBy = in_array($status, ['review', 'approved', 'rejected']) ? $faker->numberBetween(1, 3) : null;
@@ -38,20 +38,21 @@ class PermohonanKerjasamaSeeder extends Seeder
             $catatan = $status === 'review' ? 'Perlu dokumen tambahan' : ($status === 'rejected' ? 'Dokumen tidak lengkap' : ($status === 'approved' ? 'Disetujui tanpa catatan' : null));
             $updatedAt = $reviewedAt;
             $data[] = [
-                'jenis_permohonan'  => $faker->randomElement($jenisPermohonanOptions),
-                'nama_instansi'     => $faker->company,
-                'alamat'            => $faker->address,
-                'telp'              => $faker->phoneNumber,
-                'email'             => $faker->companyEmail,
-                'unit_terkait'      => $faker->randomElement($unitTerkaitOptions),
-                'kontak_dihubungi'  => $faker->name,
-                'upload_formulir'   => 'formulir_' . $faker->numberBetween(1000, 9999) . '.pdf',
-                'status'            => $status,
-                'catatan'           => $catatan,
-                'reviewed_by'       => $reviewedBy,
-                'reviewed_at'       => $reviewedAt,
-                'created_at'        => $faker->dateTimeBetween('-6 months', 'now')->format('Y-m-d H:i:s'),
-                'updated_at'        => $updatedAt,
+                'jenis_permohonan'      => $faker->randomElement($jenisPermohonanOptions),
+                'lembaga'               => $faker->company,
+                'alamat'                => $faker->address,
+                'telepon'               => $faker->phoneNumber,
+                'email'                 => $faker->companyEmail,
+                'unit_terkait'          => $faker->randomElement($unitTerkaitOptions),
+                'kontak_dapat_dihubungi' => $faker->name,
+                'file_formulir'         => 'formulir_' . $faker->numberBetween(1000, 9999) . '.pdf',
+                'tanggal_pengajuan'     => $faker->dateTimeBetween('-6 months', 'now')->format('Y-m-d H:i:s'),
+                'status'                => $status,
+                'catatan'               => $catatan,
+                'reviewed_by'           => $reviewedBy,
+                'reviewed_at'           => $reviewedAt,
+                'created_at'            => $faker->dateTimeBetween('-6 months', 'now')->format('Y-m-d H:i:s'),
+                'updated_at'            => $updatedAt,
             ];
         }
         

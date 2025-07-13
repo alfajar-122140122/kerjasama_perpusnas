@@ -80,6 +80,16 @@ $routes->group('admin', function($routes) {
 
     $routes->get('kerjasama/pengajuan', 'Admin\KerjasamaController::pengajuan');
 
+    // Admin Permohonan Routes
+    $routes->get('permohonan', 'Admin\PermohonanController::index');
+    $routes->get('permohonan/pending', 'Admin\PermohonanController::pending');
+    $routes->get('permohonan/review', 'Admin\PermohonanController::review');
+    $routes->get('permohonan/approved', 'Admin\PermohonanController::approved');
+    $routes->get('permohonan/rejected', 'Admin\PermohonanController::rejected');
+    $routes->get('permohonan/view/(:num)', 'Admin\PermohonanController::view/$1');
+    $routes->post('permohonan/update-status', 'Admin\PermohonanController::updateStatus');
+    $routes->post('permohonan/delete', 'Admin\PermohonanController::delete');
+
     $routes->get('kerjasama/tambah', 'Admin\KerjasamaController::tambah');
     $routes->get('kerjasama/edit/(:num)', 'Admin\KerjasamaController::edit/$1');
     $routes->post('kerjasama/store', 'Admin\KerjasamaController::store');

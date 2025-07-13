@@ -193,6 +193,7 @@ class PengajuanKerjasamaManager {
     }
     
     handleSubmit() {
+        this.clearAlerts(); // clear alerts at the start
         const form = document.getElementById('pengajuanForm');
         const formData = new FormData(form);
         
@@ -235,18 +236,20 @@ class PengajuanKerjasamaManager {
         .then(response => response.json())
         .then(result => {
             this.showLoading(false);
-            
+            console.log('AJAX result:', result);
             if (result.status) {
-                // Success
+                this.clearAlerts(); // clear alerts before showing success
+                console.log('Show success modal');
                 this.showSuccessModal();
                 this.resetForm();
             } else {
-                // Error
                 if (result.errors) {
                     const errorMessages = Object.values(result.errors).join('\n');
                     this.showAlert(errorMessages, 'error');
+                    console.log('Show error (validation):', errorMessages);
                 } else {
                     this.showAlert(result.message || 'Terjadi kesalahan saat mengirim permohonan.', 'error');
+                    console.log('Show error (message):', result.message);
                 }
             }
         })
@@ -254,6 +257,7 @@ class PengajuanKerjasamaManager {
             this.showLoading(false);
             console.error('Error:', error);
             this.showAlert('Terjadi kesalahan saat mengirim permohonan. Silakan coba lagi.', 'error');
+            console.log('Show error (catch):', error);
         });
     }
     
@@ -262,7 +266,7 @@ class PengajuanKerjasamaManager {
         form.reset();
         
         // Reset file upload
-        this.removeFile();
+        removeFile();
         
         // Clear validation classes
         const inputs = form.querySelectorAll('.pengajuan-form-input, .pengajuan-form-textarea');
@@ -294,6 +298,7 @@ class PengajuanKerjasamaManager {
     }
     
     showSuccessModal() {
+        this.clearAlerts(); // Tambahkan ini agar alert benar-benar hilang
         const modal = document.getElementById('successModal');
         modal.style.display = 'flex';
         
@@ -346,6 +351,10 @@ class PengajuanKerjasamaManager {
                 alert.remove();
             }
         }, 5000);
+    }
+
+    clearAlerts() {
+        document.querySelectorAll('.pengajuan-alert, .alert').forEach(alert => alert.remove());
     }
 }
 

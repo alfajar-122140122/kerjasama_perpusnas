@@ -34,6 +34,17 @@ class PermohonanController extends BaseController
         $authCheck = $this->checkAuth();
         if ($authCheck) return $authCheck;
         
+        // Check if this is an AJAX request
+        if ($this->request->isAJAX()) {
+            $data = [
+                'status' => true,
+                'data' => $this->permohonanModel->orderBy('created_at', 'DESC')->findAll(),
+                'summary' => $this->permohonanModel->getStatusSummary()
+            ];
+            
+            return $this->response->setJSON($data);
+        }
+        
         $data = [
             'title' => 'Permohonan Kerja Sama',
             'summary' => $this->permohonanModel->getStatusSummary(),
