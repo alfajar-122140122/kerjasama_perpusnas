@@ -14,16 +14,19 @@ class PermohonanKerjasamaModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'jenis_permohonan',
-        'lembaga', 
+        'nama_instansi',
         'alamat',
-        'telepon',
+        'telp',
         'email',
         'unit_terkait',
-        'kontak_dapat_dihubungi',
-        'file_formulir',
-        'tanggal_pengajuan',
-        'kerjasama_id',
-        'created_by_user_id'
+        'kontak_dihubungi',
+        'upload_formulir',
+        'status',
+        'catatan',
+        'reviewed_by',
+        'reviewed_at',
+        'created_at',
+        'updated_at',
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -33,14 +36,27 @@ class PermohonanKerjasamaModel extends Model
     protected array $castHandlers = [];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    // No soft deletes, so deletedField is not used
 
     // Validation
-    protected $validationRules      = [];
+    protected $validationRules      = [
+        'jenis_permohonan'     => 'required|in_list[Baru,Perpanjangan]',
+        'nama_instansi'        => 'required|max_length[255]',
+        'alamat'               => 'required',
+        'telp'                 => 'required|max_length[20]',
+        'email'                => 'required|valid_email|max_length[100]',
+        'unit_terkait'         => 'required|max_length[255]',
+        'kontak_dihubungi'     => 'required|max_length[255]',
+        'upload_formulir'      => 'permit_empty|max_length[255]',
+        'status'               => 'permit_empty|in_list[pending,review,approved,rejected]',
+        'catatan'              => 'permit_empty|max_length[500]',
+        'reviewed_by'          => 'permit_empty|integer',
+        'reviewed_at'          => 'permit_empty|valid_date',
+    ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
@@ -55,4 +71,63 @@ class PermohonanKerjasamaModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    /**
+     * Get permohonan by status
+     * 
+     * @param string $status The status to filter by
+     * @return array
+     */
+    public function getByStatus($status)
+    {
+        return $this->where('status', $status)->findAll();
+    }
+    
+    /**
+     * Count permohonan by status
+     * 
+     * @param string $status The status to count
+     * @return int
+     */
+    public function countByStatus($status)
+    {
+        return $this->where('status', $status)->countAllResults();
+    }
+    
+    /**
+     * Get summary count for dashboard
+     * 
+     * @return array
+     */
+    public function getStatusSummary()
+    {
+        return [
+            'pending'  => $this->countByStatus('pending'),
+            'review'   => $this->countByStatus('review'),
+            'approved' => $this->countByStatus('approved'),
+            'rejected' => $this->countByStatus('rejected'),
+            'total'    => $this->countAll(),
+        ];
+    }
+    
+    /**
+     * Update status with reviewer information
+     * 
+     * @param int $id The permohonan ID
+     * @param string $status The new status
+     * @param string|null $catatan Optional notes
+     * @param int|null $reviewedBy ID of the reviewer
+     * @return bool
+     */
+    public function updateStatus($id, $status, $catatan = null, $reviewedBy = null)
+    {
+        $data = [
+            'status'      => $status,
+            'catatan'     => $catatan,
+            'reviewed_by' => $reviewedBy,
+            'reviewed_at' => date('Y-m-d H:i:s'),
+        ];
+        
+        return $this->update($id, $data);
+    }
 }

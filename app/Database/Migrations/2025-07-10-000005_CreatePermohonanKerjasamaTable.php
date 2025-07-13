@@ -48,6 +48,29 @@ class CreatePermohonanKerjasamaTable extends Migration
                 'constraint' => 255,
                 'null'       => true,
             ],
+            // Kolom status workflow
+            'status' => [
+                'type'       => 'ENUM',
+                'constraint' => ['pending', 'review', 'approved', 'rejected'],
+                'default'    => 'pending',
+            ],
+            'catatan' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
+            'reviewed_by' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'null' => true,
+            ],
+            'reviewed_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,

@@ -221,12 +221,40 @@ class PengajuanKerjasamaManager {
         // Show loading
         this.showLoading(true);
         
-        // Simulate API call
-        setTimeout(() => {
+        // Get base URL from meta tag
+        const baseUrl = document.querySelector('meta[name="base-url"]')?.getAttribute('content') || '';
+        
+        // Submit form via AJAX
+        fetch(`${baseUrl}/kerja-sama/pengajuan/submit`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
             this.showLoading(false);
-            this.showSuccessModal();
-            this.resetForm();
-        }, 2000);
+            
+            if (result.status) {
+                // Success
+                this.showSuccessModal();
+                this.resetForm();
+            } else {
+                // Error
+                if (result.errors) {
+                    const errorMessages = Object.values(result.errors).join('\n');
+                    this.showAlert(errorMessages, 'error');
+                } else {
+                    this.showAlert(result.message || 'Terjadi kesalahan saat mengirim permohonan.', 'error');
+                }
+            }
+        })
+        .catch(error => {
+            this.showLoading(false);
+            console.error('Error:', error);
+            this.showAlert('Terjadi kesalahan saat mengirim permohonan. Silakan coba lagi.', 'error');
+        });
     }
     
     resetForm() {

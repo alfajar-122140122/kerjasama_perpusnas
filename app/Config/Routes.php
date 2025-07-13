@@ -26,8 +26,8 @@ $routes->group('', function($routes) {
     $routes->get('kerja-sama/implementasi', 'Public\KerjaSamaController::implementasi');
     $routes->get('kerja-sama/akan-berakhir', 'Public\KerjaSamaController::akanBerakhir');
     $routes->get('kerja-sama/progress', 'Public\KerjaSamaController::progress');
-    $routes->get('kerja-sama/pengajuan', 'Public\KerjaSama::pengajuan');
-    $routes->post('kerja-sama/pengajuan', 'Public\KerjaSama::submitPengajuan');
+    $routes->get('kerja-sama/pengajuan', 'Public\PermohonanController::index');
+    $routes->post('kerja-sama/pengajuan/submit', 'Public\PermohonanController::submit');
 
     $routes->get('peta-kerja-sama', 'Public\Home::petaKerjaSama');
     $routes->get('kontak', 'Public\Home::kontak');

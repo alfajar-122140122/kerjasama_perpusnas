@@ -34,6 +34,10 @@ class CreateUsersTable extends Migration
                 'constraint' => ['admin', 'staff'],
                 'default'    => 'staff',
             ],
+            'last_active' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,

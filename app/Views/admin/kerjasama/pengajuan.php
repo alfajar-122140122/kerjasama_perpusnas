@@ -111,39 +111,10 @@ Pengajuan Kerjasama
                         </tr>
                     </thead>
                     <tbody>
-                        <?php 
-                        // Sample data - nanti diganti dengan data dari database
-                        $pengajuanData = [
-                            [
-                                'id' => 1,
-                                'jenis_permohonan' => 'MOU',
-                                'lembaga' => 'Fulan',
-                                'unit_terkait' => 'Pusat Data dan Informasi',
-                                'kontak' => '+6284021064',
-                                'upload_formulir' => 'formulir_pengajuan_001.pdf',
-                                'status' => 'pending'
-                            ],
-                            [
-                                'id' => 2,
-                                'jenis_permohonan' => 'PKS',
-                                'lembaga' => 'Fulana Institute',
-                                'unit_terkait' => 'Bagian Kerjasama',
-                                'kontak' => '+6281234567890',
-                                'upload_formulir' => 'formulir_pengajuan_002.pdf',
-                                'status' => 'review'
-                            ],
-                            [
-                                'id' => 3,
-                                'jenis_permohonan' => 'IA',
-                                'lembaga' => 'Fulani Corporation',
-                                'unit_terkait' => 'Divisi Teknologi',
-                                'kontak' => '+6287654321098',
-                                'upload_formulir' => 'formulir_pengajuan_003.pdf',
-                                'status' => 'approved'
-                            ]
-                        ];
+                        <?php
+                        // Ganti data dummy dengan data dari controller
+                        $pengajuanData = isset($permohonan) ? $permohonan : [];
                         ?>
-                        
                         <?php foreach ($pengajuanData as $pengajuan): ?>
                         <tr data-jenis="<?= $pengajuan['jenis_permohonan'] ?>">
                             <td>
@@ -165,13 +136,9 @@ Pengajuan Kerjasama
                                 ?>
                                 <span class="badge <?= $badgeClass ?>"><?= $pengajuan['jenis_permohonan'] ?></span>
                             </td>
-                            <td><?= $pengajuan['lembaga'] ?></td>
-                            <td>
-                                <small class="text-muted"><?= $pengajuan['unit_terkait'] ?></small>
-                            </td>
-                            <td>
-                                <span class="text-primary"><?= $pengajuan['kontak'] ?></span>
-                            </td>
+                            <td><?= $pengajuan['nama_instansi'] ?></td>
+                            <td><small class="text-muted"><?= $pengajuan['unit_terkait'] ?></small></td>
+                            <td><span class="text-primary"><?= $pengajuan['kontak_dihubungi'] ?? $pengajuan['telp'] ?></span></td>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
                                     <button type="button" class="btn btn-outline-secondary btn-sm" title="Lihat File" onclick="viewFile('<?= $pengajuan['upload_formulir'] ?>')">
@@ -184,15 +151,10 @@ Pengajuan Kerjasama
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-1">
-                                    <button type="button" class="btn btn-success btn-sm" title="Lihat Detail" onclick="viewPengajuan(<?= $pengajuan['id'] ?>)">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-primary btn-sm" title="Approve" onclick="approvePengajuan(<?= $pengajuan['id'] ?>)">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger btn-sm" title="Reject" onclick="rejectPengajuan(<?= $pengajuan['id'] ?>)">
-                                        <i class="fas fa-times"></i>
-                                    </button>
+                                    <button type="button" class="btn btn-success btn-sm" title="Lihat Detail" onclick="viewPengajuan(<?= $pengajuan['id'] ?>)"><i class="fas fa-eye"></i></button>
+                                    <button type="button" class="btn btn-primary btn-sm" title="Approve" onclick="approvePengajuan(<?= $pengajuan['id'] ?>)"><i class="fas fa-check"></i></button>
+                                    <button type="button" class="btn btn-danger btn-sm" title="Reject" onclick="rejectPengajuan(<?= $pengajuan['id'] ?>)"><i class="fas fa-times"></i></button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" title="Delete" onclick="deletePengajuan(<?= $pengajuan['id'] ?>)"><i class="fas fa-trash"></i></button>
                                 </div>
                             </td>
                         </tr>
@@ -344,19 +306,59 @@ function viewPengajuan(id) {
 // Approve Pengajuan
 function approvePengajuan(id) {
     if (confirm('Apakah Anda yakin ingin menyetujui pengajuan ini?')) {
-        // Add AJAX request here
-        console.log('Approving pengajuan with ID:', id);
-        showAlert('success', 'Pengajuan berhasil disetujui!');
+        fetch('<?= base_url('admin/kerjasama/pengajuan/updateStatus') ?>', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+            body: `id=${id}&status=approved`
+        })
+        .then(res => res.json())
+        .then(result => {
+            if (result.status) {
+                showAlert('success', result.message);
+                location.reload();
+            } else {
+                showAlert('danger', result.message);
+            }
+        });
     }
 }
 
-// Reject Pengajuan
 function rejectPengajuan(id) {
     const reason = prompt('Masukkan alasan penolakan:');
     if (reason && reason.trim() !== '') {
-        // Add AJAX request here
-        console.log('Rejecting pengajuan with ID:', id, 'Reason:', reason);
-        showAlert('warning', 'Pengajuan telah ditolak!');
+        fetch('<?= base_url('admin/kerjasama/pengajuan/updateStatus') ?>', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+            body: `id=${id}&status=rejected&catatan=${encodeURIComponent(reason)}`
+        })
+        .then(res => res.json())
+        .then(result => {
+            if (result.status) {
+                showAlert('warning', result.message);
+                location.reload();
+            } else {
+                showAlert('danger', result.message);
+            }
+        });
+    }
+}
+
+function deletePengajuan(id) {
+    if (confirm('Hapus permohonan ini?')) {
+        fetch('<?= base_url('admin/kerjasama/pengajuan/delete') ?>', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+            body: `id=${id}`
+        })
+        .then(res => res.json())
+        .then(result => {
+            if (result.status) {
+                showAlert('success', result.message);
+                location.reload();
+            } else {
+                showAlert('danger', result.message);
+            }
+        });
     }
 }
 </script>
