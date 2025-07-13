@@ -14,6 +14,14 @@ if (!function_exists('is_nav_active')) {
         // Remove leading slash from route for consistent comparison
         $route = ltrim($route, '/');
         
+        // Special case for "aktivitas" which should be active even if we're on the exact route
+        if ($route === 'aktivitas' && ($currentUri === 'aktivitas' || strpos($currentUri, 'aktivitas/') === 0)) {
+            return true;
+        }
+        
+        // Debug to check current URI
+        log_message('debug', 'Checking nav active: Current URI = ' . $currentUri . ', Route = ' . $route . ', Exact = ' . ($exact ? 'true' : 'false'));
+        
         if ($exact) {
             return $currentUri === $route;
         }
@@ -31,10 +39,6 @@ if (!function_exists('is_nav_active')) {
                 case 'kerja-sama':
                     // Don't activate "kerja-sama" if we're on "peta-kerja-sama"
                     return strpos($currentUri, 'peta-kerja-sama') === false;
-                
-                case 'aktivitas':
-                    // Activate "aktivitas" for aktivitas sub-pages
-                    return true;
                 
                 case 'kontak':
                     // Activate "kontak" for kontak sub-pages

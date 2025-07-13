@@ -13,8 +13,12 @@ $routes->group('', function($routes) {
 
     // Public routes
     $routes->get('tentang', 'Public\Home::tentang');
-    $routes->get('aktivitas', 'Public\Home::aktivitas');
-    $routes->get('aktivitas/detail/(:num)', 'Public\AktivitasController::detail/$1');
+    $routes->get('aktivitas', 'Public\BeritaController::index'); // Using BeritaController to handle aktivitas
+    $routes->get('aktivitas/detail/(:num)', 'Public\BeritaController::detail/$1');
+    
+    // Berita routes (alternative URL for the same content)
+    $routes->get('berita', 'Public\BeritaController::index');
+    $routes->get('berita/detail/(:num)', 'Public\BeritaController::detail/$1');
 
     // Kerja Sama routes - gunakan controller baru
     $routes->get('kerja-sama', 'Public\KerjaSama::index');
@@ -84,9 +88,12 @@ $routes->group('admin', function($routes) {
     
     // Berita management routes
     $routes->get('berita', 'Admin\Berita::index');
+    $routes->get('berita/get/(:num)', 'Admin\Berita::get/$1');
     $routes->post('berita/add', 'Admin\Berita::create');
     $routes->post('berita/update/(:num)', 'Admin\Berita::update/$1');
     $routes->delete('berita/delete/(:num)', 'Admin\Berita::delete/$1');
+    $routes->post('berita/delete/(:num)', 'Admin\Berita::delete/$1'); // Fallback for browsers that don't support DELETE
+    $routes->post('berita/status/(:num)', 'Admin\Berita::changeStatus/$1');
 
     // Settings routes
     $routes->get('pengaturan', 'Admin\Settings::index');

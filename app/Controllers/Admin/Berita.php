@@ -4,16 +4,19 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\BeritaModel;
+use App\Models\UserModel;
 
 class Berita extends BaseController
 {
     protected $session;
     protected $beritaModel;
+    protected $userModel;
     
     public function __construct()
     {
         $this->session = session();
         $this->beritaModel = new BeritaModel();
+        $this->userModel = new UserModel();
     }
     
     // Middleware check untuk semua method admin
@@ -32,8 +35,8 @@ class Berita extends BaseController
         if ($authCheck) return $authCheck;
         
         try {
-            // Get all berita - in development, using sample data
-            $berita = $this->getSampleBeritaData();
+            // Get all berita from database
+            $berita = $this->beritaModel->orderBy('created_at', 'DESC')->findAll();
             
             $data = [
                 'title' => 'Manajemen Berita',
@@ -57,29 +60,43 @@ class Berita extends BaseController
         $validation->setRules([
             'judul' => 'required|max_length[255]',
             'isi_berita' => 'required',
-            'gambar' => 'permit_empty|uploaded[gambar]|is_image[gambar]|max_size[gambar,2048]',
+            'gambar' => 'permit_empty|is_image[gambar]|max_size[gambar,2048]',
             'status' => 'required|in_list[draft,published]',
-            'tanggal_publikasi' => 'permit_empty|valid_date'
+            'tanggal_publikasi' => 'permit_empty'
         ]);
         
         if (!$validation->withRequest($this->request)->run()) {
-            return redirect()->back()->withInput()->with('error', 'Data tidak valid: ' . implode(', ', $validation->getErrors()));
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Data tidak valid: ' . implode(', ', $validation->getErrors())
+            ]);
         }
         
         try {
+            $tanggalPublikasi = $this->request->getPost('tanggal_publikasi');
+            if (empty($tanggalPublikasi) && $this->request->getPost('status') === 'published') {
+                $tanggalPublikasi = date('Y-m-d H:i:s');
+            }
+            
             $data = [
                 'judul' => $this->request->getPost('judul'),
                 'isi_berita' => $this->request->getPost('isi_berita'),
-                'tanggal_publikasi' => $this->request->getPost('tanggal_publikasi') ?: date('Y-m-d H:i:s'),
-                'created_by_user_id' => $this->session->get('user_id') ?? 1,
+                'tanggal_publikasi' => $tanggalPublikasi,
+                'created_by_user_id' => $this->session->get('user_id'),
                 'status' => $this->request->getPost('status') ?: 'draft'
             ];
             
             // Handle file upload
             $imageFile = $this->request->getFile('gambar');
             if ($imageFile && $imageFile->isValid() && !$imageFile->hasMoved()) {
+                // Create uploads directory if it doesn't exist
+                $uploadPath = FCPATH . 'uploads/berita';
+                if (!is_dir($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+                
                 $newName = $imageFile->getRandomName();
-                if ($imageFile->move(FCPATH . 'uploads/berita', $newName)) {
+                if ($imageFile->move($uploadPath, $newName)) {
                     $data['gambar'] = $newName;
                 }
             }
@@ -87,10 +104,68 @@ class Berita extends BaseController
             // Save to database
             $this->beritaModel->save($data);
             
-            return redirect()->to('/admin/berita')->with('success', 'Berita berhasil ditambahkan');
+            return $this->response->setJSON([
+                'status' => true,
+                'message' => 'Berita berhasil ditambahkan'
+            ]);
             
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', 'Gagal menambahkan berita: ' . $e->getMessage());
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Gagal menambahkan berita: ' . $e->getMessage()
+            ]);
+        }
+    }
+    
+    public function get($id)
+    {
+        // Check authentication
+        $authCheck = $this->checkAuth();
+        if ($authCheck) return $authCheck;
+        
+        try {
+            $berita = $this->beritaModel->find($id);
+            if (!$berita) {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Berita tidak ditemukan'
+                ]);
+            }
+            
+            // Get author name if possible
+            $berita['author_name'] = '';
+            if (!empty($berita['created_by_user_id'])) {
+                $user = $this->userModel->find($berita['created_by_user_id']);
+                if ($user) {
+                    $berita['author_name'] = $user['name'] ?? $user['username'] ?? '';
+                }
+            }
+            
+            // Format dates for display
+            $berita['formatted_created_at'] = !empty($berita['created_at']) ? date('d/m/Y H:i', strtotime($berita['created_at'])) : '-';
+            $berita['formatted_updated_at'] = !empty($berita['updated_at']) ? date('d/m/Y H:i', strtotime($berita['updated_at'])) : '-';
+            $berita['formatted_tanggal_publikasi'] = !empty($berita['tanggal_publikasi']) ? date('d/m/Y H:i', strtotime($berita['tanggal_publikasi'])) : '-';
+            
+            // ISO format for form inputs
+            $berita['iso_tanggal_publikasi'] = !empty($berita['tanggal_publikasi']) ? date('Y-m-d\TH:i', strtotime($berita['tanggal_publikasi'])) : '';
+            
+            // Check if image exists
+            if (!empty($berita['gambar'])) {
+                $berita['image_exists'] = file_exists(FCPATH . 'uploads/berita/' . $berita['gambar']);
+            } else {
+                $berita['image_exists'] = false;
+            }
+            
+            return $this->response->setJSON([
+                'status' => true,
+                'data' => $berita
+            ]);
+            
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ]);
         }
     }
     
@@ -103,7 +178,10 @@ class Berita extends BaseController
         // Check if berita exists
         $berita = $this->beritaModel->find($id);
         if (!$berita) {
-            return redirect()->back()->with('error', 'Berita tidak ditemukan');
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Berita tidak ditemukan'
+            ]);
         }
         
         // Validate input
@@ -111,33 +189,52 @@ class Berita extends BaseController
         $validation->setRules([
             'judul' => 'required|max_length[255]',
             'isi_berita' => 'required',
-            'gambar' => 'permit_empty|uploaded[gambar]|is_image[gambar]|max_size[gambar,2048]',
+            'gambar' => 'permit_empty|is_image[gambar]|max_size[gambar,2048]',
             'status' => 'required|in_list[draft,published]',
-            'tanggal_publikasi' => 'permit_empty|valid_date'
+            'tanggal_publikasi' => 'permit_empty'
         ]);
         
         if (!$validation->withRequest($this->request)->run()) {
-            return redirect()->back()->withInput()->with('error', 'Data tidak valid: ' . implode(', ', $validation->getErrors()));
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Data tidak valid: ' . implode(', ', $validation->getErrors())
+            ]);
         }
         
         try {
+            // Handle status change: if changing from draft to published and no publication date is set
+            $newStatus = $this->request->getPost('status');
+            $tanggalPublikasi = $this->request->getPost('tanggal_publikasi');
+            
+            if ($berita['status'] === 'draft' && $newStatus === 'published' && (empty($tanggalPublikasi) && empty($berita['tanggal_publikasi']))) {
+                $tanggalPublikasi = date('Y-m-d H:i:s');
+            } else if (empty($tanggalPublikasi) && !empty($berita['tanggal_publikasi'])) {
+                $tanggalPublikasi = $berita['tanggal_publikasi'];
+            }
+            
             $data = [
                 'judul' => $this->request->getPost('judul'),
                 'isi_berita' => $this->request->getPost('isi_berita'),
-                'tanggal_publikasi' => $this->request->getPost('tanggal_publikasi') ?: $berita['tanggal_publikasi'],
-                'status' => $this->request->getPost('status') ?: $berita['status']
+                'tanggal_publikasi' => $tanggalPublikasi,
+                'status' => $newStatus
             ];
             
             // Handle file upload
             $imageFile = $this->request->getFile('gambar');
             if ($imageFile && $imageFile->isValid() && !$imageFile->hasMoved()) {
+                // Create uploads directory if it doesn't exist
+                $uploadPath = FCPATH . 'uploads/berita';
+                if (!is_dir($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+                
                 // Delete old image if exists
                 if ($berita['gambar'] && file_exists(FCPATH . 'uploads/berita/' . $berita['gambar'])) {
                     unlink(FCPATH . 'uploads/berita/' . $berita['gambar']);
                 }
                 
                 $newName = $imageFile->getRandomName();
-                if ($imageFile->move(FCPATH . 'uploads/berita', $newName)) {
+                if ($imageFile->move($uploadPath, $newName)) {
                     $data['gambar'] = $newName;
                 }
             }
@@ -145,10 +242,16 @@ class Berita extends BaseController
             // Update database
             $this->beritaModel->update($id, $data);
             
-            return redirect()->to('/admin/berita')->with('success', 'Berita berhasil diperbarui');
+            return $this->response->setJSON([
+                'status' => true,
+                'message' => 'Berita berhasil diperbarui'
+            ]);
             
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui berita: ' . $e->getMessage());
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Gagal memperbarui berita: ' . $e->getMessage()
+            ]);
         }
     }
     
@@ -159,52 +262,87 @@ class Berita extends BaseController
         if ($authCheck) return $authCheck;
         
         try {
+            // Log the request method to help debug
+            log_message('debug', 'Delete berita request method: ' . $this->request->getMethod());
+            
             $berita = $this->beritaModel->find($id);
             if (!$berita) {
-                return redirect()->back()->with('error', 'Berita tidak ditemukan');
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Berita tidak ditemukan'
+                ]);
             }
             
             // Delete image file if exists
             if ($berita['gambar'] && file_exists(FCPATH . 'uploads/berita/' . $berita['gambar'])) {
-                unlink(FCPATH . 'uploads/berita/' . $berita['gambar']);
+                try {
+                    unlink(FCPATH . 'uploads/berita/' . $berita['gambar']);
+                } catch (\Exception $e) {
+                    // Just log the error, don't stop the deletion process
+                    log_message('error', 'Error deleting image file: ' . $e->getMessage());
+                }
             }
             
             // Delete from database
-            $this->beritaModel->delete($id);
+            if (!$this->beritaModel->delete($id)) {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Gagal menghapus berita dari database'
+                ]);
+            }
             
-            return redirect()->to('/admin/berita')->with('success', 'Berita berhasil dihapus');
+            return $this->response->setJSON([
+                'status' => true,
+                'message' => 'Berita berhasil dihapus'
+            ]);
             
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menghapus berita: ' . $e->getMessage());
+            log_message('error', 'Error deleting berita: ' . $e->getMessage());
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Gagal menghapus berita: ' . $e->getMessage()
+            ]);
         }
     }
     
-    // Sample data untuk development
-    private function getSampleBeritaData()
+    public function changeStatus($id)
     {
-        return [
-            [
-                'id_berita' => 1,
-                'judul' => 'Pelestarian warisan dokumenter budaya Nusantara',
-                'isi_berita' => 'Perpustakaan Nasional meluncurkan program digitalisasi besar-besaran untuk meningkatkan akses informasi bagi seluruh masyarakat Indonesia. Program ini diharapkan dapat mempermudah akses ke koleksi digital perpustakaan.',
-                'gambar' => 'berita1.jpg',
-                'tanggal_publikasi' => '2026-08-14 10:00:00',
-                'created_by_user_id' => 1,
-                'created_at' => '2026-08-14 09:30:00',
-                'updated_at' => '2026-08-14 09:30:00',
-                'status' => 'draft'
-            ],
-            [
-                'id_berita' => 2,
-                'judul' => 'Pelestarian warisan dokumenter budaya Nusantara',
-                'isi_berita' => 'Perpustakaan Nasional menjalin kerjasama strategis dengan berbagai universitas terkemuka untuk meningkatkan literasi dan akses informasi akademik di Indonesia.',
-                'gambar' => 'berita2.jpg',
-                'tanggal_publikasi' => '2026-08-13 14:30:00',
-                'created_by_user_id' => 1,
-                'created_at' => '2026-08-13 14:00:00',
-                'updated_at' => '2026-08-13 14:00:00',
-                'status' => 'published'
-            ]
-        ];
+        // Check authentication
+        $authCheck = $this->checkAuth();
+        if ($authCheck) return $authCheck;
+        
+        try {
+            $berita = $this->beritaModel->find($id);
+            if (!$berita) {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Berita tidak ditemukan'
+                ]);
+            }
+            
+            // Toggle status
+            $newStatus = ($berita['status'] === 'published') ? 'draft' : 'published';
+            
+            // If changing to published and no publication date is set, set it to now
+            $data = ['status' => $newStatus];
+            if ($newStatus === 'published' && empty($berita['tanggal_publikasi'])) {
+                $data['tanggal_publikasi'] = date('Y-m-d H:i:s');
+            }
+            
+            // Update database
+            $this->beritaModel->update($id, $data);
+            
+            return $this->response->setJSON([
+                'status' => true,
+                'message' => 'Status berita berhasil diubah menjadi ' . 
+                    ($newStatus === 'published' ? 'Published' : 'Draft')
+            ]);
+            
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Gagal mengubah status berita: ' . $e->getMessage()
+            ]);
+        }
     }
 }

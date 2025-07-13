@@ -71,7 +71,7 @@ helper('navigation');
                     <a class="<?= get_nav_class('tentang', 'nav-link', 'active', true) ?>" href="<?= base_url('tentang') ?>">Tentang</a>
                 </li>
                 <li class="nav-item">
-                    <a class="<?= get_nav_class('aktivitas', 'nav-link', 'active', false) ?>" href="<?= base_url('aktivitas') ?>">Aktivitas</a>
+                    <a class="<?= get_nav_class('aktivitas', 'nav-link', 'active', true) ?>" href="<?= base_url('aktivitas') ?>">Aktivitas</a>
                 </li>
                 
                 <!-- Dropdown Kerja Sama -->

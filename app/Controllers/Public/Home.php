@@ -107,28 +107,7 @@ class Home extends BaseController
         return view('public/kontak', $data);
     }
     
-    public function aktivitas()
-    {
-        $data = [
-            'page_title' => 'Aktivitas Kami',
-            'activities' => [
-                [
-                    'title' => 'Pelatihan Pustakawan',
-                    'date' => '2024-07-01',
-                    'description' => 'Pelatihan pustakawan untuk meningkatkan kompetensi dalam layanan perpustakaan digital.',
-                    'image' => 'activity-1.jpg'
-                ],
-                [
-                    'title' => 'Kerjasama Internasional',
-                    'date' => '2024-06-20',
-                    'description' => 'Penandatanganan MoU dengan perpustakaan internasional untuk pertukaran koleksi.',
-                    'image' => 'activity-2.jpg'
-                ]
-            ]
-        ];
-        
-        return view('public/aktivitas', $data);
-    }
+    // Removed aktivitas method - now handled by BeritaController
 
     public function kerjaSama()
     {

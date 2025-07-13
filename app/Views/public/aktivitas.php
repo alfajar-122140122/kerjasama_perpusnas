@@ -18,133 +18,63 @@
     <div class="container">
         <h1 class="page-title">Aktivitas</h1>
         
+        <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger">
+            <?= session()->getFlashdata('error') ?>
+        </div>
+        <?php endif; ?>
+        
         <!-- News Grid -->
         <div class="news-grid">
-            <!-- News Card 1 -->
-            <article class="news-card">
-                <div class="news-image">
-                    <div class="news-image-placeholder">
-                        <i class="fas fa-image fa-2x"></i>
+            <?php if (isset($berita) && is_array($berita) && count($berita) > 0): ?>
+                <?php foreach ($berita as $item): ?>
+                <article class="news-card">
+                    <div class="news-image">
+                        <?php
+                            $imageExists = false;
+                            if (!empty($item['gambar'])) {
+                                $imagePath = FCPATH . 'uploads/berita/' . $item['gambar'];
+                                $imageExists = file_exists($imagePath) && is_file($imagePath);
+                            }
+                        ?>
+                        <?php if ($imageExists): ?>
+                            <img src="<?= base_url('uploads/berita/' . $item['gambar']) ?>" alt="<?= esc($item['judul']) ?>" class="news-img">
+                        <?php else: ?>
+                            <div class="news-image-placeholder">
+                                <i class="fas fa-image fa-2x"></i>
+                            </div>
+                        <?php endif; ?>
                     </div>
-                </div>
-                <div class="news-content">
-                    <div class="news-meta">
-                        <span class="news-date"><i class="fas fa-calendar"></i> 2025-07-03</span>
-                        <span class="news-category"><i class="fas fa-tag"></i> Berita</span>
+                    <div class="news-content">
+                        <div class="news-meta">
+                            <span class="news-date">
+                                <i class="fas fa-calendar"></i> 
+                                <?= date('d-m-Y', strtotime($item['tanggal_publikasi'] ?? $item['created_at'])) ?>
+                            </span>
+                            <span class="news-category"><i class="fas fa-tag"></i> Berita</span>
+                        </div>
+                        <h3 class="news-title"><?= esc($item['judul']) ?></h3>
+                        <p class="news-excerpt"><?= substr(strip_tags($item['isi_berita']), 0, 200) ?>...</p>
+                        <a href="<?= base_url('aktivitas/detail/' . $item['id_berita']) ?>" class="btn-read-more">Baca Selengkapnya</a>
                     </div>
-                    <h3 class="news-title">Penguatan Kelembagaan Perpustakaan, Pemkab Asmat Konsultasi ke Perpusnas</h3>
-                    <p class="news-excerpt">JAKARTA - Perpustakaan Nasional Republik Indonesia (Perpusnas) menerima kunjungan konsultasi dari Pemerintah Kabupaten Asmat terkait penguatan kelembagaan perpustakaan daerah. Kegiatan ini merupakan bagian dari upaya meningkatkan kualitas layanan perpustakaan di daerah.</p>
-                    <a href="<?= base_url('aktivitas/detail/' . ($news_id ?? '1')) ?>" class="btn-read-more">Baca Selengkapnya</a>
+                </article>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <!-- No News Available -->
+                <div class="no-news">
+                    <h3>Belum ada berita yang dipublikasikan</h3>
+                    <p>Silakan kunjungi kembali nanti untuk informasi terbaru.</p>
                 </div>
-            </article>
+            <?php endif; ?>
 
-            <!-- News Card 2 -->
-            <article class="news-card">
-                <div class="news-image">
-                    <div class="news-image-placeholder">
-                        <i class="fas fa-image fa-2x"></i>
-                    </div>
-                </div>
-                <div class="news-content">
-                    <div class="news-meta">
-                        <span class="news-date"><i class="fas fa-calendar"></i> 2025-07-03</span>
-                        <span class="news-category"><i class="fas fa-tag"></i> Berita</span>
-                    </div>
-                    <h3 class="news-title">Jelang Peringatan 200 Tahun Perang Jawa, Perpusnas Lakukan Audiensi</h3>
-                    <p class="news-excerpt">JAKARTA - Dalam rangka memperingati 200 tahun Perang Jawa, Perpustakaan Nasional RI melakukan audiensi dengan berbagai pihak untuk membahas rencana kegiatan dan pameran koleksi bersejarah terkait peristiwa penting dalam sejarah Indonesia.</p>
-                    <a href="#" class="btn-read-more">Baca Selengkapnya</a>
-                </div>
-            </article>
-
-            <!-- News Card 3 -->
-            <article class="news-card">
-                <div class="news-image">
-                    <div class="news-image-placeholder">
-                        <i class="fas fa-image fa-2x"></i>
-                    </div>
-                </div>
-                <div class="news-content">
-                    <div class="news-meta">
-                        <span class="news-date"><i class="fas fa-calendar"></i> 2025-07-02</span>
-                        <span class="news-category"><i class="fas fa-tag"></i> Berita</span>
-                    </div>
-                    <h3 class="news-title">Relima, Gerakan Kolaboratif Relawan Literasi Bangkitkan Budaya Baca</h3>
-                    <p class="news-excerpt">JAKARTA - Perpustakaan Nasional RI meluncurkan program Relima (Relawan Literasi Masyarakat), sebuah gerakan kolaboratif yang bertujuan membangkitkan budaya baca di masyarakat melalui pendekatan sukarela dan partisipatif.</p>
-                    <a href="#" class="btn-read-more">Baca Selengkapnya</a>
-                </div>
-            </article>
-
-            <!-- News Card 4 -->
-            <article class="news-card">
-                <div class="news-image">
-                    <div class="news-image-placeholder">
-                        <i class="fas fa-image fa-2x"></i>
-                    </div>
-                </div>
-                <div class="news-content">
-                    <div class="news-meta">
-                        <span class="news-date"><i class="fas fa-calendar"></i> 2025-07-01</span>
-                        <span class="news-category"><i class="fas fa-tag"></i> Berita</span>
-                    </div>
-                    <h3 class="news-title">Diskusi Penguatan Kolaborasi Antar Perpustakaan</h3>
-                    <p class="news-excerpt">JAKARTA - Membahas strategi penguatan kolaborasi antar perpustakaan dalam rangka meningkatkan layanan perpustakaan di Indonesia. Diskusi melibatkan berbagai stakeholder dari perpustakaan daerah dan institusi pendidikan.</p>
-                    <a href="#" class="btn-read-more">Baca Selengkapnya</a>
-                </div>
-            </article>
-
-            <!-- News Card 5 -->
-            <article class="news-card">
-                <div class="news-image">
-                    <div class="news-image-placeholder">
-                        <i class="fas fa-image fa-2x"></i>
-                    </div>
-                </div>
-                <div class="news-content">
-                    <div class="news-meta">
-                        <span class="news-date"><i class="fas fa-calendar"></i> 2025-06-30</span>
-                        <span class="news-category"><i class="fas fa-tag"></i> Berita</span>
-                    </div>
-                    <h3 class="news-title">Penandatanganan MoU Kerjasama Perpustakaan Daerah</h3>
-                    <p class="news-excerpt">JAKARTA - Perpustakaan Nasional melakukan penandatanganan MoU kerjasama dengan berbagai perpustakaan daerah untuk meningkatkan layanan dan kualitas perpustakaan di seluruh Indonesia melalui program pembinaan berkelanjutan.</p>
-                    <a href="#" class="btn-read-more">Baca Selengkapnya</a>
-                </div>
-            </article>
-
-            <!-- News Card 6 -->
-            <article class="news-card">
-                <div class="news-image">
-                    <div class="news-image-placeholder">
-                        <i class="fas fa-image fa-2x"></i>
-                    </div>
-                </div>
-                <div class="news-content">
-                    <div class="news-meta">
-                        <span class="news-date"><i class="fas fa-calendar"></i> 2025-06-29</span>
-                        <span class="news-category"><i class="fas fa-tag"></i> Berita</span>
-                    </div>
-                    <h3 class="news-title">Inspirasi dari Makna Hijrah dalam Pengembangan Perpustakaan</h3>
-                    <p class="news-excerpt">JAKARTA - Kegiatan memperingati hari besar Islam dengan mengaitkan makna hijrah dalam pengembangan dan transformasi perpustakaan modern. Diskusi membahas inovasi layanan perpustakaan yang relevan dengan perkembangan zaman.</p>
-                    <a href="#" class="btn-read-more">Baca Selengkapnya</a>
-                </div>
-            </article>
         </div>
 
-        <!-- Pagination -->
+        <!-- Pagination - to be added if needed -->
+        <?php if (isset($pager)): ?>
         <div class="pagination-wrapper">
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
+            <?= $pager->links() ?>
         </div>
+        <?php endif; ?>
     </div>
 </section>
 

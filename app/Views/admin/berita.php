@@ -11,43 +11,9 @@
 
 <?= $this->section('content') ?>
 <?php
-// Sample data for demo purposes - replace with actual data from controller
+// Make sure we have berita data from controller
 if (!isset($berita)) {
-    $berita = [
-        [
-            'id_berita' => 1,
-            'judul' => 'Peluncuran Program Digitalisasi Perpustakaan Nasional 2025',
-            'isi_berita' => 'Perpustakaan Nasional meluncurkan program digitalisasi besar-besaran untuk meningkatkan akses informasi...',
-            'gambar' => 'berita1.jpg',
-            'tanggal_publikasi' => '2025-01-15 10:00:00',
-            'created_by_user_id' => 1,
-            'created_at' => '2025-01-15 09:30:00',
-            'updated_at' => '2025-01-15 09:30:00',
-            'status' => 'published'
-        ],
-        [
-            'id_berita' => 2,
-            'judul' => 'Kerjasama Perpustakaan Nasional dengan Universitas Terkemuka',
-            'isi_berita' => 'Perpustakaan Nasional menjalin kerjasama strategis dengan berbagai universitas untuk meningkatkan literasi...',
-            'gambar' => 'berita2.jpg',
-            'tanggal_publikasi' => '2025-01-10 14:30:00',
-            'created_by_user_id' => 1,
-            'created_at' => '2025-01-10 14:00:00',
-            'updated_at' => '2025-01-10 14:00:00',
-            'status' => 'published'
-        ],
-        [
-            'id_berita' => 3,
-            'judul' => 'Workshop Literasi Digital untuk Masyarakat',
-            'isi_berita' => 'Perpustakaan Nasional mengadakan workshop literasi digital gratis untuk meningkatkan kemampuan masyarakat...',
-            'gambar' => null,
-            'tanggal_publikasi' => null,
-            'created_by_user_id' => 1,
-            'created_at' => '2025-01-05 16:00:00',
-            'updated_at' => '2025-01-05 16:00:00',
-            'status' => 'draft'
-        ]
-    ];
+    $berita = [];
 }
 ?>
 
@@ -91,6 +57,8 @@ if (!isset($berita)) {
                 <li><a class="dropdown-item" href="#" onclick="filterByStatus('all')">Semua Status</a></li>
                 <li><a class="dropdown-item" href="#" onclick="filterByStatus('published')">Published</a></li>
                 <li><a class="dropdown-item" href="#" onclick="filterByStatus('draft')">Draft</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#" onclick="resetFilters()"><i class="fas fa-times"></i> Reset Filter</a></li>
             </ul>
         </div>
 
@@ -245,9 +213,9 @@ if (!isset($berita)) {
                 <h5 class="modal-title" id="editBeritaModalLabel">Edit Berita</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="editBeritaForm" method="POST" enctype="multipart/form-data">
+            <form id="editBeritaForm" method="POST" action="" enctype="multipart/form-data">
                 <?= csrf_field() ?>
-                <input type="hidden" id="edit_berita_id" name="id_berita">
+                <input type="hidden" id="edit_id_berita" name="id_berita">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-8">
@@ -402,10 +370,20 @@ if (!isset($berita)) {
                 })
                 .then(editor => {
                     editEditor = editor;
+                    
+                    // Set content from stored value if available
+                    if (window.pendingEditorContent !== undefined) {
+                        editor.setData(window.pendingEditorContent);
+                        window.pendingEditorContent = undefined;
+                    }
                 })
                 .catch(error => {
                     console.error('Error initializing CKEditor:', error);
                 });
+        } else if (window.pendingEditorContent !== undefined) {
+            // If editor already exists, set the content
+            editEditor.setData(window.pendingEditorContent);
+            window.pendingEditorContent = undefined;
         }
     });
     
