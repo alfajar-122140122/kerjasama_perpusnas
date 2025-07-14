@@ -13,7 +13,7 @@ class UserModel extends Model
     protected $useSoftDeletes   = false;
 
     // Kolom yang diizinkan untuk diisi
-    protected $allowedFields    = ['username', 'email', 'password', 'role', 'last_active', 'name', 'phone'];
+    protected $allowedFields    = ['username', 'email', 'password_hash', 'role', 'last_active', 'name', 'phone'];
 
     // Dates
     protected $useTimestamps = true;
@@ -70,7 +70,8 @@ class UserModel extends Model
     protected function hashPassword(array $data)
     {
         if (!empty($data['data']['password'])) {
-            $data['data']['password'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
+            $data['data']['password_hash'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
+            unset($data['data']['password']);
         }
         return $data;
     }
