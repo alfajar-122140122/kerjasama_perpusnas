@@ -3,6 +3,7 @@
 namespace App\Controllers\Auth;
 
 use App\Controllers\BaseController;
+use App\Models\UserModel;
 
 class Auth extends BaseController
 {
@@ -32,18 +33,20 @@ class Auth extends BaseController
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
         
-        // TODO: Implementasi autentikasi dengan database
-        // Sementara menggunakan hardcode untuk testing
-        if ($username === 'admin' && $password === 'password') {
+        $userModel = new UserModel();
+        // Bisa login pakai username atau email
+        $user = $userModel->where('username', $username)
+                          ->orWhere('email', $username)
+                          ->first();
+        
+        if ($user && password_verify($password, $user['password_hash'])) {
             $sessionData = [
-                'user_id' => 1,
-                'username' => $username,
-                'role' => 'admin',
+                'user_id' => $user['id'],
+                'username' => $user['username'],
+                'role' => $user['role'],
                 'isLoggedIn' => true
             ];
-            
             session()->set($sessionData);
-            
             return redirect()->to('/admin/dashboard')->with('success', 'Login berhasil!');
         } else {
             return redirect()->back()

@@ -318,7 +318,7 @@ function renderTable() {
                 </td>
                 <td>
                     <small class="text-muted">
-                        ${formatDate(item.created_at)}
+                        ${formatDate(item.tanggal_pengajuan)}
                     </small>
                 </td>
                 <td class="text-center">

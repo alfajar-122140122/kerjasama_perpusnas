@@ -38,7 +38,7 @@ class PermohonanController extends BaseController
         if ($this->request->isAJAX()) {
             $data = [
                 'status' => true,
-                'data' => $this->permohonanModel->orderBy('created_at', 'DESC')->findAll(),
+                'data' => $this->permohonanModel->orderBy('tanggal_pengajuan', 'DESC')->findAll(),
                 'summary' => $this->permohonanModel->getStatusSummary()
             ];
             
@@ -48,7 +48,7 @@ class PermohonanController extends BaseController
         $data = [
             'title' => 'Permohonan Kerja Sama',
             'summary' => $this->permohonanModel->getStatusSummary(),
-            'permohonan' => $this->permohonanModel->orderBy('created_at', 'DESC')->findAll()
+            'permohonan' => $this->permohonanModel->orderBy('tanggal_pengajuan', 'DESC')->findAll()
         ];
         
         return view('admin/permohonan/index', $data);
@@ -63,7 +63,7 @@ class PermohonanController extends BaseController
         $data = [
             'title' => 'Permohonan Kerja Sama - Pending',
             'summary' => $this->permohonanModel->getStatusSummary(),
-            'permohonan' => $this->permohonanModel->where('status', 'pending')->orderBy('created_at', 'DESC')->findAll()
+            'permohonan' => $this->permohonanModel->where('status', 'pending')->orderBy('tanggal_pengajuan', 'DESC')->findAll()
         ];
         
         return view('admin/permohonan/index', $data);
@@ -78,7 +78,7 @@ class PermohonanController extends BaseController
         $data = [
             'title' => 'Permohonan Kerja Sama - Review',
             'summary' => $this->permohonanModel->getStatusSummary(),
-            'permohonan' => $this->permohonanModel->where('status', 'review')->orderBy('created_at', 'DESC')->findAll()
+            'permohonan' => $this->permohonanModel->where('status', 'review')->orderBy('tanggal_pengajuan', 'DESC')->findAll()
         ];
         
         return view('admin/permohonan/index', $data);
@@ -93,7 +93,7 @@ class PermohonanController extends BaseController
         $data = [
             'title' => 'Permohonan Kerja Sama - Disetujui',
             'summary' => $this->permohonanModel->getStatusSummary(),
-            'permohonan' => $this->permohonanModel->where('status', 'approved')->orderBy('created_at', 'DESC')->findAll()
+            'permohonan' => $this->permohonanModel->where('status', 'approved')->orderBy('tanggal_pengajuan', 'DESC')->findAll()
         ];
         
         return view('admin/permohonan/index', $data);
@@ -108,7 +108,7 @@ class PermohonanController extends BaseController
         $data = [
             'title' => 'Permohonan Kerja Sama - Ditolak',
             'summary' => $this->permohonanModel->getStatusSummary(),
-            'permohonan' => $this->permohonanModel->where('status', 'rejected')->orderBy('created_at', 'DESC')->findAll()
+            'permohonan' => $this->permohonanModel->where('status', 'rejected')->orderBy('tanggal_pengajuan', 'DESC')->findAll()
         ];
         
         return view('admin/permohonan/index', $data);
