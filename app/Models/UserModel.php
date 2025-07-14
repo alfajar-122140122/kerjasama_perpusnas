@@ -70,7 +70,13 @@ class UserModel extends Model
     protected function hashPassword(array $data)
     {
         if (!empty($data['data']['password'])) {
-            $data['data']['password_hash'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
+            // Cegah double hash jika password sudah hash
+            $password = $data['data']['password'];
+            if (strpos($password, '$2y$') !== 0) {
+                $data['data']['password_hash'] = password_hash($password, PASSWORD_DEFAULT);
+            } else {
+                $data['data']['password_hash'] = $password;
+            }
             unset($data['data']['password']);
         }
         return $data;
