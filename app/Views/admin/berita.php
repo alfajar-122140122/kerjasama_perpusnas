@@ -338,7 +338,7 @@ if (!isset($berita)) {
     const base_url = '<?= base_url() ?>';
 </script>
 <!-- Berita Management JS -->
-<script src="<?= base_url('js/berita-management-new.js') ?>"></script>
+<script src="<?= base_url('js/berita-management.js') ?>"></script>
 <!-- CKEditor for rich text editing -->
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <script>
