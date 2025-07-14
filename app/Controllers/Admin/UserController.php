@@ -14,18 +14,26 @@ class UserController extends BaseController
         $this->userModel = new UserModel();
     }
 
+    private function checkAdmin()
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/admin/dashboard')->with('error', 'Akses ditolak. Hanya admin yang dapat mengelola user.');
+        }
+    }
+
     public function index()
     {
+        // Semua role bisa akses index (read)
         $data = [
             'title' => 'Manajemen User',
             'users' => $this->userModel->findAll()
         ];
-
         return view('admin/users', $data);
     }
 
     public function add()
     {
+        if ($redirect = $this->checkAdmin()) return $redirect;
         if ($this->request->getMethod() === 'POST') {
             $rules = [
                 'username' => 'required|min_length[3]|max_length[50]|is_unique[users.username]',
@@ -68,6 +76,7 @@ class UserController extends BaseController
 
     public function edit($id)
     {
+        if ($redirect = $this->checkAdmin()) return $redirect;
         if ($this->request->getMethod() === 'POST') {
             $user = $this->userModel->find($id);
             if (!$user) {
@@ -107,16 +116,21 @@ class UserController extends BaseController
 
             // Only update password if provided
             if (!empty($password)) {
-                $data['password'] = $password;
+                $data['password_hash'] = password_hash($password, PASSWORD_DEFAULT);
             }
 
             if ($this->userModel->update($id, $data)) {
                 return redirect()->to('/admin/users')
                     ->with('success', 'User berhasil diupdate');
             } else {
+                $errorMsg = 'Gagal mengupdate user';
+                $modelErrors = $this->userModel->errors();
+                if (!empty($modelErrors)) {
+                    $errorMsg .= ': ' . implode(', ', $modelErrors);
+                }
                 return redirect()->back()
                     ->withInput()
-                    ->with('error', 'Gagal mengupdate user');
+                    ->with('error', $errorMsg);
             }
         }
 
@@ -125,6 +139,12 @@ class UserController extends BaseController
 
     public function delete($id)
     {
+        if ($redirect = $this->checkAdmin()) return $redirect;
+        // Cegah user menghapus dirinya sendiri
+        if (session()->get('user_id') == $id) {
+            return redirect()->to('/admin/users')
+                ->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
         $user = $this->userModel->find($id);
         if (!$user) {
             return redirect()->to('/admin/users')
@@ -142,6 +162,7 @@ class UserController extends BaseController
 
     public function changePassword($id)
     {
+        if ($redirect = $this->checkAdmin()) return $redirect;
         if ($this->request->getMethod() === 'POST') {
             $user = $this->userModel->find($id);
             if (!$user) {
@@ -192,6 +213,7 @@ class UserController extends BaseController
 
     public function resetPassword($id)
     {
+        if ($redirect = $this->checkAdmin()) return $redirect;
         $user = $this->userModel->find($id);
         if (!$user) {
             return $this->response->setJSON([

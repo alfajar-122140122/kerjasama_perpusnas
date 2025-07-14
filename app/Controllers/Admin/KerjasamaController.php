@@ -110,6 +110,9 @@ class KerjasamaController extends BaseController
     
     public function tambah()
     {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/admin/kerjasama')->with('error', 'Akses ditolak.');
+        }
         $data = [
             'title' => 'Tambah Kerjasama'
         ];
@@ -119,6 +122,9 @@ class KerjasamaController extends BaseController
     
     public function edit($id)
     {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/admin/kerjasama')->with('error', 'Akses ditolak.');
+        }
         $kerjasama = $this->kerjasamaModel->find($id);
         
         if (!$kerjasama) {
@@ -135,6 +141,9 @@ class KerjasamaController extends BaseController
     
     public function store()
     {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/admin/kerjasama')->with('error', 'Akses ditolak.');
+        }
         // Validasi input sesuai skema database
         $rules = [
             'nama_mitra' => 'required',
@@ -182,6 +191,9 @@ class KerjasamaController extends BaseController
     
     public function update($id)
     {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/admin/kerjasama')->with('error', 'Akses ditolak.');
+        }
         // Validasi input sesuai skema database
         $rules = [
             'nama_mitra' => 'required',
@@ -256,6 +268,9 @@ class KerjasamaController extends BaseController
     
     public function delete($id)
     {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/admin/kerjasama')->with('error', 'Akses ditolak.');
+        }
         try {
             // Check if record exists
             $kerjasama = $this->kerjasamaModel->find($id);
