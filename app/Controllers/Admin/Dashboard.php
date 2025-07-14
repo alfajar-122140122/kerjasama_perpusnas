@@ -64,12 +64,14 @@ class Dashboard extends BaseController
         // Statistik Kerjasama Bulanan (12 bulan terakhir)
         $statistikBulanan = [];
         for ($i = 11; $i >= 0; $i--) {
-            $bulan = date('Y-m', strtotime("-$i months"));
+            $start = date('Y-m-01 00:00:00', strtotime("-$i months"));
+            $end = date('Y-m-t 23:59:59', strtotime("-$i months"));
             $count = $kerjasamaModel
-                ->where('DATE_FORMAT(created_at, "%Y-%m") =', $bulan)
+                ->where('created_at >=', $start)
+                ->where('created_at <=', $end)
                 ->countAllResults();
             $statistikBulanan[] = [
-                'bulan' => $bulan,
+                'bulan' => date('Y-m', strtotime($start)),
                 'total' => $count
             ];
         }

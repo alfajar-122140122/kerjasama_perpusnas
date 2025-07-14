@@ -42,57 +42,39 @@
         <section class="bg-white rounded-3 p-4 shadow-sm mb-4">
             <h2 class="fs-5 fw-semibold text-dark mb-4">Aktivitas Terbaru</h2>
             <div class="row g-3">
+                <?php foreach ($recent_activities as $activity): ?>
                 <div class="col-lg-4 col-md-6">
                     <article class="activity-card">
-                        <div class="activity-image">
-                            <img src="<?= base_url('assets/images/placeholder-activity.jpg') ?>" alt="Webinar" class="img-fluid w-100 h-100" style="object-fit: cover;">
-                        </div>
+                        <a href="<?= base_url('aktivitas/detail/' . $activity['id_berita']) ?>" class="activity-image d-block" style="text-decoration:none;">
+                            <?php
+                                $image = !empty($activity['gambar']) ? $activity['gambar'] : 'placeholder-activity.jpg';
+                                $imagePath = FCPATH . 'assets/images/' . $image;
+                                $imageExists = file_exists($imagePath) && is_file($imagePath);
+                            ?>
+                            <img src="<?= base_url('assets/images/' . ($imageExists ? $image : 'placeholder-activity.jpg')) ?>"
+                                 alt="<?= esc($activity['judul'] ?? $activity['title'] ?? 'Aktivitas') ?>"
+                                 class="img-fluid w-100 h-100"
+                                 style="object-fit: cover;">
+                        </a>
                         <div class="p-3">
                             <div class="activity-meta">
                                 <i class="fas fa-calendar"></i>
-                                <time datetime="2025-06-17">17 Juni 2025</time>
+                                <time datetime="<?= esc($activity['tanggal_publikasi'] ?? $activity['created_at']) ?>">
+                                    <?= date('d F Y', strtotime($activity['tanggal_publikasi'] ?? $activity['created_at'])) ?>
+                                </time>
                             </div>
-                            <h3 class="activity-title">Webinar Kualitas, Akreditasi, Evaluasi, Digitalisasi</h3>
+                            <h3 class="activity-title mb-2">
+                                <a href="<?= base_url('aktivitas/detail/' . $activity['id_berita']) ?>" style="text-decoration:none; color:inherit;">
+                                    <?= esc($activity['judul'] ?? $activity['title']) ?>
+                                </a>
+                            </h3>
                             <p class="activity-excerpt">
-                                JAKARTA - Perpustakaan Nasional Republik Indonesia (Perpusnas) menyelenggarakan kegiatan webinar tentang evaluasi untuk Webinar Masa Depan Buku dan Literasi Digital di Indonesia...
+                                <?= isset($activity['isi_berita']) ? substr(strip_tags($activity['isi_berita']), 0, 120) . '...' : '' ?>
                             </p>
                         </div>
                     </article>
                 </div>
-                <div class="col-lg-4 col-md-6">
-                    <article class="activity-card">
-                        <div class="activity-image">
-                            <img src="<?= base_url('assets/images/placeholder-activity.jpg') ?>" alt="Implementasi" class="img-fluid w-100 h-100" style="object-fit: cover;">
-                        </div>
-                        <div class="p-3">
-                            <div class="activity-meta">
-                                <i class="fas fa-calendar"></i>
-                                <time datetime="2025-02-09">09 Februari 2025</time>
-                            </div>
-                            <h3 class="activity-title">Implementasi Operasional Perpustakaan 2025, Hari Masa Depan</h3>
-                            <p class="activity-excerpt">
-                                JAKARTA - Sebagai organisasi perpustakaan terbesar dengan standar internasional yang sistematis, Perpusnas mengorganisasikan kegiatan sistem operasional perpustakaan...
-                            </p>
-                        </div>
-                    </article>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <article class="activity-card">
-                        <div class="activity-image">
-                            <img src="<?= base_url('assets/images/placeholder-activity.jpg') ?>" alt="Inklusi Sosial" class="img-fluid w-100 h-100" style="object-fit: cover;">
-                        </div>
-                        <div class="p-3">
-                            <div class="activity-meta">
-                                <i class="fas fa-calendar"></i>
-                                <time datetime="2024-11-21">21 November 2024</time>
-                            </div>
-                            <h3 class="activity-title">Perpustakaan Nasional Inklusi Sosial di Alang Lawas</h3>
-                            <p class="activity-excerpt">
-                                JAKARTA - Perpustakaan dapat (PI) Kantor Perpustakaan Nasional berserta mahasiswa di Provinsi 31 provinsi yang mengimprimis program perpustakaan harus mengintegrasikan hingga pusat yang memastikan perpustakaan...
-                            </p>
-                        </div>
-                    </article>
-                </div>
+                <?php endforeach; ?>
             </div>
         </section>
 
@@ -132,5 +114,10 @@
 
 <?= $this->section('scripts') ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const statistikBulanan = <?= json_encode($statistikBulanan ?? ($stats['statistikBulanan'] ?? [])) ?>;
+    const statistikTahunan = <?= json_encode($statistikTahunan ?? ($stats['statistikTahunan'] ?? [])) ?>;
+    const distribusiMitra = <?= json_encode($distribusiMitra ?? ($stats['distribusiMitra'] ?? [])) ?>;
+</script>
 <script src="<?= base_url('js/public/home.js') ?>"></script>
 <?= $this->endSection() ?>

@@ -26,7 +26,7 @@
         
         <!-- News Grid -->
         <div class="news-grid">
-            <?php if (isset($berita) && is_array($berita) && count($berita) > 0): ?>
+            <?php if (is_array($berita) && count($berita) > 0): ?>
                 <?php foreach ($berita as $item): ?>
                 <article class="news-card">
                     <div class="news-image">

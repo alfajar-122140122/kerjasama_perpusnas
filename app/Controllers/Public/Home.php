@@ -3,12 +3,55 @@
 namespace App\Controllers\Public;
 
 use App\Controllers\BaseController;
+use App\Models\KerjasamaModel;
+use App\Models\BeritaModel;
 
 class Home extends BaseController
 {
     public function index()
     {
+        // Statistik bulanan real dari database
+        $kerjasamaModel = new KerjasamaModel();
+        $statistikBulanan = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $start = date('Y-m-01 00:00:00', strtotime("-$i months"));
+            $end = date('Y-m-t 23:59:59', strtotime("-$i months"));
+            $count = $kerjasamaModel
+                ->where('created_at >=', $start)
+                ->where('created_at <=', $end)
+                ->countAllResults();
+            $statistikBulanan[] = [
+                'bulan' => date('Y-m', strtotime($start)),
+                'total' => $count
+            ];
+        }
+        // Statistik pertumbuhan kerjasama per tahun (6 tahun terakhir)
+        $statistikTahunan = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $year = date('Y', strtotime("-$i years"));
+            $count = $kerjasamaModel
+                ->where('YEAR(created_at)', $year)
+                ->countAllResults();
+            $statistikTahunan[] = [
+                'tahun' => $year,
+                'total' => $count
+            ];
+        }
+        // Distribusi tipe mitra
+        $tipeMitra = ['Universitas', 'Pemerintah', 'Swasta', 'Internasional', 'Lainnya'];
+        $distribusiMitra = [];
+        foreach ($tipeMitra as $tipe) {
+            $count = $kerjasamaModel
+                ->like('ruang_lingkup', $tipe)
+                ->countAllResults();
+            $distribusiMitra[] = $count;
+        }
         // Data statistik untuk homepage
+        $beritaModel = new BeritaModel();
+        $recent_activities = $beritaModel
+            ->orderBy('tanggal_publikasi', 'DESC')
+            ->limit(3)
+            ->findAll();
         $data = [
             'stats' => [
                 'total_kerjasama' => 150,
@@ -16,32 +59,7 @@ class Home extends BaseController
                 'provinsi' => 34,
                 'negara' => 12
             ],
-            'recent_activities' => [
-                [
-                    'id' => 1,
-                    'title' => 'Penandatanganan MoU dengan 15 Perpustakaan Daerah',
-                    'excerpt' => 'Perpustakaan Nasional menandatangani memorandum of understanding dengan 15 perpustakaan daerah untuk program digitalisasi koleksi bersama.',
-                    'date' => '2024-06-15',
-                    'image' => 'activity-1.jpg',
-                    'slug' => 'penandatanganan-mou-15-perpustakaan-daerah'
-                ],
-                [
-                    'id' => 2,
-                    'title' => 'Workshop Literasi Digital untuk Pustakawan',
-                    'excerpt' => 'Kegiatan pelatihan literasi digital yang diikuti 200 pustakawan dari berbagai daerah sebagai bentuk implementasi kerjasama.',
-                    'date' => '2024-06-10',
-                    'image' => 'activity-2.jpg',
-                    'slug' => 'workshop-literasi-digital-pustakawan'
-                ],
-                [
-                    'id' => 3,
-                    'title' => 'Kerjasama Internasional dengan Library of Congress',
-                    'excerpt' => 'Perpustakaan Nasional memperluas jaringan internasional dengan menjalin kerjasama strategis bersama Library of Congress Amerika Serikat.',
-                    'date' => '2024-06-05',
-                    'image' => 'activity-3.jpg',
-                    'slug' => 'kerjasama-internasional-library-congress'
-                ]
-            ],
+            'recent_activities' => $recent_activities,
             'partners' => [
                 ['name' => 'Universitas Indonesia', 'logo' => 'ui.png'],
                 ['name' => 'Universitas Gadjah Mada', 'logo' => 'ugm.png'],
@@ -49,7 +67,10 @@ class Home extends BaseController
                 ['name' => 'Institut Teknologi Sepuluh Nopember', 'logo' => 'its.png'],
                 ['name' => 'Institut Pertanian Bogor', 'logo' => 'ipb.png'],
                 ['name' => 'Universitas Bina Nusantara', 'logo' => 'binus.png']
-            ]
+            ],
+            'statistikBulanan' => $statistikBulanan,
+            'statistikTahunan' => $statistikTahunan,
+            'distribusiMitra' => $distribusiMitra
         ];
         
         return view('public/home', $data);
