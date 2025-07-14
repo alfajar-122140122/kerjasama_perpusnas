@@ -154,7 +154,7 @@
                             <div class="mb-3">
                                 <label for="new_password" class="form-label">Password Baru *</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="new_password" name="new_password" required minlength="6">
+                                    <input type="password" class="form-control" id="new_password" name="new_password" required minlength="6" oninput="checkPasswordStrengthSettings(this)">
                                     <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('new_password', 'newToggle')">
                                         <i class="fas fa-eye" id="newToggle"></i>
                                     </button>

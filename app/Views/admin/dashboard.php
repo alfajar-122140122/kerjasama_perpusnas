@@ -42,10 +42,10 @@
             <div class="card-body">
                 <div class="text-center">
                     <div class="stats-label text-primary text-uppercase fw-bold small">Total Users</div>
-                    <div class="stats-number h3 fw-bold text-dark mb-1"><?= $total_users ?? 150 ?></div>
+                    <div class="stats-number h3 fw-bold text-dark mb-1"><?= $totalUsers ?></div>
                     <div class="stats-change">
                         <span class="badge bg-success">
-                            <i class="fas fa-arrow-up"></i> +12%
+                            <i class="fas fa-arrow-up"></i> <?= ($userChange >= 0 ? '+' : '') . $userChange ?>%
                         </span>
                         <small class="text-muted ms-1">dari bulan lalu</small>
                     </div>
@@ -59,10 +59,10 @@
             <div class="card-body">
                 <div class="text-center">
                     <div class="stats-label text-success text-uppercase fw-bold small">Total Kerjasama</div>
-                    <div class="stats-number h3 fw-bold text-dark mb-1"><?= $total_kerjasama ?? 43 ?></div>
+                    <div class="stats-number h3 fw-bold text-dark mb-1"><?= $totalKerjasama ?></div>
                     <div class="stats-change">
                         <span class="badge bg-success">
-                            <i class="fas fa-arrow-up"></i> +8%
+                            <i class="fas fa-arrow-up"></i> <?= ($kerjasamaChange >= 0 ? '+' : '') . $kerjasamaChange ?>%
                         </span>
                         <small class="text-muted ms-1">dari bulan lalu</small>
                     </div>
@@ -76,10 +76,10 @@
             <div class="card-body">
                 <div class="text-center">
                     <div class="stats-label text-info text-uppercase fw-bold small">Total Berita</div>
-                    <div class="stats-number h3 fw-bold text-dark mb-1"><?= $total_berita ?? 48 ?></div>
+                    <div class="stats-number h3 fw-bold text-dark mb-1"><?= $totalBerita ?></div>
                     <div class="stats-change">
                         <span class="badge bg-info">
-                            <i class="fas fa-arrow-up"></i> +15%
+                            <i class="fas fa-arrow-up"></i> <?= ($beritaChange >= 0 ? '+' : '') . $beritaChange ?>%
                         </span>
                         <small class="text-muted ms-1">dari bulan lalu</small>
                     </div>
@@ -98,15 +98,6 @@
                     <h6 class="mb-0 fw-bold text-dark">
                         <i class="fas fa-chart-line me-2"></i>Statistik Kerjasama Bulanan
                     </h6>
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            2024
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">2024</a></li>
-                            <li><a class="dropdown-item" href="#">2023</a></li>
-                        </ul>
-                    </div>
                 </div>
             </div>
             <div class="card-body">
@@ -128,7 +119,7 @@
                     <div class="status-item">
                         <div class="status-indicator bg-success"></div>
                         <div class="status-content">
-                            <div class="status-number"><?= $kerjasama_aktif ?? 20 ?></div>
+                            <div class="status-number"><?= $statusAktif ?></div>
                             <div class="status-label">Kerjasama Aktif</div>
                         </div>
                     </div>
@@ -136,7 +127,7 @@
                     <div class="status-item">
                         <div class="status-indicator bg-primary"></div>
                         <div class="status-content">
-                            <div class="status-number"><?= $kerjasama_selesai ?? 15 ?></div>
+                            <div class="status-number"><?= $statusSelesai ?></div>
                             <div class="status-label">Kerjasama Selesai</div>
                         </div>
                     </div>
@@ -144,7 +135,7 @@
                     <div class="status-item">
                         <div class="status-indicator bg-warning"></div>
                         <div class="status-content">
-                            <div class="status-number"><?= $kerjasama_pending ?? 8 ?></div>
+                            <div class="status-number"><?= $statusPending ?></div>
                             <div class="status-label">Kerjasama Pending</div>
                         </div>
                     </div>
@@ -156,5 +147,10 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Data for statistik bulanan
+    const statistikBulanan = <?= json_encode($statistikBulanan) ?>;
+</script>
 <script src="<?= base_url('js/admin/dashboard.js') ?>"></script>
 <?= $this->endSection() ?>

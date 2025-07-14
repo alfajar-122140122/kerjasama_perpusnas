@@ -165,12 +165,17 @@
                     <div class="mb-3">
                         <label for="password" class="form-label">Password *</label>
                         <div class="input-group">
-                            <input type="password" class="form-control" id="password" name="password" required minlength="8">
+                            <input type="password" class="form-control" id="password" name="password" required minlength="8" oninput="checkPasswordStrength(this, 'add')">
                             <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('password')">
-                                Lihat
+                                <i class="fas fa-eye"></i>
                             </button>
                         </div>
                         <div class="form-text">Password minimal 8 karakter</div>
+                        <!-- Password Strength Bar -->
+                        <div class="progress mt-2" style="height: 8px;">
+                            <div class="progress-bar" id="passwordStrengthAdd" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        <small id="passwordStrengthTextAdd" class="text-muted">Masukkan password untuk melihat kekuatan</small>
                     </div>
                     
                     <div class="mb-3">
@@ -222,12 +227,17 @@
                     <div class="mb-3">
                         <label for="edit_password" class="form-label">Password (Kosongkan jika tidak ingin mengubah)</label>
                         <div class="input-group">
-                            <input type="password" class="form-control" id="edit_password" name="password" minlength="8">
+                            <input type="password" class="form-control" id="edit_password" name="password" minlength="8" oninput="checkPasswordStrength(this, 'edit')">
                             <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('edit_password')">
-                                Lihat
+                                <i class="fas fa-eye"></i>
                             </button>
                         </div>
                         <div class="form-text">Password minimal 8 karakter</div>
+                        <!-- Password Strength Bar -->
+                        <div class="progress mt-2" style="height: 8px;">
+                            <div class="progress-bar" id="passwordStrengthEdit" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        <small id="passwordStrengthTextEdit" class="text-muted">Masukkan password untuk melihat kekuatan</small>
                     </div>
                     
                     <div class="mb-3">

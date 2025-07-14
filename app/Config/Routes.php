@@ -54,6 +54,11 @@ $routes->group('admin', function($routes) {
     $routes->post('users/reset-password/(:num)', 'Admin\UserController::resetPassword/$1');
     $routes->get('users/data/(:num)', 'Admin\UserController::getUserData/$1');
     
+    // Settings routes
+    $routes->get('settings', 'Admin\UserController::settings');
+    $routes->post('settings/update-profile', 'Admin\UserController::updateProfile');
+    $routes->post('settings/update-password', 'Admin\UserController::updatePassword');
+    
     // Admin Kerjasama Routes
     $routes->get('kerjasama/data', 'Admin\KerjasamaController::data');
     $routes->get('kerjasama/get/(:num)', 'Admin\KerjasamaController::get/$1');

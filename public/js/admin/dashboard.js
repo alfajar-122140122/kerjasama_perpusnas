@@ -1,17 +1,31 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Line Chart
+    // Prepare statistik bulanan data from global variable
+    let labels = [];
+    let data = [];
+    if (typeof statistikBulanan !== 'undefined' && Array.isArray(statistikBulanan)) {
+        labels = statistikBulanan.map(item => {
+            // Format bulan: 2024-01 -> Jan 2024
+            const [year, month] = item.bulan.split('-');
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            return monthNames[parseInt(month, 10) - 1] + ' ' + year;
+        });
+        data = statistikBulanan.map(item => item.total);
+    }
+
+    // Bar Chart
     const lineCtx = document.getElementById('lineChart').getContext('2d');
     new Chart(lineCtx, {
-        type: 'line',
+        type: 'bar',
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            labels: labels.length ? labels : ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
             datasets: [{
                 label: 'Kerjasama Baru',
-                data: [12, 19, 3, 5, 2, 3],
+                data: data.length ? data : [0,0,0,0,0,0,0,0,0,0,0,0],
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
                 borderColor: 'rgb(75, 192, 192)',
-                backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                tension: 0.4,
-                fill: true
+                borderWidth: 1,
+                borderRadius: 6,
+                maxBarThickness: 32
             }]
         },
         options: {
@@ -19,7 +33,10 @@ document.addEventListener('DOMContentLoaded', function() {
             maintainAspectRatio: false,
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
                 }
             }
         }

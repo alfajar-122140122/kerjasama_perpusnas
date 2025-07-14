@@ -401,3 +401,229 @@ const baseUrl = getBaseUrl();
 window.togglePasswordVisibility = togglePasswordVisibility;
 window.updatePasswordStrength = updatePasswordStrength;
 window.showAlert = showAlert;
+
+// Settings Management JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSettingsManagement();
+});
+
+function initializeSettingsManagement() {
+    // Initialize password strength checking for settings page
+    const newPasswordInput = document.getElementById('new_password');
+    if (newPasswordInput) {
+        newPasswordInput.addEventListener('input', function() {
+            checkPasswordStrengthSettings(this);
+        });
+    }
+    
+    // Initialize form submissions
+    initializeFormSubmissions();
+}
+
+// Password Strength Checker for Settings
+function checkPasswordStrengthSettings(input) {
+    const value = input.value;
+    let score = 0;
+    let feedback = '';
+    const bar = document.getElementById('passwordStrength');
+    const text = document.getElementById('passwordStrengthText');
+
+    // Check for each requirement
+    if (value.length >= 8) score++;
+    if (/[a-z]/.test(value)) score++;
+    if (/[A-Z]/.test(value)) score++;
+    if (/\d/.test(value)) score++;
+    if (/[^A-Za-z0-9]/.test(value)) score++;
+
+    // Set feedback and bar color
+    switch (score) {
+        case 0:
+        case 1:
+            bar.style.width = '20%';
+            bar.className = 'progress-bar bg-danger';
+            feedback = 'Sangat Lemah';
+            break;
+        case 2:
+            bar.style.width = '40%';
+            bar.className = 'progress-bar bg-warning';
+            feedback = 'Lemah';
+            break;
+        case 3:
+            bar.style.width = '60%';
+            bar.className = 'progress-bar bg-info';
+            feedback = 'Sedang';
+            break;
+        case 4:
+            bar.style.width = '80%';
+            bar.className = 'progress-bar bg-primary';
+            feedback = 'Kuat';
+            break;
+        case 5:
+            bar.style.width = '100%';
+            bar.className = 'progress-bar bg-success';
+            feedback = 'Sangat Kuat';
+            break;
+    }
+
+    if (value.length === 0) {
+        bar.style.width = '0%';
+        bar.className = 'progress-bar';
+        feedback = 'Masukkan password baru untuk melihat kekuatan';
+    }
+
+    text.textContent = feedback;
+}
+
+// Toggle Password Visibility for Settings
+function togglePasswordVisibility(inputId, toggleId) {
+    const input = document.getElementById(inputId);
+    const toggle = document.getElementById(toggleId);
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        toggle.className = 'fas fa-eye-slash';
+    } else {
+        input.type = 'password';
+        toggle.className = 'fas fa-eye';
+    }
+}
+
+// Initialize Form Submissions
+function initializeFormSubmissions() {
+    // Profile Form
+    const profileForm = document.getElementById('profileForm');
+    if (profileForm) {
+        profileForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            updateProfile();
+        });
+    }
+    
+    // Password Form
+    const passwordForm = document.getElementById('passwordForm');
+    if (passwordForm) {
+        passwordForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            updatePassword();
+        });
+    }
+}
+
+// Update Profile
+function updateProfile() {
+    const formData = new FormData(document.getElementById('profileForm'));
+    
+    fetch(baseUrl + '/admin/settings/update-profile', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert('success', data.message);
+        } else {
+            showAlert('danger', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('danger', 'Terjadi kesalahan saat memperbarui profil');
+    });
+}
+
+// Update Password
+function updatePassword() {
+    const formData = new FormData(document.getElementById('passwordForm'));
+    
+    // Validate password strength
+    const newPassword = formData.get('new_password');
+    if (newPassword && !isPasswordStrong(newPassword)) {
+        showAlert('danger', 'Password harus mengandung huruf kecil, huruf besar, angka, dan karakter khusus');
+        return;
+    }
+    
+    fetch(baseUrl + '/admin/settings/update-password', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert('success', data.message);
+            document.getElementById('passwordForm').reset();
+            // Reset password strength bar
+            const bar = document.getElementById('passwordStrength');
+            const text = document.getElementById('passwordStrengthText');
+            bar.style.width = '0%';
+            bar.className = 'progress-bar';
+            text.textContent = 'Masukkan password baru untuk melihat kekuatan';
+        } else {
+            showAlert('danger', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('danger', 'Terjadi kesalahan saat memperbarui password');
+    });
+}
+
+// Check if password meets strength requirements
+function isPasswordStrong(password) {
+    return password.length >= 8 && 
+           /[a-z]/.test(password) && 
+           /[A-Z]/.test(password) && 
+           /\d/.test(password) && 
+           /[^A-Za-z0-9]/.test(password);
+}
+
+// Show Alert Function
+function showAlert(type, message) {
+    const alertContainer = document.getElementById('alertContainer');
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} alert-dismissible fade show`;
+    alert.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    alertContainer.appendChild(alert);
+    
+    // Auto hide after 5 seconds
+    setTimeout(() => {
+        if (alert.parentNode) {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        }
+    }, 5000);
+}
+
+// Form validation
+function validateForm(formId) {
+    const form = document.getElementById(formId);
+    const inputs = form.querySelectorAll('input[required], select[required]');
+    let isValid = true;
+    
+    inputs.forEach(input => {
+        if (!input.value.trim()) {
+            input.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            input.classList.remove('is-invalid');
+        }
+    });
+    
+    return isValid;
+}
+
+// Clear form validation
+function clearFormValidation(formId) {
+    const form = document.getElementById(formId);
+    const inputs = form.querySelectorAll('.is-invalid');
+    
+    inputs.forEach(input => {
+        input.classList.remove('is-invalid');
+    });
+}
+
+window.checkPasswordStrengthSettings = checkPasswordStrengthSettings;
+window.togglePasswordVisibility = togglePasswordVisibility;

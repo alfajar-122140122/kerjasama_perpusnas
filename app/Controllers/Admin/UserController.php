@@ -30,11 +30,17 @@ class UserController extends BaseController
             $rules = [
                 'username' => 'required|min_length[3]|max_length[50]|is_unique[users.username]',
                 'email' => 'required|valid_email|max_length[100]|is_unique[users.email]',
-                'password' => 'required|min_length[8]',
+                'password' => 'required|min_length[8]|regex_match[/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/]',
                 'hak_akses' => 'required|in_list[admin,staff]'
             ];
 
-            if (!$this->validate($rules)) {
+            $messages = [
+                'password' => [
+                    'regex_match' => 'Password harus mengandung huruf kecil, huruf besar, angka, dan karakter khusus'
+                ]
+            ];
+
+            if (!$this->validate($rules, $messages)) {
                 return redirect()->back()
                     ->withInput()
                     ->with('error', 'Data tidak valid: ' . implode(', ', $this->validator->getErrors()));
@@ -43,7 +49,7 @@ class UserController extends BaseController
             $data = [
                 'username' => $this->request->getPost('username'),
                 'email' => $this->request->getPost('email'),
-                'password_hash' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+                'password' => $this->request->getPost('password'),
                 'role' => $this->request->getPost('hak_akses')
             ];
 
@@ -78,10 +84,16 @@ class UserController extends BaseController
             // Only validate password if provided
             $password = $this->request->getPost('password');
             if (!empty($password)) {
-                $rules['password'] = 'min_length[8]';
+                $rules['password'] = 'min_length[8]|regex_match[/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/]';
             }
 
-            if (!$this->validate($rules)) {
+            $messages = [
+                'password' => [
+                    'regex_match' => 'Password harus mengandung huruf kecil, huruf besar, angka, dan karakter khusus'
+                ]
+            ];
+
+            if (!$this->validate($rules, $messages)) {
                 return redirect()->back()
                     ->withInput()
                     ->with('error', 'Data tidak valid: ' . implode(', ', $this->validator->getErrors()));
@@ -95,7 +107,7 @@ class UserController extends BaseController
 
             // Only update password if provided
             if (!empty($password)) {
-                $data['password_hash'] = password_hash($password, PASSWORD_DEFAULT);
+                $data['password'] = $password;
             }
 
             if ($this->userModel->update($id, $data)) {
@@ -140,11 +152,17 @@ class UserController extends BaseController
             }
 
             $rules = [
-                'new_password' => 'required|min_length[8]',
+                'new_password' => 'required|min_length[8]|regex_match[/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/]',
                 'confirm_password' => 'required|matches[new_password]'
             ];
 
-            if (!$this->validate($rules)) {
+            $messages = [
+                'new_password' => [
+                    'regex_match' => 'Password harus mengandung huruf kecil, huruf besar, angka, dan karakter khusus'
+                ]
+            ];
+
+            if (!$this->validate($rules, $messages)) {
                 return $this->response->setJSON([
                     'success' => false,
                     'message' => 'Password tidak valid',
@@ -233,5 +251,140 @@ class UserController extends BaseController
             'success' => true,
             'data' => $user
         ]);
+    }
+
+    // Settings Methods
+    public function settings()
+    {
+        $userId = session()->get('user_id');
+        $user = $this->userModel->find($userId);
+        
+        if (!$user) {
+            return redirect()->to('/admin/login')
+                ->with('error', 'User tidak ditemukan');
+        }
+
+        $data = [
+            'title' => 'Pengaturan',
+            'user' => $user
+        ];
+
+        return view('admin/settings', $data);
+    }
+
+    public function updateProfile()
+    {
+        if ($this->request->getMethod() !== 'POST') {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Method tidak diizinkan'
+            ]);
+        }
+
+        $userId = session()->get('user_id');
+        $user = $this->userModel->find($userId);
+        
+        if (!$user) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'User tidak ditemukan'
+            ]);
+        }
+
+        $rules = [
+            'name' => 'permit_empty|max_length[100]',
+            'email' => "required|valid_email|max_length[100]|is_unique[users.email,id,{$userId}]",
+            'phone' => 'permit_empty|max_length[20]'
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Data tidak valid',
+                'errors' => $this->validator->getErrors()
+            ]);
+        }
+
+        $data = [
+            'name' => $this->request->getPost('name'),
+            'email' => $this->request->getPost('email'),
+            'phone' => $this->request->getPost('phone')
+        ];
+
+        if ($this->userModel->updateUserProfile($userId, $data)) {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Profil berhasil diperbarui'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Gagal memperbarui profil'
+            ]);
+        }
+    }
+
+    public function updatePassword()
+    {
+        if ($this->request->getMethod() !== 'POST') {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Method tidak diizinkan'
+            ]);
+        }
+
+        $userId = session()->get('user_id');
+        $user = $this->userModel->find($userId);
+        
+        if (!$user) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'User tidak ditemukan'
+            ]);
+        }
+
+        $rules = [
+            'current_password' => 'required',
+            'new_password' => 'required|min_length[8]|regex_match[/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/]',
+            'confirm_password' => 'required|matches[new_password]'
+        ];
+
+        $messages = [
+            'new_password' => [
+                'regex_match' => 'Password harus mengandung huruf kecil, huruf besar, angka, dan karakter khusus'
+            ]
+        ];
+
+        if (!$this->validate($rules, $messages)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Data tidak valid',
+                'errors' => $this->validator->getErrors()
+            ]);
+        }
+
+        // Verify current password
+        if (!$this->userModel->verifyPassword($this->request->getPost('current_password'), $user['password'])) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Password saat ini tidak benar'
+            ]);
+        }
+
+        $data = [
+            'password' => $this->request->getPost('new_password')
+        ];
+
+        if ($this->userModel->updateUserProfile($userId, $data)) {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Password berhasil diperbarui'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Gagal memperbarui password'
+            ]);
+        }
     }
 }

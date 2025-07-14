@@ -3,6 +3,9 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\UserModel;
+use App\Models\KerjasamaModel;
+use App\Models\BeritaModel;
 
 class Dashboard extends BaseController
 {
@@ -24,19 +27,70 @@ class Dashboard extends BaseController
     
     public function dashboard()
     {
-        // Check authentication
-        $authCheck = $this->checkAuth();
-        if ($authCheck) return $authCheck;
-        
-        $data = [
-            'title' => 'Dashboard',
-            'total_users' => 150,
-            'total_kerjasama' => 25,
-            'total_berita' => 48,
-            'active_users' => 142
-        ];
-        
-        return view('admin/dashboard', $data);
+        $userModel = new UserModel();
+        $kerjasamaModel = new KerjasamaModel();
+        $beritaModel = new BeritaModel();
+
+        // Total Users
+        $totalUsers = $userModel->countAllResults();
+        $usersLastMonth = $userModel
+            ->where('created_at >=', date('Y-m-01 00:00:00', strtotime('-1 month')))
+            ->where('created_at <', date('Y-m-01 00:00:00'))
+            ->countAllResults();
+
+        // Total Kerjasama
+        $totalKerjasama = $kerjasamaModel->countAllResults();
+        $kerjasamaLastMonth = $kerjasamaModel
+            ->where('created_at >=', date('Y-m-01 00:00:00', strtotime('-1 month')))
+            ->where('created_at <', date('Y-m-01 00:00:00'))
+            ->countAllResults();
+
+        // Total Berita
+        $totalBerita = $beritaModel->countAllResults();
+        $beritaLastMonth = $beritaModel
+            ->where('created_at >=', date('Y-m-01 00:00:00', strtotime('-1 month')))
+            ->where('created_at <', date('Y-m-01 00:00:00'))
+            ->countAllResults();
+
+        // Status Kerjasama (dummy, since no status field in model)
+        $statusAktif = $kerjasamaModel
+            ->where('tanggal_berakhir >=', date('Y-m-d'))
+            ->countAllResults();
+        $statusSelesai = $kerjasamaModel
+            ->where('tanggal_berakhir <', date('Y-m-d'))
+            ->countAllResults();
+        $statusPending = 0; // Adjust if you have a pending status
+
+        // Statistik Kerjasama Bulanan (12 bulan terakhir)
+        $statistikBulanan = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $bulan = date('Y-m', strtotime("-$i months"));
+            $count = $kerjasamaModel
+                ->where('DATE_FORMAT(created_at, "%Y-%m") =', $bulan)
+                ->countAllResults();
+            $statistikBulanan[] = [
+                'bulan' => $bulan,
+                'total' => $count
+            ];
+        }
+
+        // Persentase perubahan
+        $userChange = $usersLastMonth ? round((($totalUsers - $usersLastMonth) / max($usersLastMonth,1)) * 100) : 0;
+        $kerjasamaChange = $kerjasamaLastMonth ? round((($totalKerjasama - $kerjasamaLastMonth) / max($kerjasamaLastMonth,1)) * 100) : 0;
+        $beritaChange = $beritaLastMonth ? round((($totalBerita - $beritaLastMonth) / max($beritaLastMonth,1)) * 100) : 0;
+
+        return view('admin/dashboard', [
+            'totalUsers' => $totalUsers,
+            'userChange' => $userChange,
+            'totalKerjasama' => $totalKerjasama,
+            'kerjasamaChange' => $kerjasamaChange,
+            'totalBerita' => $totalBerita,
+            'beritaChange' => $beritaChange,
+            'statusAktif' => $statusAktif,
+            'statusSelesai' => $statusSelesai,
+            'statusPending' => $statusPending,
+            'statistikBulanan' => $statistikBulanan
+        ]);
     }
     
     public function users()

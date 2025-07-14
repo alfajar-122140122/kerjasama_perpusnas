@@ -83,14 +83,77 @@ function deleteUser(userId, username) {
 function togglePasswordVisibility(inputId) {
     const input = document.getElementById(inputId);
     const button = input.nextElementSibling;
+    const icon = button.querySelector('i');
     
     if (input.type === 'password') {
         input.type = 'text';
-        button.textContent = 'Sembunyikan';
+        icon.className = 'fas fa-eye-slash';
     } else {
         input.type = 'password';
-        button.textContent = 'Lihat';
+        icon.className = 'fas fa-eye';
     }
+}
+
+// Password Strength Checker
+function checkPasswordStrength(input, mode) {
+    const value = input.value;
+    let score = 0;
+    let feedback = '';
+    let bar = null;
+    let text = null;
+
+    if (mode === 'add') {
+        bar = document.getElementById('passwordStrengthAdd');
+        text = document.getElementById('passwordStrengthTextAdd');
+    } else {
+        bar = document.getElementById('passwordStrengthEdit');
+        text = document.getElementById('passwordStrengthTextEdit');
+    }
+
+    // Check for each requirement
+    if (value.length >= 8) score++;
+    if (/[a-z]/.test(value)) score++;
+    if (/[A-Z]/.test(value)) score++;
+    if (/\d/.test(value)) score++;
+    if (/[^A-Za-z0-9]/.test(value)) score++;
+
+    // Set feedback and bar color
+    switch (score) {
+        case 0:
+        case 1:
+            bar.style.width = '20%';
+            bar.className = 'progress-bar bg-danger';
+            feedback = 'Sangat Lemah';
+            break;
+        case 2:
+            bar.style.width = '40%';
+            bar.className = 'progress-bar bg-warning';
+            feedback = 'Lemah';
+            break;
+        case 3:
+            bar.style.width = '60%';
+            bar.className = 'progress-bar bg-info';
+            feedback = 'Sedang';
+            break;
+        case 4:
+            bar.style.width = '80%';
+            bar.className = 'progress-bar bg-primary';
+            feedback = 'Kuat';
+            break;
+        case 5:
+            bar.style.width = '100%';
+            bar.className = 'progress-bar bg-success';
+            feedback = 'Sangat Kuat';
+            break;
+    }
+
+    if (value.length === 0) {
+        bar.style.width = '0%';
+        bar.className = 'progress-bar';
+        feedback = 'Masukkan password untuk melihat kekuatan';
+    }
+
+    text.textContent = feedback;
 }
 
 // Show Alert Function
