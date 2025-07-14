@@ -174,7 +174,6 @@ Kerjasama Akan Berakhir
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-primary" id="btn_perpanjang">Perpanjang</button>
             </div>
         </div>
     </div>
@@ -269,11 +268,6 @@ function viewKerjasama(id) {
                 } else {
                     document.getElementById('view_created_at').textContent = '-';
                 }
-                
-                // Setup perpanjang button
-                document.getElementById('btn_perpanjang').onclick = function() {
-                    window.location.href = `<?= base_url('admin/kerjasama/edit/') ?>${id}`;
-                };
                 
                 // Show modal
                 const modal = new bootstrap.Modal(document.getElementById('lihatKerjasamaModal'));

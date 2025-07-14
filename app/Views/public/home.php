@@ -81,25 +81,25 @@
         <!-- Services Grid using CSS Grid + Bootstrap responsive -->
         <section>
             <div class="services-grid">
-                <a href="<?= base_url('permohonan-kerjasama') ?>" class="service-card text-decoration-none">
+                <a href="<?= base_url('kerja-sama/pengajuan') ?>" class="service-card text-decoration-none">
                     <i class="fas fa-file-alt service-icon"></i>
                     <span class="service-title">Ajukan Kerjasama</span>
                 </a>
-                <a href="<?= base_url('data-kerja-sama') ?>" class="service-card text-decoration-none">
+                <a href="<?= base_url('kerja-sama/data') ?>" class="service-card text-decoration-none">
                     <i class="fas fa-search service-icon"></i>
                     <span class="service-title">Data Kerja Sama</span>
                 </a>
-                <a href="<?= base_url('implementasi-kerja-sama') ?>" class="service-card text-decoration-none">
+                <a href="<?= base_url('kerja-sama/implementasi') ?>" class="service-card text-decoration-none">
                     <i class="fas fa-chart-line service-icon"></i>
                     <span class="service-title">Implementasi Kerja Sama</span>
                 </a>
-                <a href="<?= base_url('kerjasama-dalam-luar-negeri') ?>" class="service-card text-decoration-none">
+                <a href="<?= base_url('kerja-sama/akan-berakhir') ?>" class="service-card text-decoration-none">
                     <i class="fas fa-users service-icon"></i>
-                    <span class="service-title">Kerjasama Dalam dan Luar Negeri</span>
+                    <span class="service-title">Kerja Sama yang Akan Berakhir</span>
                 </a>
-                <a href="<?= base_url('program-kerja-sama') ?>" class="service-card text-decoration-none">
+                <a href="<?= base_url('kerja-sama/progress') ?>" class="service-card text-decoration-none">
                     <i class="fas fa-tasks service-icon"></i>
-                    <span class="service-title">Program Kerja Sama</span>
+                    <span class="service-title">Progress Kerja Sama</span>
                 </a>
                 <a href="<?= base_url('peta-kerja-sama') ?>" class="service-card text-decoration-none">
                     <i class="fas fa-map service-icon"></i>
