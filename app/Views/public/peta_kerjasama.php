@@ -26,43 +26,10 @@
         <!-- Map Section -->
         <div class="map-wrapper">
             <div class="map-container">
-                <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m2!1m1!1sindonesia!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2c4c07d7496404b7%3A0xe37b4de71badf485!2sIndonesia!5e0!3m2!1sen!2sid!4v1699459200000!5m2!1sen!2sid"
-                    width="100%" 
-                    height="100%" 
-                    allowfullscreen="" 
-                    loading="lazy" 
-                    referrerpolicy="no-referrer-when-downgrade"
-                    title="Peta Kerjasama Perpustakaan Nasional Indonesia">
-                </iframe>
-                
-                <!-- Custom Markers Overlay -->
-                <div class="map-markers">
-                    <div class="marker provinsi" data-location="jakarta" data-type="provinsi">
-                        <i class="fas fa-book"></i>
-                        <div class="marker-tooltip">Perpustakaan Provinsi DKI Jakarta</div>
-                    </div>
-                    <div class="marker provinsi" data-location="bandung" data-type="provinsi">
-                        <i class="fas fa-book"></i>
-                        <div class="marker-tooltip">Perpustakaan Provinsi Jawa Barat</div>
-                    </div>
-                    <div class="marker kota" data-location="surabaya" data-type="kota">
-                        <i class="fas fa-building"></i>
-                        <div class="marker-tooltip">Perpustakaan Kota Surabaya</div>
-                    </div>
-                    <div class="marker kabupaten" data-location="bogor" data-type="kabupaten">
-                        <i class="fas fa-landmark"></i>
-                        <div class="marker-tooltip">Perpustakaan Kabupaten Bogor</div>
-                    </div>
-                    <div class="marker swasta" data-location="depok" data-type="swasta">
-                        <i class="fas fa-university"></i>
-                        <div class="marker-tooltip">Perpustakaan Universitas Indonesia</div>
-                    </div>
-                    <div class="marker provinsi" data-location="bali" data-type="provinsi">
-                        <i class="fas fa-book"></i>
-                        <div class="marker-tooltip">Perpustakaan Provinsi Bali</div>
-                    </div>
-                </div>
+                <div id="googleMap" style="width:100%;height:400px;"></div>
+                <script>
+                    window.petaMarkers = <?= json_encode($markers) ?>;
+                </script>
             </div>
         </div>
 
@@ -72,83 +39,18 @@
             
             <div class="partner-slider-container">
                 <div class="partner-slider" id="partnerSlider">
-                    <!-- Partner Slide 1 -->
-                    <div class="partner-slide" data-type="provinsi">
-                        <div class="partner-logo provinsi">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                        <div class="partner-name">Perpustakaan Provinsi DKI Jakarta</div>
-                        <div class="partner-location">Jakarta</div>
-                        <div class="partner-type-badge">Provinsi</div>
-                    </div>
-                    
-                    <!-- Partner Slide 2 -->
-                    <div class="partner-slide" data-type="provinsi">
-                        <div class="partner-logo provinsi">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                        <div class="partner-name">Perpustakaan Provinsi Jawa Barat</div>
-                        <div class="partner-location">Bandung</div>
-                        <div class="partner-type-badge">Provinsi</div>
-                    </div>
-                    
-                    <!-- Partner Slide 3 -->
-                    <div class="partner-slide" data-type="kota">
-                        <div class="partner-logo kota">
-                            <i class="fas fa-building"></i>
-                        </div>
-                        <div class="partner-name">Perpustakaan Kota Surabaya</div>
-                        <div class="partner-location">Surabaya</div>
-                        <div class="partner-type-badge">Kota</div>
-                    </div>
-                    
-                    <!-- Partner Slide 4 -->
-                    <div class="partner-slide" data-type="kabupaten">
-                        <div class="partner-logo kabupaten">
-                            <i class="fas fa-map-signs"></i>
-                        </div>
-                        <div class="partner-name">Perpustakaan Kabupaten Bogor</div>
-                        <div class="partner-location">Cibinong</div>
-                        <div class="partner-type-badge">Kabupaten</div>
-                    </div>
-                    
-                    <!-- Partner Slide 5 -->
-                    <div class="partner-slide" data-type="swasta">
-                        <div class="partner-logo swasta">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <div class="partner-name">Perpustakaan Universitas Indonesia</div>
-                        <div class="partner-location">Depok</div>
-                        <div class="partner-type-badge">Swasta</div>
-                    </div>
-                    
-                    <!-- Partner Slide 6 -->
-                    <div class="partner-slide" data-type="provinsi">
-                        <div class="partner-logo provinsi geometric"></div>
-                        <div class="partner-name">Perpustakaan Provinsi Bali</div>
-                        <div class="partner-location">Denpasar</div>
-                        <div class="partner-type-badge">Provinsi</div>
-                    </div>
-                    
-                    <!-- Partner Slide 7 -->
-                    <div class="partner-slide" data-type="provinsi">
-                        <div class="partner-logo provinsi">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                        <div class="partner-name">Perpustakaan Provinsi Jawa Tengah</div>
-                        <div class="partner-location">Semarang</div>
-                        <div class="partner-type-badge">Provinsi</div>
-                    </div>
-                    
-                    <!-- Partner Slide 8 -->
-                    <div class="partner-slide" data-type="kota">
-                        <div class="partner-logo kota">
-                            <i class="fas fa-building"></i>
-                        </div>
-                        <div class="partner-name">Perpustakaan Kota Yogyakarta</div>
-                        <div class="partner-location">Yogyakarta</div>
-                        <div class="partner-type-badge">Kota</div>
-                    </div>
+                    <?php if (!empty($mitra)): ?>
+                        <?php foreach ($mitra as $m): ?>
+                            <div class="partner-slide" data-type="<?= esc($m['ruang_lingkup']) ?>">
+                                <div class="partner-logo <?= esc($m['ruang_lingkup']) ?>">
+                                    <i class="fas fa-book-open"></i>
+                                </div>
+                                <div class="partner-name"><?= esc($m['nama_mitra']) ?></div>
+                                <div class="partner-location">-</div>
+                                <div class="partner-type-badge"><?= ucfirst(esc($m['ruang_lingkup'])) ?></div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </div>
             
@@ -166,4 +68,24 @@
 
 <?= $this->section('scripts') ?>
 <script src="<?= base_url('js/public/peta_kerjasama.js') ?>"></script>
+<script>
+function initMap() {
+    var map = new google.maps.Map(document.getElementById('googleMap'), {
+        zoom: 5,
+        center: {lat: -2.5489, lng: 118.0149} // Center Indonesia
+    });
+    if (window.petaMarkers) {
+        window.petaMarkers.forEach(function(marker) {
+            if(marker.latitude && marker.longitude) {
+                new google.maps.Marker({
+                    position: {lat: parseFloat(marker.latitude), lng: parseFloat(marker.longitude)},
+                    map: map,
+                    title: marker.nama_mitra
+                });
+            }
+        });
+    }
+}
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
 <?= $this->endSection() ?>

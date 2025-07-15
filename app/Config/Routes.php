@@ -29,7 +29,7 @@ $routes->group('', function($routes) {
     $routes->get('kerja-sama/pengajuan', 'Public\PermohonanController::index');
     $routes->post('kerja-sama/pengajuan/submit', 'Public\PermohonanController::submit');
 
-    $routes->get('peta-kerja-sama', 'Public\Home::petaKerjaSama');
+    $routes->get('peta-kerja-sama', 'Public\KerjaSamaController::petaKerjasama');
     $routes->get('kontak', 'Public\Home::kontak');
 });
 

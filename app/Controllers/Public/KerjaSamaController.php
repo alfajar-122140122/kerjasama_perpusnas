@@ -6,18 +6,21 @@ use App\Controllers\BaseController;
 use App\Models\KerjasamaModel;
 use App\Models\ImplementasiKerjasamaModel;
 use App\Models\ProgressKerjasamaModel;
+use App\Models\PetaKerjasamaModel;
 
 class KerjaSamaController extends BaseController
 {
     protected $kerjasamaModel;
     protected $implementasiModel;
     protected $progressModel; // Add this line
+    protected $petaKerjasamaModel;
     
     public function __construct()
     {
         $this->kerjasamaModel = new KerjasamaModel();
         $this->implementasiModel = new ImplementasiKerjasamaModel();
         $this->progressModel = new \App\Models\ProgressKerjasamaModel(); // Add this line
+        $this->petaKerjasamaModel = new PetaKerjasamaModel();
     }
     
     public function data()
@@ -150,6 +153,23 @@ class KerjaSamaController extends BaseController
         ];
         
         return view('public/kerjasama/progress', $data);
+    }
+    
+    public function petaKerjasama()
+    {
+        // Ambil data marker (peta_kerjasama join kerjasama)
+        $markers = $this->petaKerjasamaModel
+            ->select('peta_kerjasama.*, kerjasama.nama_mitra, kerjasama.ruang_lingkup')
+            ->join('kerjasama', 'kerjasama.id = peta_kerjasama.kerjasama_id')
+            ->findAll();
+
+        // Ambil data mitra (untuk slider)
+        $mitra = $this->kerjasamaModel->findAll();
+
+        return view('public/peta_kerjasama', [
+            'markers' => $markers,
+            'mitra' => $mitra
+        ]);
     }
     
     // Helper methods for data calculations
