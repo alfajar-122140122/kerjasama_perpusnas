@@ -113,15 +113,15 @@ if (!isset($berita)) {
                                         <?= $item['tanggal_publikasi'] ? date('d/m/Y', strtotime($item['tanggal_publikasi'])) : '-' ?>
                                     </small>
                                 </td>
-                                <td class="text-center p-3">
-                                    <div class="d-flex gap-1 justify-content-center">
-                                        <button class="btn btn-sm btn-outline-success" onclick="viewBerita(<?= $item['id_berita'] ?>)" title="Lihat">
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-success btn-sm" title="Lihat" onclick="viewBerita(<?= $item['id_berita'] ?>)">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button class="btn btn-sm btn-outline-warning" onclick="editBerita(<?= $item['id_berita'] ?>)" title="Edit">
+                                        <button type="button" class="btn btn-primary btn-sm" title="Edit" onclick="editBerita(<?= $item['id_berita'] ?>)">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteBerita(<?= $item['id_berita'] ?>)" title="Hapus">
+                                        <button type="button" class="btn btn-danger btn-sm" title="Hapus" onclick="deleteBerita(<?= $item['id_berita'] ?>)">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
