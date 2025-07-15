@@ -172,6 +172,15 @@ class KerjaSamaController extends BaseController
         ]);
     }
     
+    public function apiData()
+    {
+        $data = $this->kerjasamaModel->findAll();
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
+    
     // Helper methods for data calculations
     private function countActiveKerjasama()
     {

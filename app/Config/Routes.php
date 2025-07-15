@@ -31,6 +31,7 @@ $routes->group('', function($routes) {
 
     $routes->get('peta-kerja-sama', 'Public\KerjaSamaController::petaKerjasama');
     $routes->get('kontak', 'Public\Home::kontak');
+    $routes->get('api/kerjasama', 'Public\KerjaSamaController::apiData');
 });
 
 // Auth routes

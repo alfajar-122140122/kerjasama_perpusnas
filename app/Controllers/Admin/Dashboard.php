@@ -27,6 +27,9 @@ class Dashboard extends BaseController
     
     public function dashboard()
     {
+        $authCheck = $this->checkAuth();
+        if ($authCheck) return $authCheck;
+
         $userModel = new UserModel();
         $kerjasamaModel = new KerjasamaModel();
         $beritaModel = new BeritaModel();
