@@ -19,22 +19,20 @@
         <!-- Statistics Section using Bootstrap cards -->
         <section class="bg-white rounded-3 p-4 shadow-sm mb-4">
             <h2 class="fs-5 fw-semibold text-dark mb-4">Statistik Kerja Sama</h2>
-            <div class="row g-3">
-                <div class="col-lg-4">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-6 mb-4">
+                    <!-- Panel statistik 1: Statistik Kerjasama Bulanan -->
                     <div class="chart-container d-flex align-items-center justify-content-center">
                         <canvas id="barChart"></canvas>
                     </div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-6 mb-4">
+                    <!-- Panel statistik 2: Statistik Total Kerjasama/Tahunan -->
                     <div class="chart-container d-flex align-items-center justify-content-center">
                         <canvas id="lineChart"></canvas>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="chart-container d-flex align-items-center justify-content-center">
-                        <canvas id="pieChart"></canvas>
-                    </div>
-                </div>
+                <!-- Panel statistik 3 (distribusi mitra) dihapus -->
             </div>
         </section>
 
@@ -47,11 +45,11 @@
                     <article class="activity-card">
                         <a href="<?= base_url('aktivitas/detail/' . $activity['id_berita']) ?>" class="activity-image d-block" style="text-decoration:none;">
                             <?php
-                                $image = !empty($activity['gambar']) ? $activity['gambar'] : 'placeholder-activity.jpg';
-                                $imagePath = FCPATH . 'assets/images/' . $image;
-                                $imageExists = file_exists($imagePath) && is_file($imagePath);
+                                $image = !empty($activity['gambar']) ? $activity['gambar'] : null;
+                                $imagePath = FCPATH . 'uploads/berita/' . $image;
+                                $imageExists = $image && file_exists($imagePath) && is_file($imagePath);
                             ?>
-                            <img src="<?= base_url('assets/images/' . ($imageExists ? $image : 'placeholder-activity.jpg')) ?>"
+                            <img src="<?= $imageExists ? base_url('uploads/berita/' . $image) : base_url('assets/images/placeholder-activity.jpg') ?>"
                                  alt="<?= esc($activity['judul'] ?? $activity['title'] ?? 'Aktivitas') ?>"
                                  class="img-fluid w-100 h-100"
                                  style="object-fit: cover;">

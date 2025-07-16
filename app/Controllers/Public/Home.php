@@ -48,7 +48,13 @@ class Home extends BaseController
         }
         // Data statistik untuk homepage
         $beritaModel = new BeritaModel();
+        $now = date('Y-m-d H:i:s');
         $recent_activities = $beritaModel
+            ->where('status', 'published')
+            ->groupStart()
+                ->where('tanggal_publikasi <=', $now)
+                ->orWhere('tanggal_publikasi IS NULL', null, false)
+            ->groupEnd()
             ->orderBy('tanggal_publikasi', 'DESC')
             ->limit(3)
             ->findAll();
