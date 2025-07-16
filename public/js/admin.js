@@ -371,6 +371,28 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Users dropdown with smooth toggle
+    const usersToggle = document.querySelector('a[data-target="usersSubmenu"]');
+    const usersSubmenu = document.getElementById('usersSubmenu');
+
+    if (usersToggle && usersSubmenu) {
+        usersToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const isOpen = usersSubmenu.classList.contains('open');
+
+            if (isOpen) {
+                usersSubmenu.classList.remove('open');
+                usersToggle.classList.remove('expanded');
+            } else {
+                usersSubmenu.classList.add('open');
+                usersToggle.classList.add('expanded');
+            }
+        });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
     // Kerjasama dropdown with smooth toggle
     const kerjasamaToggle = document.querySelector('a[data-target="kerjasamaSubmenu"]');
     const kerjasamaSubmenu = document.getElementById('kerjasamaSubmenu');

@@ -47,14 +47,18 @@ $routes->group('admin', function($routes) {
     $routes->get('dashboard', 'Admin\Dashboard::dashboard');
     
     // User Management Routes
-    $routes->get('users', 'Admin\UserController::index');
-    $routes->post('users/add', 'Admin\UserController::add');
-    $routes->post('users/edit/(:num)', 'Admin\UserController::edit/$1');
-    $routes->get('users/delete/(:num)', 'Admin\UserController::delete/$1');
-    $routes->post('users/change-password/(:num)', 'Admin\UserController::changePassword/$1');
-    $routes->post('users/reset-password/(:num)', 'Admin\UserController::resetPassword/$1');
-    $routes->get('users/data/(:num)', 'Admin\UserController::getUserData/$1');
-    
+    $routes->group('users', function($routes) {
+        $routes->get('hak-akses', 'Admin\UserController::hakAkses');
+        $routes->get('kelola-user', 'Admin\UserController::kelolaUser');
+        $routes->post('update-permissions', 'Admin\UserController::updatePermissions');
+        $routes->post('add', 'Admin\UserController::add');
+        $routes->post('edit/(:num)', 'Admin\UserController::edit/$1');
+        $routes->get('delete/(:num)', 'Admin\UserController::delete/$1');
+        $routes->post('change-password/(:num)', 'Admin\UserController::changePassword/$1');
+        $routes->post('reset-password/(:num)', 'Admin\UserController::resetPassword/$1');
+        $routes->get('data/(:num)', 'Admin\UserController::getUserData/$1');
+    });
+
     // Settings routes
     $routes->get('settings', 'Admin\UserController::settings');
     $routes->post('settings/update-profile', 'Admin\UserController::updateProfile');
