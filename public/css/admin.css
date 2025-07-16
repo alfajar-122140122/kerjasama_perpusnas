@@ -56,15 +56,8 @@ body {
 }
 
 .sidebar-logo {
-    max-height: 40px;
+    max-height: 80px;
     margin-bottom: 10px;
-    /* Untuk logo yang gelap agar terlihat putih di background biru */
-    filter: brightness(0) invert(1);
-    /* Jika ingin logo original dengan background putih, comment baris di atas dan uncomment di bawah */
-    /* filter: none; */
-    /* background: rgba(255, 255, 255, 0.9); */
-    /* padding: 8px; */
-    /* border-radius: 8px; */
 }
 
 .sidebar-header h4 {
