@@ -12,7 +12,7 @@
             </a>
         </li>
         
-        <?php if (session()->get('role') === 'admin'): ?>
+        <?php if (session()->get('role') === 'superadmin'): ?>
         <li class="<?= (strpos(current_url(), 'admin/users') !== false) ? 'active' : '' ?>">
             <a href="#" class="dropdown-toggle" data-target="usersSubmenu">
                 <i class="fas fa-users"></i> <span>Users</span>
