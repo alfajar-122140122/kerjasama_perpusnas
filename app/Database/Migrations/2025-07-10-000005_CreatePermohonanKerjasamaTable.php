@@ -35,10 +35,6 @@ class CreatePermohonanKerjasamaTable extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
             ],
-            'unit_terkait' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 255,
-            ],
             'kontak_dapat_dihubungi' => [
                 'type' => 'TEXT',
             ],
@@ -56,10 +52,6 @@ class CreatePermohonanKerjasamaTable extends Migration
                 'type'       => 'ENUM',
                 'constraint' => ['pending', 'review', 'approved', 'rejected'],
                 'default'    => 'pending',
-            ],
-            'catatan' => [
-                'type' => 'TEXT',
-                'null' => true,
             ],
             'reviewed_by' => [
                 'type' => 'INT',

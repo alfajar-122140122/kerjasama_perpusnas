@@ -46,61 +46,11 @@ class ProgressKerjasamaController extends BaseController
     
     public function store()
     {
-        // Log the raw input for debugging
-        log_message('debug', 'Store Progress Input: ' . json_encode($this->request->getPost()));
-        
-        // Validasi input sesuai skema database
-        $rules = [
-            'lembaga' => 'required',
-            'tanggal_pengajuan' => 'required|valid_date',
-            'jenis' => 'required',
-            'progress' => 'required'
-        ];
-        
-        if (!$this->validate($rules)) {
-            log_message('error', 'Validation Failed: ' . json_encode($this->validator->getErrors()));
-            return $this->response->setJSON([
-                'status' => false,
-                'message' => 'Validasi gagal',
-                'errors' => $this->validator->getErrors()
-            ]);
-        }
-        
-        // Prepare data untuk disimpan - simplified
-        $data = [
-            'tanggal_pengajuan' => $this->request->getPost('tanggal_pengajuan'),
-            'lembaga' => $this->request->getPost('lembaga'),
-            'jenis' => $this->request->getPost('jenis'),
-            'progress' => $this->request->getPost('progress')
-        ];
-        
-        try {
-            // Simpan data directly to database
-            $this->progressKerjasamaModel->db->table('progress_kerjasama')->insert($data);
-            $insertID = $this->progressKerjasamaModel->db->insertID();
-            
-            if ($insertID) {
-                return $this->response->setJSON([
-                    'status' => true,
-                    'message' => 'Data progress kerjasama berhasil ditambahkan',
-                    'data' => $data,
-                    'id' => $insertID
-                ]);
-            } else {
-                log_message('error', 'Insert Failed: Database error');
-                return $this->response->setJSON([
-                    'status' => false,
-                    'message' => 'Gagal menambahkan data progress kerjasama',
-                    'errors' => $this->progressKerjasamaModel->db->error()
-                ]);
-            }
-        } catch (\Exception $e) {
-            log_message('error', 'Exception: ' . $e->getMessage());
-            return $this->response->setJSON([
-                'status' => false,
-                'message' => 'Error: ' . $e->getMessage()
-            ]);
-        }
+        // Batasi akses tambah progress manual
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Tambah progress kerjasama hanya bisa dilakukan melalui validasi permohonan oleh admin.'
+        ]);
     }
     
     public function update($id)

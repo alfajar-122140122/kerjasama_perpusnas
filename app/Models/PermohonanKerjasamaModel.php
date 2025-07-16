@@ -18,12 +18,10 @@ class PermohonanKerjasamaModel extends Model
         'alamat',
         'telepon',
         'email',
-        'unit_terkait',
         'kontak_dapat_dihubungi',
         'file_formulir',
         'tanggal_pengajuan',
         'status',
-        'catatan',
         'reviewed_by',
         'reviewed_at',
         'created_at',
@@ -50,12 +48,10 @@ class PermohonanKerjasamaModel extends Model
         'alamat'               => 'required',
         'telepon'              => 'required|max_length[50]',
         'email'                => 'required|valid_email|max_length[255]',
-        'unit_terkait'         => 'required|max_length[255]',
         'kontak_dapat_dihubungi' => 'required',
         'file_formulir'        => 'permit_empty|max_length[255]',
         'tanggal_pengajuan'    => 'permit_empty|valid_date',
         'status'               => 'permit_empty|in_list[pending,review,approved,rejected]',
-        'catatan'              => 'permit_empty',
         'reviewed_by'          => 'permit_empty|integer',
         'reviewed_at'          => 'permit_empty|valid_date',
     ];
@@ -125,11 +121,32 @@ class PermohonanKerjasamaModel extends Model
     {
         $data = [
             'status'      => $status,
-            'catatan'     => $catatan,
             'reviewed_by' => $reviewedBy,
             'reviewed_at' => date('Y-m-d H:i:s'),
         ];
-        
-        return $this->update($id, $data);
+        $result = $this->update($id, $data);
+
+        // Ambil data permohonan untuk di-insert ke progress_kerjasama
+        $permohonan = $this->find($id);
+        if ($permohonan) {
+            $progressModel = new \App\Models\ProgressKerjasamaModel();
+            $progressData = [
+                'tanggal_pengajuan' => !empty($permohonan['tanggal_pengajuan']) ? date('Y-m-d', strtotime($permohonan['tanggal_pengajuan'])) : null,
+                'lembaga'           => $permohonan['lembaga'] ?? null,
+                'jenis'             => isset($permohonan['jenis_permohonan']) ? ucfirst($permohonan['jenis_permohonan']) : null,
+                'progress'          => ucfirst($status),
+            ];
+            log_message('debug', 'Progress Data: ' . json_encode($progressData));
+            if (!in_array(null, $progressData, true) && !in_array('', $progressData, true)) {
+                $insertResult = $progressModel->insert($progressData);
+                if ($insertResult === false) {
+                    log_message('error', 'Progress insert failed: ' . json_encode($progressModel->errors()));
+                }
+            } else {
+                log_message('error', 'Progress Data NOT inserted due to missing field: ' . json_encode($progressData));
+            }
+        }
+
+        return $result;
     }
 }

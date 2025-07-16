@@ -11,11 +11,7 @@ Progress Kerjasama
         <div>
             <h2 class="h4 mb-0 text-gray-800">Admin / Kelola Progress Kerja Sama</h2>
         </div>
-        <div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProgressModal">
-                <i class="fas fa-plus me-2"></i>Tambah Data
-            </button>
-        </div>
+        <!-- Hapus tombol tambah data -->
     </div>
 
     <!-- Data Table Card -->
@@ -96,17 +92,14 @@ Progress Kerjasama
                                 <?php
                                 $progressBadgeClass = '';
                                 switch($progress['progress']) {
-                                    case 'Dokumentasi':
-                                        $progressBadgeClass = 'bg-warning text-dark';
-                                        break;
-                                    case 'Finishing':
-                                        $progressBadgeClass = 'bg-success';
-                                        break;
                                     case 'Review':
                                         $progressBadgeClass = 'bg-info';
                                         break;
-                                    case 'Approval':
-                                        $progressBadgeClass = 'bg-primary';
+                                    case 'Approved':
+                                        $progressBadgeClass = 'bg-success';
+                                        break;
+                                    case 'Rejected':
+                                        $progressBadgeClass = 'bg-danger';
                                         break;
                                     default:
                                         $progressBadgeClass = 'bg-secondary';
@@ -119,12 +112,7 @@ Progress Kerjasama
                                     <button type="button" class="btn btn-success btn-sm" title="Lihat" onclick="viewProgress(<?= $progress['id'] ?>)">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <button type="button" class="btn btn-primary btn-sm" title="Edit" onclick="editProgress(<?= $progress['id'] ?>)">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger btn-sm" title="Hapus" onclick="deleteProgress(<?= $progress['id'] ?>)">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                    <!-- Hapus tombol Edit dan Hapus -->
                                 </div>
                             </td>
                         </tr>
@@ -421,10 +409,9 @@ function viewProgress(id) {
                 
                 let progressBadgeClass = 'bg-secondary';
                 switch(data.progress) {
-                    case 'Dokumentasi': progressBadgeClass = 'bg-warning text-dark'; break;
-                    case 'Finishing': progressBadgeClass = 'bg-success'; break;
                     case 'Review': progressBadgeClass = 'bg-info'; break;
-                    case 'Approval': progressBadgeClass = 'bg-primary'; break;
+                    case 'Approved': progressBadgeClass = 'bg-success'; break;
+                    case 'Rejected': progressBadgeClass = 'bg-danger'; break;
                 }
                 
                 $('#view-jenis-badge').removeClass().addClass(`badge ${jenisBadgeClass}`).text(data.jenis);

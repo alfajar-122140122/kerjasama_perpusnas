@@ -12,45 +12,38 @@ class ProgressKerjasamaSeeder extends Seeder
         $faker = Factory::create('id_ID');
         
         // Prepare data
-        $data = [];
-        
-        // Mitra options
-        $mitraOptions = [
-            'Universitas Indonesia',
-            'Perpustakaan Nasional Malaysia',
-            'Dinas Kearsipan dan Perpustakaan DKI Jakarta',
-            'PT Telkom Indonesia',
-            'Yayasan Sastra Digital Nusantara',
-            'Pusat Dokumentasi Sejarah Indonesia',
-            'Institut Kearsipan Modern',
-            'Balai Pelestarian Cagar Budaya',
-            'Perpustakaan British Council',
-            'Museum Nasional Indonesia',
-            'Google Indonesia',
-            'Kementerian Pendidikan dan Kebudayaan'
+        $data = [
+            [
+                'tanggal_pengajuan' => date('Y-m-d', strtotime('-10 days')),
+                'lembaga'           => 'PT Sumber Jaya',
+                'jenis'             => 'Baru',
+                'progress'          => 'Review',
+            ],
+            [
+                'tanggal_pengajuan' => date('Y-m-d', strtotime('-8 days')),
+                'lembaga'           => 'CV Maju Bersama',
+                'jenis'             => 'Baru',
+                'progress'          => 'Approved',
+            ],
+            [
+                'tanggal_pengajuan' => date('Y-m-d', strtotime('-6 days')),
+                'lembaga'           => 'Yayasan Cerdas Bangsa',
+                'jenis'             => 'Baru',
+                'progress'          => 'Rejected',
+            ],
+            [
+                'tanggal_pengajuan' => date('Y-m-d', strtotime('-4 days')),
+                'lembaga'           => 'Universitas Nusantara',
+                'jenis'             => 'Perpanjangan',
+                'progress'          => 'Review',
+            ],
+            [
+                'tanggal_pengajuan' => date('Y-m-d', strtotime('-2 days')),
+                'lembaga'           => 'SMK Negeri 1',
+                'jenis'             => 'Perpanjangan',
+                'progress'          => 'Approved',
+            ],
         ];
-        
-        // Jenis options
-        $jenisOptions = ['Baru', 'Perpanjangan', 'Dokumentasi', 'Finishing'];
-        
-        // Progress options
-        $progressOptions = [
-            'Dokumentasi',
-            'Finishing',
-            'Review',
-            'Approval'
-        ];
-        
-        // Generate 10 random progress records
-        for ($i = 0; $i < 10; $i++) {
-            $data[] = [
-                'tanggal_pengajuan' => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
-                'lembaga'           => $faker->randomElement($mitraOptions),
-                'jenis'             => $faker->randomElement($jenisOptions),
-                'progress'          => $faker->randomElement($progressOptions),
-                'created_at'        => $faker->dateTimeBetween('-3 months', 'now')->format('Y-m-d H:i:s'),
-            ];
-        }
         
         // Insert data to table
         $this->db->table('progress_kerjasama')->insertBatch($data);

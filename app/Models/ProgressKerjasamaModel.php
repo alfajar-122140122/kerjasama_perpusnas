@@ -21,10 +21,10 @@ class ProgressKerjasamaModel extends Model
     ];
 
     // Dates
-    protected $useTimestamps = true;
+    protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = null;
+    // protected $createdField  = 'created_at';
+    // protected $updatedField  = null;
     
     // Get progress kerjasama with filtering options
     public function getProgressData($filter = null)

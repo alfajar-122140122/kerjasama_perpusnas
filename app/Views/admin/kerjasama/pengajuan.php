@@ -121,7 +121,6 @@ Pengajuan Kerjasama
                             <th>No</th>
                             <th>Jenis Permohonan</th>
                             <th>Lembaga</th>
-                            <th>Unit Terkait</th>
                             <th>Kontak</th>
                             <th>Status</th>
                             <th>Tanggal Pengajuan</th>
@@ -198,12 +197,7 @@ Pengajuan Kerjasama
                 <form id="statusForm">
                     <input type="hidden" id="permohonanId" name="id">
                     <input type="hidden" id="newStatus" name="status">
-                    
-                    <div class="mb-3">
-                        <label for="catatan" class="form-label">Catatan (Opsional)</label>
-                        <textarea class="form-control" id="catatan" name="catatan" rows="3" 
-                                  placeholder="Masukkan catatan jika diperlukan..."></textarea>
-                    </div>
+                    <!-- Hapus field catatan -->
                 </form>
             </div>
             <div class="modal-footer">
@@ -303,7 +297,6 @@ function renderTable() {
                     </span>
                 </td>
                 <td>${escapeHtml(item.lembaga)}</td>
-                <td><small class="text-muted">${escapeHtml(item.unit_terkait)}</small></td>
                 <td>
                     <div>
                         <div><i class="fas fa-phone me-1"></i>${escapeHtml(item.telepon)}</div>
@@ -363,11 +356,10 @@ function filterTable() {
     rows.forEach(row => {
         const status = row.dataset.status;
         const lembaga = row.cells[2]?.textContent.toLowerCase() || '';
-        const unitTerkait = row.cells[3]?.textContent.toLowerCase() || '';
-        const kontak = row.cells[4]?.textContent.toLowerCase() || '';
+        const kontak = row.cells[3]?.textContent.toLowerCase() || '';
         
         const matchesFilter = currentFilter === 'all' || status === currentFilter;
-        const matchesSearch = lembaga.includes(searchTerm) || unitTerkait.includes(searchTerm) || kontak.includes(searchTerm);
+        const matchesSearch = lembaga.includes(searchTerm) || kontak.includes(searchTerm);
         
         row.style.display = matchesFilter && matchesSearch ? '' : 'none';
     });
@@ -450,7 +442,6 @@ function viewDetail(id) {
                 <table class="table table-sm">
                     <tr><td>Jenis Permohonan</td><td>: ${permohonan.jenis_permohonan.charAt(0).toUpperCase() + permohonan.jenis_permohonan.slice(1)}</td></tr>
                     <tr><td>Lembaga</td><td>: ${escapeHtml(permohonan.lembaga)}</td></tr>
-                    <tr><td>Unit Terkait</td><td>: ${escapeHtml(permohonan.unit_terkait)}</td></tr>
                     <tr><td>Status</td><td>: <span class="badge ${getStatusClass(permohonan.status)}">${permohonan.status.charAt(0).toUpperCase() + permohonan.status.slice(1)}</span></td></tr>
                 </table>
             </div>

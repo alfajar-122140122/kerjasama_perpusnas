@@ -41,7 +41,6 @@ class PermohonanController extends BaseController
             'alamat' => 'required',
             'telp' => 'required|max_length[50]',
             'email' => 'required|valid_email|max_length[255]',
-            'unit_terkait' => 'required|max_length[255]',
             'kontak' => 'required',
             'formulir' => 'uploaded[formulir]|max_size[formulir,5120]|ext_in[formulir,pdf,doc,docx]',
         ];
@@ -78,7 +77,6 @@ class PermohonanController extends BaseController
             'alamat' => $this->request->getPost('alamat'),
             'telepon' => $this->request->getPost('telp'),
             'email' => $this->request->getPost('email'),
-            'unit_terkait' => $this->request->getPost('unit_terkait'),
             'kontak_dapat_dihubungi' => $this->request->getPost('kontak'),
             'file_formulir' => $newName,
             'tanggal_pengajuan' => date('Y-m-d H:i:s'),
