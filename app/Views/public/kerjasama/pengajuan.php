@@ -87,18 +87,6 @@
                                        pattern="[0-9\-\+\(\)\s]+"
                                        required>
                             </div>
-
-                            <!-- Unit Terkait Field -->
-                            <div class="pengajuan-form-group">
-                                <label for="unit_terkait" class="pengajuan-form-label">Unit Terkait:</label>
-                                <input type="text" 
-                                       id="unit_terkait" 
-                                       name="unit_terkait" 
-                                       class="pengajuan-form-input" 
-                                       placeholder="Masukkan unit terkait"
-                                       required>
-                            </div>
-
                         </div>
 
                         <!-- Right Column -->
