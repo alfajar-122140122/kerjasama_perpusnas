@@ -1,68 +1,219 @@
-# CodeIgniter 4 Application Starter
+# Portal Kerja Sama Perpustakaan Nasional RI
 
-## What is CodeIgniter?
+Aplikasi web untuk mengelola dan menampilkan informasi kerja sama Perpustakaan Nasional Republik Indonesia dengan berbagai mitra institusi dalam dan luar negeri.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+## 🏛️ Tentang Aplikasi
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+Portal Kerja Sama Perpustakaan Nasional RI adalah sistem informasi yang dikembangkan untuk Sub Bidang Kerja Sama Perpustakaan, Perpustakaan Nasional RI. Aplikasi ini berfungsi sebagai platform digital untuk:
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+- Mengelola data kerja sama dengan berbagai mitra
+- Memonitor progress dan implementasi kerja sama
+- Menampilkan informasi publik mengenai aktivitas kerja sama
+- Memfasilitasi pengajuan permohonan kerja sama baru
+- Visualisasi peta sebaran kerja sama di Indonesia
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+## 🚀 Fitur Utama
 
-## Installation & updates
+### Portal Publik
+- **Beranda**: Informasi umum dan statistik kerja sama
+- **Data Kerja Sama**: Daftar lengkap kerja sama aktif dan yang akan berakhir
+- **Implementasi**: Status pelaksanaan kerja sama
+- **Progress**: Monitoring perkembangan kerja sama
+- **Pengajuan**: Form permohonan kerja sama baru
+- **Peta Kerja Sama**: Visualisasi sebaran mitra di Indonesia
+- **Aktivitas**: Berita dan kegiatan terkait kerja sama
+- **Tentang**: Informasi tugas dan fungsi sub bidang
+- **Kontak**: Informasi kontak dan lokasi
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+### Panel Admin
+- **Dashboard**: Overview dan statistik admin
+- **Kelola Kerja Sama**:
+  - Data master kerja sama
+  - Implementasi kerja sama
+  - Progress monitoring
+  - Kerja sama yang akan berakhir
+  - Pengajuan permohonan
+- **Kelola Users** (Khusus Superadmin):
+  - Manajemen hak akses
+  - CRUD pengguna
+- **Kelola Berita**: Manajemen konten aktivitas
+- **Pengaturan**: Konfigurasi sistem
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+## 🛠️ Teknologi yang Digunakan
 
-## Setup
+- **Framework**: CodeIgniter 4
+- **Database**: MySQL
+- **Frontend**: Bootstrap 5.2.3, jQuery, Font Awesome
+- **Maps**: Google Maps API
+- **Animation**: AOS (Animate On Scroll)
+- **Icons**: Bootstrap Icons, Font Awesome
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+## 📋 Persyaratan Sistem
 
-## Important Change with index.php
+- PHP 8.1 atau lebih tinggi
+- MySQL 5.7 atau lebih tinggi
+- Apache/Nginx Web Server
+- Ekstensi PHP yang diperlukan:
+  - intl
+  - mbstring
+  - json
+  - mysqlnd
+  - libcurl
+  - gd (untuk manipulasi gambar)
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+## 🔧 Instalasi
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+### 1. Clone Repository
+```bash
+git clone [repository-url]
+cd kerjasama_perpusnas
+```
 
-**Please** read the user guide for a better explanation of how CI4 works!
+### 2. Install Dependencies
+```bash
+composer install
+```
 
-## Repository Management
+### 3. Konfigurasi Environment
+```bash
+cp env .env
+```
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+edit file .env sesuai konfigurasi server Anda:
+```bash
+CI_ENVIRONMENT = development
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+app.baseURL = 'http://localhost/kerjasama_perpusnas'
+app.appTimezone = 'Asia/Jakarta'
 
-## Server Requirements
+database.default.hostname = localhost
+database.default.database = kerjasama_perpusnas
+database.default.username = root
+database.default.password = 
+database.default.DBDriver = MySQLi
+```
+### 4. Setup Database
+```bash
+# Buat database
+mysql -u root -p -e "CREATE DATABASE kerjasama_perpusnas"
 
-PHP version 8.1 or higher is required, with the following extensions installed:
+# Jalankan migrasi
+php spark migrate
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+# Jalankan seeder untuk data dummy
+php spark db:seed KerjasamaSeeder
+php spark db:seed ImplementasiKerjasamaSeeder
+php spark db:seed PermohonanKerjasamaSeeder
+php spark db:seed BeritaSeeder
+php spark db:seed UserSeeder
+```
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
+### 5. Konfigurasi Web Server
+Pastikan document root mengarah ke folder public
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+## 📁 Struktur Folder
+```bash
+app/
+├── Config/           # Konfigurasi aplikasi
+├── Controllers/      # Controller MVC
+│   ├── Admin/        # Controller admin
+│   ├── Auth/         # Controller autentikasi
+│   └── Public/       # Controller publik
+├── Database/         # Database migrations & seeders
+├── Models/           # Model data
+├── Views/            # Template tampilan
+│   ├── admin/        # Template admin
+│   ├── auth/         # Template login
+│   ├── layouts/      # Layout template
+│   └── public/       # Template publik
+└── Helpers/          # Helper functions
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+public/
+├── css/              # File CSS
+├── js/               # File JavaScript
+├── assets/           # Gambar dan media
+└── uploads/          # File upload
+```
+
+## 🔐 Sistem Hak Akses
+
+### Superadmin
+- Akses penuh ke semua fitur
+- Kelola users dan hak akses
+- Kelola kerja sama dan berita
+
+### Admin
+- Kelola kerja sama (jika diberi akses)
+- Kelola berita (jika diberi akses)
+- Tidak bisa kelola users
+
+### Staff
+- Akses terbatas sesuai permission
+- Biasanya hanya kelola berita
+
+## 📊 Database Schema
+Tabel Utama
+- kerjasama: Data master kerja sama
+- implementasi_kerjasama: Data implementasi
+- permohonan_kerjasama: Pengajuan kerja sama baru
+- peta_kerjasama: Koordinat lokasi mitra
+- progress_kerjasama: Monitoring progress
+- berita: Konten aktivitas
+- users: Data pengguna sistem
+
+## 🌐 API Endpoints
+
+### Public API
+- GET /api/kerjasama - Data kerja sama untuk publik
+- POST /permohonan/submit - Submit pengajuan kerja sama
+
+### Admin API
+- POST /admin/kerjasama/store - Tambah kerja sama
+- PUT /admin/kerjasama/update/{id} - Update kerja sama
+- DELETE /admin/kerjasama/delete/{id} - Hapus kerja sama
+- POST /admin/implementasi/store - Tambah implementasi
+- POST /admin/progress/store - Tambah progress
+
+## 🚀 Deployment
+
+### Production Setup
+1. Set environment ke production dalam .env
+2. Disable debug mode
+3. Konfigurasi SSL certificate
+4. Setup backup database otomatis
+4. Konfigurasi file permissions yang tepat
+
+### Performance Optimization
+- Enable caching di CodeIgniter
+- Optimize database queries
+- Compress CSS/JS files
+- Setup CDN untuk static assets
+
+## 📝 Maintenance
+
+### Update Data
+```bash
+# Update data dummy
+php spark db:seed KerjasamaSeeder
+
+# Reset database (hati-hati!)
+php spark migrate:rollback
+php spark migrate
+```
+File log tersimpan di logs
+
+## 🤝 Kontribusi
+Aplikasi ini dikembangkan untuk Perpustakaan Nasional RI. Untuk kontribusi atau bug report, silakan hubungi tim pengembang.
+
+## 📞 Kontak
+Sub Bidang Kerja Sama Perpustakaan
+Perpustakaan Nasional RI
+Gedung Layanan, Lantai 5
+Jl. Medan Merdeka Selatan No. 11
+Jakarta Pusat 10110
+
+Email: kerjasama@perpusnas.go.id
+Telepon: (021) 3927685
+
+## 📄 Lisensi
+Aplikasi ini dikembangkan khusus untuk Perpustakaan Nasional Republik Indonesia.
