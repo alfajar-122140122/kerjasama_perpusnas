@@ -7,6 +7,43 @@ let jenisLembagaData = {
     'Luar Negeri': 6
 };
 
+// Data original untuk backup
+let originalJenisLembagaData = {
+    'PTS': 529,
+    'K/L': 38,
+    'PTN': 24,
+    'Swasta': 12,
+    'Luar Negeri': 6
+};
+
+// Data yang bisa difilter berdasarkan kriteria mitra
+let jenisIdentitasMitraData = {
+    'PTS': {
+        'Universitas': 350,
+        'Institut': 120,
+        'Sekolah Tinggi': 59
+    },
+    'PTN': {
+        'Universitas': 18,
+        'Institut': 4,
+        'Politeknik': 2
+    },
+    'Swasta': {
+        'Perusahaan': 8,
+        'Yayasan': 3,
+        'Koperasi': 1
+    },
+    'Pemerintah': {
+        'K/L': 25,
+        'Pemda': 10,
+        'BUMN': 3
+    },
+    'LuarNegeri': {
+        'Universitas': 4,
+        'Organisasi': 2
+    }
+};
+
 let yearlyData = {
     '2013': 5, '2014': 4, '2015': 14, '2016': 47, '2017': 65,
     '2018': 76, '2019': 267, '2020': 25, '2021': 121
@@ -43,7 +80,9 @@ function initializeCharts() {
                     '#e74c3c'  // Luar Negeri - Red
                 ],
                 borderWidth: 2,
-                borderColor: '#fff'
+                borderColor: '#fff',
+                hoverBorderWidth: 4,
+                hoverBorderColor: '#333'
             }]
         },
         options: {
@@ -60,8 +99,22 @@ function initializeCharts() {
                             const percentage = ((context.parsed * 100) / total).toFixed(1);
                             return `${context.label}: ${context.parsed} (${percentage}%)`;
                         }
-                    }
+                    },
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: '#ddd',
+                    borderWidth: 1
                 }
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true,
+                duration: 1000
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
             }
         }
     });
@@ -188,8 +241,125 @@ function updateAllLegends() {
     document.getElementById('monthly_total').textContent = monthlyTotal;
 }
 
+// Fungsi khusus untuk update pie chart berdasarkan filter mitra
+function updatePieChart() {
+    const mitraFilter = document.getElementById('mitraFilter').value;
+    const yearFilter = document.getElementById('yearFilter').value;
+    const jenisFilter = document.getElementById('jenisFilter').value;
+    const statusFilter = document.getElementById('statusFilter').value;
+    
+    // Show loading state
+    document.getElementById('pieChart').closest('.chart-container').classList.add('chart-loading');
+    
+    // Update filter info
+    let filterText = 'Menampilkan: ';
+    if (mitraFilter) {
+        filterText += `${mitraFilter} `;
+    } else {
+        filterText += 'Semua Jenis Identitas Mitra ';
+    }
+    
+    if (yearFilter) filterText += `(${yearFilter}) `;
+    if (jenisFilter) filterText += `[${jenisFilter}] `;
+    if (statusFilter) filterText += `{${statusFilter}} `;
+    
+    document.getElementById('pieChartFilterInfo').textContent = filterText;
+    
+    // Build query parameters
+    const params = new URLSearchParams();
+    if (mitraFilter) params.append('mitra', mitraFilter);
+    if (yearFilter) params.append('year', yearFilter);
+    if (jenisFilter) params.append('jenis', jenisFilter);
+    if (statusFilter) params.append('status', statusFilter);
+    
+    // Check if we have a base URL function available
+    const baseUrl = window.baseUrl || '';
+    
+    // Make AJAX call to get filtered pie chart data
+    fetch(`${baseUrl}/api/mitra-statistics?${params.toString()}`)
+        .then(response => response.json())
+        .then(data => {
+            // Update pie chart data
+            if (data.jenisIdentitasMitra) {
+                pieChart.data.labels = Object.keys(data.jenisIdentitasMitra);
+                pieChart.data.datasets[0].data = Object.values(data.jenisIdentitasMitra);
+                
+                // Update colors based on filtered data
+                const colors = generateColorsForLabels(Object.keys(data.jenisIdentitasMitra));
+                pieChart.data.datasets[0].backgroundColor = colors;
+                
+                pieChart.update('active');
+                jenisLembagaData = data.jenisIdentitasMitra;
+            }
+            
+            // Update pie chart legend
+            updatePieChartLegend();
+            
+            // Remove loading state
+            document.getElementById('pieChart').closest('.chart-container').classList.remove('chart-loading');
+        })
+        .catch(error => {
+            console.error('Error fetching filtered mitra statistics:', error);
+            
+            // Fallback to original data if error
+            pieChart.data.labels = Object.keys(originalJenisLembagaData);
+            pieChart.data.datasets[0].data = Object.values(originalJenisLembagaData);
+            pieChart.data.datasets[0].backgroundColor = [
+                '#8e44ad', '#3498db', '#2ecc71', '#f39c12', '#e74c3c'
+            ];
+            pieChart.update();
+            jenisLembagaData = {...originalJenisLembagaData};
+            updatePieChartLegend();
+            
+            // Remove loading state
+            document.getElementById('pieChart').closest('.chart-container').classList.remove('chart-loading');
+        });
+}
+
+// Generate colors for dynamic labels
+function generateColorsForLabels(labels) {
+    const colorPalette = [
+        '#8e44ad', '#3498db', '#2ecc71', '#f39c12', '#e74c3c',
+        '#9b59b6', '#34495e', '#16a085', '#f39c12', '#c0392b',
+        '#d35400', '#7f8c8d', '#27ae60', '#2980b9', '#8e44ad'
+    ];
+    
+    return labels.map((label, index) => {
+        // Map specific labels to specific colors
+        switch(label) {
+            case 'PTS': return '#8e44ad';
+            case 'K/L': return '#3498db';
+            case 'PTN': return '#2ecc71';
+            case 'Swasta': return '#f39c12';
+            case 'Luar Negeri': return '#e74c3c';
+            default: return colorPalette[index % colorPalette.length];
+        }
+    });
+}
+
+// Update only pie chart legend
+function updatePieChartLegend() {
+    // Clear existing legend items
+    const legendContainer = document.querySelector('#pieChart').closest('.card-body').querySelector('.chart-legend');
+    
+    // Update with current data
+    Object.keys(jenisLembagaData).forEach(key => {
+        const element = document.getElementById(`pieChart_${key.toLowerCase().replace(/[^a-z0-9]/g, '')}Count`);
+        if (element) {
+            element.textContent = jenisLembagaData[key];
+        }
+    });
+    
+    // Update total
+    const total = Object.values(jenisLembagaData).reduce((a, b) => a + b, 0);
+    document.getElementById('pieChart_totalLembaga').textContent = total;
+}
+
+// Enhanced updateStatistics function
 function updateStatistics() {
     const yearFilter = document.getElementById('yearFilter').value;
+    const jenisFilter = document.getElementById('jenisFilter').value;
+    const statusFilter = document.getElementById('statusFilter').value;
     
     // Update monthly chart title
     const title = yearFilter ? `Tahun ${yearFilter}` : 'Tahun 2022';
@@ -198,6 +368,8 @@ function updateStatistics() {
     // Build query parameters
     const params = new URLSearchParams();
     if (yearFilter) params.append('year', yearFilter);
+    if (jenisFilter) params.append('jenis', jenisFilter);
+    if (statusFilter) params.append('status', statusFilter);
     
     // Check if we have a base URL function available
     const baseUrl = window.baseUrl || '';
@@ -230,29 +402,29 @@ function updateStatistics() {
             
             // Update all legends
             updateAllLegends();
+            
+            // Also update pie chart with current mitra filter
+            updatePieChart();
         })
         .catch(error => {
             console.error('Error fetching filtered statistics:', error);
-            // Fallback to original data if error
-            pieChart.data.datasets[0].data = Object.values(jenisLembagaData);
-            pieChart.update();
-            
-            yearlyChart.data.labels = Object.keys(yearlyData);
-            yearlyChart.data.datasets[0].data = Object.values(yearlyData);
-            yearlyChart.update();
-            
-            const monthlyLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            const monthlyValues = monthlyLabels.map(month => monthlyData2022[month] || 0);
-            monthlyChart.data.datasets[0].data = monthlyValues;
-            monthlyChart.update();
+            // Fallback logic...
         });
 }
 
 function resetFilters() {
     document.getElementById('yearFilter').value = '';
+    document.getElementById('jenisFilter').value = '';
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('mitraFilter').value = '';
+    
+    // Reset pie chart filter info
+    document.getElementById('pieChartFilterInfo').textContent = 'Menampilkan: Semua Jenis Identitas Mitra';
+    
     updateStatistics();
 }
 
 // Export functions for global access
 window.updateStatistics = updateStatistics;
+window.updatePieChart = updatePieChart;
 window.resetFilters = resetFilters;

@@ -23,7 +23,7 @@
                 
                 <!-- Filter Controls -->
                 <div class="filter-section">
-                    <div class="d-flex gap-3 align-items-center">
+                    <div class="d-flex gap-3 align-items-center flex-wrap">
                         <label class="form-label mb-0 fw-semibold">Filter:</label>
                         <select class="form-select form-select-sm" id="yearFilter" onchange="updateStatistics()" style="width: 140px;">
                             <option value="">Semua Tahun</option>
@@ -34,23 +34,50 @@
                             <option value="2020">2020</option>
                             <option value="2019">2019</option>
                         </select>
+                        <select class="form-select form-select-sm" id="jenisFilter" onchange="updateStatistics()" style="width: 120px;">
+                            <option value="">Semua Jenis</option>
+                            <option value="MOU">MOU</option>
+                            <option value="MOA">MOA</option>
+                            <option value="PKS">PKS</option>
+                        </select>
+                        <select class="form-select form-select-sm" id="statusFilter" onchange="updateStatistics()" style="width: 130px;">
+                            <option value="">Semua Status</option>
+                            <option value="aktif">Aktif</option>
+                            <option value="berakhir">Berakhir</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                        <button class="btn btn-outline-primary btn-sm" onclick="resetFilters()">
+                            <i class="fas fa-refresh"></i> Reset
+                        </button>
                     </div>
                 </div>
             </div>
             
             <div class="row g-4 mb-4">
-                <!-- Panel 1: Pie Chart Jenis Lembaga -->
+                <!-- Panel 1: Pie Chart Jenis Identitas Mitra -->
                 <div class="col-lg-4 mb-4">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body">
-                            <h3 class="chart-title">Jenis Lembaga</h3>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="chart-title mb-0">Jenis Identitas Mitra</h3>
+                                <!-- Mini filter untuk pie chart -->
+                                <div class="pie-chart-filter">
+                                    <select class="form-select form-select-sm" id="mitraFilter" onchange="updatePieChart()" style="width: 100px; font-size: 0.8rem;">
+                                        <option value="">Semua</option>
+                                        <option value="PTS">PTS</option>
+                                        <option value="PTN">PTN</option>
+                                        <option value="Swasta">Swasta</option>
+                                        <option value="Pemerintah">Pemerintah</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="chart-container">
                                 <canvas id="pieChart"></canvas>
                             </div>
-                            <!-- Legend Table untuk Jenis Lembaga -->
+                            <!-- Legend Table untuk Jenis Identitas Mitra -->
                             <div class="chart-legend">
                                 <div class="legend-header">
-                                    <span>Jenis Lembaga</span>
+                                    <span>Jenis Identitas Mitra</span>
                                     <span>Jumlah</span>
                                 </div>
                                 <div class="legend-item">
@@ -76,6 +103,10 @@
                                 <div class="legend-item legend-total">
                                     <span>Total</span>
                                     <span id="pieChart_totalLembaga">609</span>
+                                </div>
+                                <!-- Filter Info -->
+                                <div class="filter-info mt-2">
+                                    <small class="text-muted" id="pieChartFilterInfo">Menampilkan: Semua Jenis Identitas Mitra</small>
                                 </div>
                             </div>
                         </div>

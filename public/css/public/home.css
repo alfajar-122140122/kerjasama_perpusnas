@@ -30,12 +30,65 @@
     width: 100%;
 }
 
-.filter-section {
-    background: #f8f9fa;
+/* Pie Chart Specific Styles */
+.pie-chart-filter {
     border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 15px;
+    border-radius: 4px;
+    padding: 5px;
+    background: #f8f9fa;
+}
+
+.filter-info {
+    background: #e3f2fd;
+    border-radius: 4px;
+    padding: 8px;
+    border-left: 3px solid #2196f3;
+}
+
+.filter-info small {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Enhanced Filter Section */
+.filter-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
     margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.filter-section .form-select {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.filter-section .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.filter-section .btn {
+    border-radius: 6px;
+    font-size: 0.9rem;
+    padding: 0.375rem 0.75rem;
+}
+
+/* Chart Animation */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    transition: opacity 0.3s ease;
+}
+
+.chart-loading {
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 .chart-title {
@@ -46,42 +99,63 @@
     text-align: center;
 }
 
+/* Legend Improvements */
 .chart-legend {
-    background: #fff;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
     border: 1px solid #e9ecef;
-    border-radius: 4px;
-    padding: 10px;
-    margin-top: 10px;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
     font-size: 0.9rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .legend-header {
     display: flex;
     justify-content: space-between;
-    font-weight: bold;
+    font-weight: 600;
     text-align: center;
-    margin-bottom: 8px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #007bff;
+    color: #495057;
 }
 
 .legend-item {
     display: flex;
     justify-content: space-between;
-    padding: 2px 0;
+    padding: 4px 0;
+    transition: background-color 0.2s ease;
+}
+
+.legend-item:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+    border-radius: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .legend-total {
-    font-weight: bold;
-    border-top: 1px solid #e9ecef;
-    padding-top: 8px;
-    margin-top: 8px;
+    font-weight: 600;
+    border-top: 2px solid #28a745;
+    padding-top: 10px;
+    margin-top: 10px;
+    background-color: rgba(40, 167, 69, 0.05);
+    border-radius: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
-/* Legend Colors */
+/* Enhanced Legend Colors with animation */
 .legend-color {
-    font-size: 1.2em;
-    margin-right: 5px;
+    font-size: 1.4em;
+    margin-right: 8px;
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.legend-item:hover .legend-color {
+    transform: scale(1.2);
 }
 
 .legend-color-pts {
