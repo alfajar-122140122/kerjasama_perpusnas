@@ -18,21 +18,179 @@
     <div class="container">
         <!-- Statistics Section using Bootstrap cards -->
         <section class="bg-white rounded-3 p-4 shadow-sm mb-4">
-            <h2 class="fs-5 fw-semibold text-dark mb-4">Statistik Kerja Sama</h2>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fs-5 fw-semibold text-dark mb-0">Statistik Kerja Sama</h2>
+                
+                <!-- Filter Controls -->
+                <div class="filter-section">
+                    <div class="d-flex gap-3 align-items-center">
+                        <label class="form-label mb-0 fw-semibold">Filter:</label>
+                        <select class="form-select form-select-sm" id="yearFilter" onchange="updateStatistics()" style="width: 140px;">
+                            <option value="">Semua Tahun</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
             <div class="row g-4 mb-4">
-                <div class="col-lg-6 mb-4">
-                    <!-- Panel statistik 1: Statistik Kerjasama Bulanan -->
-                    <div class="chart-container d-flex align-items-center justify-content-center">
-                        <canvas id="barChart"></canvas>
+                <!-- Panel 1: Pie Chart Jenis Lembaga -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h3 class="chart-title">Jenis Lembaga</h3>
+                            <div class="chart-container">
+                                <canvas id="pieChart"></canvas>
+                            </div>
+                            <!-- Legend Table untuk Jenis Lembaga -->
+                            <div class="chart-legend">
+                                <div class="legend-header">
+                                    <span>Jenis Lembaga</span>
+                                    <span>Jumlah</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span><span class="legend-color legend-color-pts">●</span> PTS</span>
+                                    <span id="pieChart_ptsCount">529</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span><span class="legend-color legend-color-kl">●</span> K/L</span>
+                                    <span id="pieChart_klCount">38</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span><span class="legend-color legend-color-ptn">●</span> PTN</span>
+                                    <span id="pieChart_ptnCount">24</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span><span class="legend-color legend-color-swasta">●</span> Swasta</span>
+                                    <span id="pieChart_swastaCount">12</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span><span class="legend-color legend-color-luar-negeri">●</span> Luar Negeri</span>
+                                    <span id="pieChart_luarNegeriCount">6</span>
+                                </div>
+                                <div class="legend-item legend-total">
+                                    <span>Total</span>
+                                    <span id="pieChart_totalLembaga">609</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-6 mb-4">
-                    <!-- Panel statistik 2: Statistik Total Kerjasama/Tahunan -->
-                    <div class="chart-container d-flex align-items-center justify-content-center">
-                        <canvas id="lineChart"></canvas>
+                
+                <!-- Panel 2: Bar Chart Pertahun -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h3 class="chart-title">Pertahun</h3>
+                            <div class="chart-container">
+                                <canvas id="yearlyChart"></canvas>
+                            </div>
+                            <!-- Legend Table untuk Data Tahunan -->
+                            <div class="chart-legend">
+                                <div class="legend-header">
+                                    <span>Tahun</span>
+                                    <span>Jumlah</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>2013</span>
+                                    <span id="year_2013">5</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>2014</span>
+                                    <span id="year_2014">4</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>2015</span>
+                                    <span id="year_2015">14</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>2016</span>
+                                    <span id="year_2016">47</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>2017</span>
+                                    <span id="year_2017">65</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>2018</span>
+                                    <span id="year_2018">76</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>2019</span>
+                                    <span id="year_2019">267</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>2020</span>
+                                    <span id="year_2020">25</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>2021</span>
+                                    <span id="year_2021">121</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- Panel statistik 3 (distribusi mitra) dihapus -->
+                
+                <!-- Panel 3: Bar Chart Bulanan (untuk tahun tertentu) -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h3 class="chart-title" id="monthlyChartTitle">Tahun 2022</h3>
+                            <div class="chart-container">
+                                <canvas id="monthlyChart"></canvas>
+                            </div>
+                            <!-- Legend Table untuk Data Bulanan -->
+                            <div class="chart-legend">
+                                <div class="legend-header">
+                                    <span>Bulan</span>
+                                    <span>Jumlah</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>January</span>
+                                    <span id="month_january">2</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>February</span>
+                                    <span id="month_february">1</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>March</span>
+                                    <span id="month_march">45</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>May</span>
+                                    <span id="month_may">1</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>September</span>
+                                    <span id="month_september">9</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>October</span>
+                                    <span id="month_october">105</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>November</span>
+                                    <span id="month_november">60</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>December</span>
+                                    <span id="month_december">44</span>
+                                </div>
+                                <div class="legend-item legend-total">
+                                    <span>Total</span>
+                                    <span id="monthly_total">267</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -112,10 +270,5 @@
 
 <?= $this->section('scripts') ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const statistikBulanan = <?= json_encode($statistikBulanan ?? ($stats['statistikBulanan'] ?? [])) ?>;
-    const statistikTahunan = <?= json_encode($statistikTahunan ?? ($stats['statistikTahunan'] ?? [])) ?>;
-    const distribusiMitra = <?= json_encode($distribusiMitra ?? ($stats['distribusiMitra'] ?? [])) ?>;
-</script>
 <script src="<?= base_url('js/public/home.js') ?>"></script>
 <?= $this->endSection() ?>
