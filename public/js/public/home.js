@@ -54,13 +54,125 @@ let monthlyData2022 = {
     'July': 0, 'August': 0, 'September': 9, 'October': 105, 'November': 60, 'December': 44
 };
 
+// Slider functionality
+let currentSlideIndex = 0;
+const slides = document.querySelectorAll('.hero-slide');
+const indicators = document.querySelectorAll('.hero-indicator');
+let slideInterval;
+
 // Chart instances
 let pieChart, yearlyChart, monthlyChart;
 
 // Initialize charts when page loads
 document.addEventListener('DOMContentLoaded', function() {
+    initializeSlider();
     initializeCharts();
     updateAllLegends();
+});
+
+function initializeSlider() {
+    // Show first slide
+    if (slides.length > 0) {
+        showSlide(0);
+        startAutoSlide();
+    }
+}
+
+function showSlide(index) {
+    // Hide all slides
+    slides.forEach(slide => slide.classList.remove('active'));
+    indicators.forEach(indicator => indicator.classList.remove('active'));
+    
+    // Show current slide
+    if (slides[index]) {
+        slides[index].classList.add('active');
+    }
+    if (indicators[index]) {
+        indicators[index].classList.add('active');
+    }
+    
+    currentSlideIndex = index;
+}
+
+function changeSlide(direction) {
+    stopAutoSlide();
+    
+    let newIndex = currentSlideIndex + direction;
+    
+    if (newIndex >= slides.length) {
+        newIndex = 0;
+    } else if (newIndex < 0) {
+        newIndex = slides.length - 1;
+    }
+    
+    showSlide(newIndex);
+    startAutoSlide();
+}
+
+function currentSlide(index) {
+    stopAutoSlide();
+    showSlide(index - 1);
+    startAutoSlide();
+}
+
+function nextSlide() {
+    changeSlide(1);
+}
+
+function startAutoSlide() {
+    slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+}
+
+function stopAutoSlide() {
+    if (slideInterval) {
+        clearInterval(slideInterval);
+    }
+}
+
+// Pause auto-slide when user hovers over slider
+const sliderContainer = document.querySelector('.hero-slider-container');
+if (sliderContainer) {
+    sliderContainer.addEventListener('mouseenter', stopAutoSlide);
+    sliderContainer.addEventListener('mouseleave', startAutoSlide);
+}
+
+// Touch/swipe support for mobile
+let touchStartX = 0;
+let touchEndX = 0;
+
+if (sliderContainer) {
+    sliderContainer.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    sliderContainer.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+}
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+            // Swipe left - next slide
+            changeSlide(1);
+        } else {
+            // Swipe right - previous slide
+            changeSlide(-1);
+        }
+    }
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft') {
+        changeSlide(-1);
+    } else if (e.key === 'ArrowRight') {
+        changeSlide(1);
+    }
 });
 
 function initializeCharts() {
@@ -410,6 +522,8 @@ function updateStatistics() {
             console.error('Error fetching filtered statistics:', error);
             // Fallback logic...
         });
+    console.log('Statistics will be updated here');
+
 }
 
 function resetFilters() {
@@ -425,6 +539,8 @@ function resetFilters() {
 }
 
 // Export functions for global access
+window.changeSlide = changeSlide;
+window.currentSlide = currentSlide;
 window.updateStatistics = updateStatistics;
 window.updatePieChart = updatePieChart;
 window.resetFilters = resetFilters;

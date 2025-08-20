@@ -16,6 +16,105 @@
 <!-- Main Content using Bootstrap containers and utilities -->
 <main class="py-4" style="background: #F5F5F5; min-height: calc(100vh - 200px);">
     <div class="container">
+        
+        <!-- Hero Slider Section - Berita Terbaru -->
+        <section class="hero-slider-section mb-5">
+            <div class="hero-slider-container">
+                <div class="hero-slider" id="heroSlider">
+                    
+                    <!-- Slide 1 -->
+                    <div class="hero-slide active">
+                        <div class="hero-slide-image">
+                            <img src="<?= base_url('assets/berita/berita1.jpeg') ?>" alt="Berita Terbaru 1" class="img-fluid">
+                            <div class="hero-slide-overlay"></div>
+                        </div>
+                        <div class="hero-slide-content">
+                            <div class="hero-slide-category">
+                                <span class="badge bg-primary">Kerjasama Internasional</span>
+                            </div>
+                            <h2 class="hero-slide-title">Perpustakaan Nasional Tandatangani MOU dengan Universitas Terkemuka di Asia</h2>
+                            <p class="hero-slide-description">Kerjasama strategis ini akan membuka peluang pertukaran koleksi digital dan program literasi lintas negara untuk mendukung perkembangan pendidikan di Indonesia.</p>
+                            <div class="hero-slide-meta">
+                                <span class="hero-slide-date">
+                                    <i class="fas fa-calendar"></i>
+                                    15 Desember 2024
+                                </span>
+                                <a href="#" class="btn btn-light btn-sm hero-slide-btn">
+                                    Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div class="hero-slide">
+                        <div class="hero-slide-image">
+                            <img src="<?= base_url('assets/berita/berita2.jpeg') ?>" alt="Berita Terbaru 2" class="img-fluid">
+                            <div class="hero-slide-overlay"></div>
+                        </div>
+                        <div class="hero-slide-content">
+                            <div class="hero-slide-category">
+                                <span class="badge bg-success">Digitalisasi</span>
+                            </div>
+                            <h2 class="hero-slide-title">Peluncuran Platform Digital Baru untuk Akses Koleksi Perpustakaan</h2>
+                            <p class="hero-slide-description">Inovasi terbaru dalam layanan perpustakaan digital yang memungkinkan akses koleksi dari seluruh nusantara dengan teknologi AI dan machine learning.</p>
+                            <div class="hero-slide-meta">
+                                <span class="hero-slide-date">
+                                    <i class="fas fa-calendar"></i>
+                                    12 Desember 2024
+                                </span>
+                                <a href="#" class="btn btn-light btn-sm hero-slide-btn">
+                                    Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3 -->
+                    <div class="hero-slide">
+                        <div class="hero-slide-image">
+                            <img src="<?= base_url('assets/berita/berita3.jpg') ?>" alt="Berita Terbaru 3" class="img-fluid">
+                            <div class="hero-slide-overlay"></div>
+                        </div>
+                        <div class="hero-slide-content">
+                            <div class="hero-slide-category">
+                                <span class="badge bg-warning">Program Literasi</span>
+                            </div>
+                            <h2 class="hero-slide-title">Gerakan Literasi Nasional Mencapai 1000 Perpustakaan Desa</h2>
+                            <p class="hero-slide-description">Program kerjasama dengan pemerintah daerah berhasil mendirikan dan mengembangkan perpustakaan desa di seluruh Indonesia sebagai upaya peningkatan literasi masyarakat.</p>
+                            <div class="hero-slide-meta">
+                                <span class="hero-slide-date">
+                                    <i class="fas fa-calendar"></i>
+                                    10 Desember 2024
+                                </span>
+                                <a href="#" class="btn btn-light btn-sm hero-slide-btn">
+                                    Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Slider Navigation -->
+                <div class="hero-slider-nav">
+                    <button class="hero-slider-btn hero-slider-prev" onclick="changeSlide(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="hero-slider-btn hero-slider-next" onclick="changeSlide(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Slider Indicators -->
+                <div class="hero-slider-indicators">
+                    <button class="hero-indicator active" onclick="currentSlide(1)"></button>
+                    <button class="hero-indicator" onclick="currentSlide(2)"></button>
+                    <button class="hero-indicator" onclick="currentSlide(3)"></button>
+                </div>
+            </div>
+        </section>
+
         <!-- Statistics Section using Bootstrap cards -->
         <section class="bg-white rounded-3 p-4 shadow-sm mb-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
