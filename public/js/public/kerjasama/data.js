@@ -232,3 +232,132 @@ class CooperationDataManager {
 document.addEventListener('DOMContentLoaded', function() {
     new CooperationDataManager();
 });
+
+// Tambahan untuk fitur filter khusus Data Kerjasama
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for table filter to be initialized
+    setTimeout(() => {
+        addCustomFiltersForDataKerjasama();
+        setupCustomFilterEvents();
+    }, 1000);
+});
+
+function addCustomFiltersForDataKerjasama() {
+    const filterControls = document.getElementById('dataKerjasamaTable-filter-controls');
+    if (!filterControls) return;
+    
+    // Add Jenis Identitas filter
+    const jenisIdentitasFilter = createCustomSelectFilter('jenisIdentitas', 'Jenis Identitas', 
+        ['', 'PTN', 'PTS', 'K/L', 'Swasta', 'Luar Negeri']);
+    filterControls.appendChild(jenisIdentitasFilter);
+    
+    // Add Jenis Kerjasama filter
+    const jenisKerjasamaFilter = createCustomSelectFilter('jenisKerjasama', 'Jenis Kerjasama', 
+        ['', 'MOU', 'MOA', 'PKS']);
+    filterControls.appendChild(jenisKerjasamaFilter);
+    
+    // Add Status filter
+    const statusFilter = createCustomSelectFilter('status', 'Status', 
+        ['', 'Aktif', 'Berakhir', 'Draft']);
+    filterControls.appendChild(statusFilter);
+    
+    // Add Tahun filter
+    const tahunFilter = createCustomSelectFilter('tahun', 'Tahun', 
+        ['', '2024', '2023', '2022', '2021', '2020']);
+    filterControls.appendChild(tahunFilter);
+}
+
+function createCustomSelectFilter(id, label, options) {
+    const filterGroup = document.createElement('div');
+    filterGroup.className = 'filter-group';
+    
+    const optionsHTML = options.map(option => 
+        `<option value="${option}">${option || 'Semua'}</option>`
+    ).join('');
+    
+    filterGroup.innerHTML = `
+        <label class="filter-label">${label}</label>
+        <select class="filter-input" id="filter-${id}">
+            ${optionsHTML}
+        </select>
+    `;
+    
+    return filterGroup;
+}
+
+function setupCustomFilterEvents() {
+    const filterIds = ['jenisIdentitas', 'jenisKerjasama', 'status', 'tahun'];
+    
+    filterIds.forEach(filterId => {
+        const filterElement = document.getElementById(`filter-${filterId}`);
+        if (filterElement) {
+            filterElement.addEventListener('change', function() {
+                applyAllCustomFiltersForData();
+            });
+        }
+    });
+}
+
+function applyAllCustomFiltersForData() {
+    const tableFilter = window.tableFilters['dataKerjasamaTable'];
+    if (!tableFilter) return;
+    
+    // Get all filter values
+    const filters = {
+        jenisIdentitas: document.getElementById('filter-jenisIdentitas')?.value || '',
+        jenisKerjasama: document.getElementById('filter-jenisKerjasama')?.value || '',
+        status: document.getElementById('filter-status')?.value || '',
+        tahun: document.getElementById('filter-tahun')?.value || ''
+    };
+    
+    // Start with original data
+    let filtered = [...tableFilter.originalData];
+    
+    // Apply global search first
+    const globalSearch = document.getElementById('dataKerjasamaTable-global-search');
+    const globalTerm = globalSearch ? globalSearch.value.trim() : '';
+    
+    if (globalTerm) {
+        const term = globalTerm.toLowerCase();
+        filtered = filtered.filter(row => {
+            return row.data.some(cell => 
+                cell.toLowerCase().includes(term)
+            );
+        });
+    }
+    
+    // Apply Jenis Identitas filter (column 2)
+    if (filters.jenisIdentitas) {
+        filtered = filtered.filter(row => 
+            row.data[2].includes(filters.jenisIdentitas)
+        );
+    }
+    
+    // Apply Jenis Kerjasama filter (column 3)
+    if (filters.jenisKerjasama) {
+        filtered = filtered.filter(row => 
+            row.data[3].includes(filters.jenisKerjasama)
+        );
+    }
+    
+    // Apply Status filter (column 7)
+    if (filters.status) {
+        filtered = filtered.filter(row => 
+            row.data[7].includes(filters.status)
+        );
+    }
+    
+    // Apply Tahun filter (column 5 - Tanggal Mulai)
+    if (filters.tahun) {
+        filtered = filtered.filter(row => {
+            const tanggalMulai = row.data[5];
+            return tanggalMulai.includes(filters.tahun);
+        });
+    }
+    
+    // Update table with filtered data
+    tableFilter.filteredData = filtered;
+    tableFilter.currentPage = 1;
+    tableFilter.updateTable();
+    tableFilter.updateInfoBar();
+}

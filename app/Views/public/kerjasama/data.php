@@ -9,6 +9,7 @@
 <?= $this->section('styles') ?>
 <link href="<?= base_url('css/public.css') ?>" rel="stylesheet">
 <link href="<?= base_url('css/public/kerjasama/data.css') ?>" rel="stylesheet">
+<link href="<?= base_url('css/public/components/filter.css') ?>" rel="stylesheet">
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <?= $this->endSection() ?>
 
@@ -149,4 +150,36 @@
     });
 </script>
 <script src="<?= base_url('js/public/kerjasama/data.js') ?>"></script>
+<script src="<?= base_url('js/public/components/table-filter.js') ?>"></script>
+<script src="<?= base_url('js/public/kerjasama/data.js') ?>"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize table filter with specific options for Data Kerjasama
+    initializeTableFilter('dataKerjasamaTable', {
+        searchable: true,
+        sortable: true,
+        pagination: true,
+        itemsPerPage: 10
+    });
+    
+    // Connect existing search box to global filter if exists
+    const existingSearch = document.getElementById('global-search');
+    const newGlobalSearch = document.getElementById('dataKerjasamaTable-global-search');
+    
+    if (existingSearch && newGlobalSearch) {
+        existingSearch.addEventListener('input', function() {
+            newGlobalSearch.value = this.value;
+            newGlobalSearch.dispatchEvent(new Event('input'));
+        });
+        
+        const searchBtn = document.querySelector('.kerjasama-search-btn');
+        if (searchBtn) {
+            searchBtn.addEventListener('click', function() {
+                newGlobalSearch.value = existingSearch.value;
+                newGlobalSearch.dispatchEvent(new Event('input'));
+            });
+        }
+    }
+});
+</script>
 <?= $this->endSection() ?>
