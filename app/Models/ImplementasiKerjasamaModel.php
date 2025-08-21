@@ -18,7 +18,6 @@ class ImplementasiKerjasamaModel extends Model
         'masa_berlaku',
         'implementasi',
         'lingkup',
-        'unit_kerja_terkait'
     ];
 
     // Dates

@@ -255,7 +255,6 @@ class KerjaSamaController extends BaseController
                 'period' => $period,
                 'implementation' => $item['implementasi'],
                 'scope' => $item['lingkup'],
-                'unit' => $item['unit_kerja_terkait'] ?: 'null'
             ];
         }
         

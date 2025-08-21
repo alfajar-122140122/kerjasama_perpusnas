@@ -82,10 +82,6 @@ class ImplementasiKerjasamaManager {
                     <h4>Lingkup</h4>
                     <p>${item.scope}</p>
                 </div>
-                <div class="implementasi-modal-section">
-                    <h4>Unit Kerja</h4>
-                    <p>${item.unit === 'null' ? '-' : item.unit}</p>
-                </div>
             </div>
         </div>`;
         

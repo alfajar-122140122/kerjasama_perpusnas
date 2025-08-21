@@ -309,7 +309,6 @@ class KerjasamaController extends BaseController
             'implementasi' => 'required',
             'lingkup' => 'required',
             'masa_berlaku' => 'required',
-            'unit_kerja_terkait' => 'required'
         ];
         
         if (!$this->validate($rules)) {
@@ -326,7 +325,6 @@ class KerjasamaController extends BaseController
             'implementasi' => $this->request->getPost('implementasi'),
             'lingkup' => $this->request->getPost('lingkup'),
             'masa_berlaku' => $this->request->getPost('masa_berlaku'),
-            'unit_kerja_terkait' => $this->request->getPost('unit_kerja_terkait'),
             'created_at' => date('Y-m-d H:i:s') // Set created_at manually
         ];
         
@@ -361,7 +359,6 @@ class KerjasamaController extends BaseController
             'implementasi' => 'required',
             'lingkup' => 'required',
             'masa_berlaku' => 'required',
-            'unit_kerja_terkait' => 'required'
         ];
         
         if (!$this->validate($rules)) {
@@ -389,7 +386,6 @@ class KerjasamaController extends BaseController
             'implementasi' => $this->request->getPost('implementasi'),
             'lingkup' => $this->request->getPost('lingkup'),
             'masa_berlaku' => $this->request->getPost('masa_berlaku'),
-            'unit_kerja_terkait' => $this->request->getPost('unit_kerja_terkait')
         ];
         
         try {

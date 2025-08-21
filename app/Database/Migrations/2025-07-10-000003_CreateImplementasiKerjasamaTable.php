@@ -30,10 +30,6 @@ class CreateImplementasiKerjasamaTable extends Migration
             'lingkup' => [
                 'type' => 'TEXT',
             ],
-            'unit_kerja_terkait' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 255,
-            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,

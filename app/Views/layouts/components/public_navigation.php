@@ -23,29 +23,6 @@ helper('navigation');
             <!-- Header Controls -->
             <div class="col-md-9">
                 <div class="d-flex justify-content-end align-items-center gap-3">
-                    <!-- Dropdown -->
-                    <div class="dropdown">
-                        <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            Situs ini
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="<?= base_url('/') ?>">Portal Kerjasama</a></li>
-                            <li><a class="dropdown-item" href="https://perpusnas.go.id" target="_blank">Website Utama</a></li>
-                            <li><a class="dropdown-item" href="https://e-resources.perpusnas.go.id" target="_blank">E-Resources</a></li>
-                            <li><a class="dropdown-item" href="https://koleksi.perpusnas.go.id" target="_blank">Koleksi Digital</a></li>
-                        </ul>
-                    </div>
-                    
-                    <!-- Search -->
-                    <div class="search-container">
-                        <div class="input-group">
-                            <input type="text" class="search-box search-input" placeholder="Cari" id="headerSearchInput">
-                            <button class="btn btn-outline-light search-btn" type="button" onclick="performHeaderSearch()">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                    
                     <!-- Login -->
                     <a href="<?= base_url('auth/login') ?>" class="btn btn-light login-btn">Login</a>
                 </div>
@@ -75,7 +52,7 @@ helper('navigation');
                 </li>
                 
                 <!-- Dropdown Kerja Sama -->
-                <li class="nav-item nav-dropdown">
+                <li class="dropdown">
                     <a class="<?= get_nav_class('kerja-sama', 'nav-link nav-dropdown-toggle', 'active', false) ?>" 
                        href="#" 
                        data-bs-toggle="dropdown" 
@@ -83,12 +60,12 @@ helper('navigation');
                         Kerja Sama 
                         <i class="fas fa-chevron-down dropdown-arrow"></i>
                     </a>
-                    <ul class="nav-dropdown-menu">
-                        <li><a class="nav-dropdown-item <?= get_nav_class('kerja-sama/data', 'nav-dropdown-link', 'active', true) ?>" href="<?= base_url('kerja-sama/data') ?>">Data Kerja Sama</a></li>
-                        <li><a class="nav-dropdown-item <?= get_nav_class('kerja-sama/implementasi', 'nav-dropdown-link', 'active', true) ?>" href="<?= base_url('kerja-sama/implementasi') ?>">Implementasi Kerja Sama</a></li>
-                        <li><a class="nav-dropdown-item <?= get_nav_class('kerja-sama/akan-berakhir', 'nav-dropdown-link', 'active', true) ?>" href="<?= base_url('kerja-sama/akan-berakhir') ?>">Kerja Sama yang Akan Berakhir</a></li>
-                        <li><a class="nav-dropdown-item <?= get_nav_class('kerja-sama/progress', 'nav-dropdown-link', 'active', true) ?>" href="<?= base_url('kerja-sama/progress') ?>">Progress</a></li>
-                        <li><a class="nav-dropdown-item <?= get_nav_class('kerja-sama/pengajuan', 'nav-dropdown-link', 'active', true) ?>" href="<?= base_url('kerja-sama/pengajuan') ?>">Pengajuan</a></li>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item <?= get_nav_class('kerja-sama/data', 'nav-dropdown-link', 'active', true) ?>" href="<?= base_url('kerja-sama/data') ?>">Data Kerja Sama</a></li>
+                        <li><a class="dropdown-item <?= get_nav_class('kerja-sama/implementasi', 'nav-dropdown-link', 'active', true) ?>" href="<?= base_url('kerja-sama/implementasi') ?>">Implementasi Kerja Sama</a></li>
+                        <li><a class="dropdown-item <?= get_nav_class('kerja-sama/akan-berakhir', 'nav-dropdown-link', 'active', true) ?>" href="<?= base_url('kerja-sama/akan-berakhir') ?>">Kerja Sama yang Akan Berakhir</a></li>
+                        <li><a class="dropdown-item <?= get_nav_class('kerja-sama/progress', 'nav-dropdown-link', 'active', true) ?>" href="<?= base_url('kerja-sama/progress') ?>">Progress</a></li>
+                        <li><a class="dropdown-item <?= get_nav_class('kerja-sama/pengajuan', 'nav-dropdown-link', 'active', true) ?>" href="<?= base_url('kerja-sama/pengajuan') ?>">Pengajuan</a></li>
                     </ul>
                 </li>
                 

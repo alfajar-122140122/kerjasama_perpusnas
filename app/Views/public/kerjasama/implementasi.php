@@ -57,7 +57,6 @@
                             <th class="implementasi-col-period">Masa Berlaku</th>
                             <th class="implementasi-col-implementation">Implementasi Kerja Sama</th>
                             <th class="implementasi-col-scope">Lingkup</th>
-                            <th class="implementasi-col-unit">Unit Kerja</th>
                         </tr>
                     </thead>
                     <tbody id="implementasiTableBody">

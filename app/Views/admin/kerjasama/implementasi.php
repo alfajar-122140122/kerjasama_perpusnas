@@ -61,7 +61,6 @@ Implementasi Kerjasama
                             <th>Masa Berlaku</th>
                             <th>Implementasi</th>
                             <th>Lingkup</th>
-                            <th>Unit Kerja</th>
                             <th width="120" class="text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -109,9 +108,6 @@ Implementasi Kerjasama
                             </td>
                             <td>
                                 <span class="badge bg-info"><?= esc($implementasi['lingkup']) ?></span>
-                            </td>
-                            <td>
-                                <span class="badge bg-secondary"><?= esc($implementasi['unit_kerja_terkait']) ?></span>
                             </td>
                             <td class="text-center">
                                 <div class="btn-group" role="group">
@@ -217,21 +213,6 @@ Implementasi Kerjasama
                             <p class="text-primary fw-bold" id="duration_preview"></p>
                         </div>
                     </div>
-                    
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label for="unit_kerja_terkait" class="form-label">Unit Kerja</label>
-                            <select class="form-select" id="unit_kerja_terkait" name="unit_kerja_terkait" required>
-                                <option value="">Pilih Unit Kerja</option>
-                                <option value="Pustakawan">Pustakawan</option>
-                                <option value="IT Support">IT Support</option>
-                                <option value="HRD">HRD</option>
-                                <option value="Research">Research</option>
-                                <option value="Marketing">Marketing</option>
-                                <option value="Admin">Admin</option>
-                            </select>
-                        </div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -286,10 +267,6 @@ Implementasi Kerjasama
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Lingkup</label>
                         <p id="view_lingkup" class="border-bottom pb-2"></p>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Unit Kerja</label>
-                        <p id="view_unit_kerja_terkait" class="border-bottom pb-2"></p>
                     </div>
                 </div>
                 
@@ -359,21 +336,6 @@ Implementasi Kerjasama
                         <div class="col-md-12 mb-3" id="edit_duration_preview_container" style="display: none;">
                             <label class="form-label">Durasi Masa Berlaku:</label>
                             <p class="text-primary fw-bold" id="edit_duration_preview"></p>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label for="edit_unit_kerja_terkait" class="form-label">Unit Kerja</label>
-                            <select class="form-select" id="edit_unit_kerja_terkait" name="unit_kerja_terkait" required>
-                                <option value="">Pilih Unit Kerja</option>
-                                <option value="Pustakawan">Pustakawan</option>
-                                <option value="IT Support">IT Support</option>
-                                <option value="HRD">HRD</option>
-                                <option value="Research">Research</option>
-                                <option value="Marketing">Marketing</option>
-                                <option value="Admin">Admin</option>
-                            </select>
                         </div>
                     </div>
                 </div>
@@ -692,7 +654,6 @@ function viewImplementasi(id) {
             
             document.getElementById('view_implementasi').textContent = data.data.implementasi;
             document.getElementById('view_lingkup').textContent = data.data.lingkup;
-            document.getElementById('view_unit_kerja_terkait').textContent = data.data.unit_kerja_terkait;
             document.getElementById('view_created_at').textContent = new Date(data.data.created_at).toLocaleString('id-ID');
             
             // Show modal
@@ -726,7 +687,6 @@ function editImplementasi(id) {
             document.getElementById('edit_implementasi').value = data.data.implementasi;
             document.getElementById('edit_tanggal_mulai').value = data.data.tanggal_mulai || '';
             document.getElementById('edit_tanggal_berakhir').value = data.data.tanggal_berakhir || '';
-            document.getElementById('edit_unit_kerja_terkait').value = data.data.unit_kerja_terkait;
             
             // Show edit modal
             const modal = new bootstrap.Modal(document.getElementById('editImplementasiModal'));
