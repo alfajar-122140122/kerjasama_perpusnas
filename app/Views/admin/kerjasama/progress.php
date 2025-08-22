@@ -143,6 +143,30 @@ Progress Kerjasama
                 <?php endif; ?>
             </div>
             <?php endif; ?>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div class="text-muted">
+                    <?php
+                    $count = count($progressData);
+                    $start = $count > 0 ? 1 : 0;
+                    echo "Menampilkan {$start}-{$count} dari {$count} data";
+                    ?>
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                        <li class="page-item active">
+                            <span class="page-link">1</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
 </div>

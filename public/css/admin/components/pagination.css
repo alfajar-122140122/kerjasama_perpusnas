@@ -1,0 +1,215 @@
+/* Universal Pagination Styles for Admin */
+.admin-pagination-container {
+    padding: 20px;
+    border-top: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+    margin-top: 0;
+}
+
+.admin-pagination-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.admin-pagination-info-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin: 0;
+    font-weight: 500;
+}
+
+.admin-pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.admin-pagination-select {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    background: white;
+    min-width: 70px;
+}
+
+.admin-pagination-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+    outline: none;
+}
+
+.admin-pagination-label {
+    font-size: 0.9rem;
+    color: #495057;
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* Pagination Navigation */
+.pagination .page-link {
+    color: #007bff;
+    border-color: #dee2e6;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.pagination .page-item.active .page-link {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    box-shadow: 0 2px 4px rgba(0,123,255,0.25);
+}
+
+.pagination .page-link:hover {
+    color: #0056b3;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+    transform: translateY(-1px);
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    background-color: #fff;
+    border-color: #dee2e6;
+    cursor: not-allowed;
+}
+
+.pagination .page-item.disabled .page-link:hover {
+    transform: none;
+}
+
+/* Empty State for Pagination */
+.admin-empty-pagination-row {
+    background-color: #f8f9fa;
+}
+
+.admin-empty-pagination-row td {
+    padding: 40px 20px;
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.admin-empty-pagination-row .fas {
+    font-size: 1.2rem;
+    margin-right: 8px;
+    color: #adb5bd;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .admin-pagination-info {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .admin-pagination-controls {
+        justify-content: center;
+    }
+    
+    .pagination {
+        justify-content: center;
+        margin-bottom: 0;
+    }
+    
+    .pagination .page-link {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .admin-pagination-container {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .admin-pagination-controls {
+        flex-direction: column;
+        width: 100%;
+        gap: 15px;
+    }
+    
+    .admin-pagination-select {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .admin-pagination-label {
+        text-align: center;
+    }
+    
+    /* Compact pagination for mobile */
+    .pagination .page-link {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+    }
+    
+    .pagination .page-item:not(.active):not(.disabled) {
+        display: none;
+    }
+    
+    .pagination .page-item.active,
+    .pagination .page-item.disabled,
+    .pagination .page-item:first-child,
+    .pagination .page-item:last-child {
+        display: block;
+    }
+}
+
+/* Loading State */
+.admin-pagination-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.admin-pagination-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Smooth transitions */
+.admin-pagination-container * {
+    transition: all 0.2s ease;
+}
+
+/* Hover effects for better UX */
+.admin-pagination-select:hover {
+    border-color: #80bdff;
+}
+
+.pagination .page-link {
+    position: relative;
+    overflow: hidden;
+}
+
+.pagination .page-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.pagination .page-link:hover::before {
+    left: 100%;
+}

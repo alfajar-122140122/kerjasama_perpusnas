@@ -329,3 +329,337 @@ function bulkDeleteUsers() {
         console.log('Bulk deleting users:', selectedIds);
     }
 }
+
+// User Pagination Class
+class UserPagination {
+    constructor() {
+        this.currentPage = 1;
+        this.itemsPerPage = 10;
+        this.totalUsers = 0;
+        this.totalPages = 1;
+        this.allUsers = [];
+        
+        this.init();
+    }
+    
+    init() {
+        this.extractUserData();
+        this.createPaginationInterface();
+        this.setupEventListeners();
+        this.updateDisplay();
+    }
+    
+    extractUserData() {
+        const userRows = document.querySelectorAll('.user-row');
+        this.allUsers = Array.from(userRows);
+        this.totalUsers = this.allUsers.length;
+        this.calculateTotalPages();
+    }
+    
+    calculateTotalPages() {
+        this.totalPages = Math.ceil(this.totalUsers / this.itemsPerPage);
+        if (this.totalPages === 0) this.totalPages = 1;
+    }
+    
+    createPaginationInterface() {
+        const cardBody = document.querySelector('.card-body');
+        
+        // Create pagination container
+        const paginationContainer = document.createElement('div');
+        paginationContainer.className = 'pagination-container';
+        paginationContainer.id = 'userPaginationContainer';
+        
+        paginationContainer.innerHTML = `
+            <div class="pagination-info">
+                <div class="pagination-info-text" id="paginationInfoText">
+                    Menampilkan 1 - ${Math.min(this.itemsPerPage, this.totalUsers)} dari ${this.totalUsers} user
+                </div>
+                <div class="pagination-controls">
+                    <label for="itemsPerPage" class="form-label mb-0 me-2">Tampilkan:</label>
+                    <select class="pagination-select" id="itemsPerPage">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                    <span class="ms-2">per halaman</span>
+                </div>
+            </div>
+            <nav aria-label="User pagination">
+                <ul class="pagination justify-content-center mb-0" id="userPagination">
+                    <!-- Pagination buttons will be inserted here -->
+                </ul>
+            </nav>
+        `;
+        
+        cardBody.appendChild(paginationContainer);
+    }
+    
+    setupEventListeners() {
+        // Items per page selector
+        const itemsPerPageSelect = document.getElementById('itemsPerPage');
+        if (itemsPerPageSelect) {
+            itemsPerPageSelect.addEventListener('change', (e) => {
+                this.itemsPerPage = parseInt(e.target.value);
+                this.currentPage = 1;
+                this.calculateTotalPages();
+                this.updateDisplay();
+            });
+        }
+    }
+    
+    updateDisplay() {
+        this.showCurrentPageUsers();
+        this.updatePaginationButtons();
+        this.updateInfoText();
+    }
+    
+    showCurrentPageUsers() {
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        
+        // Hide all users first
+        this.allUsers.forEach(userRow => {
+            userRow.style.display = 'none';
+        });
+        
+        // Show current page users
+        const currentPageUsers = this.allUsers.slice(startIndex, endIndex);
+        currentPageUsers.forEach(userRow => {
+            userRow.style.display = '';
+        });
+        
+        // Handle empty state
+        this.handleEmptyState(currentPageUsers.length === 0 && this.totalUsers > 0);
+    }
+    
+    handleEmptyState(isEmpty) {
+        let emptyRow = document.querySelector('.empty-pagination-row');
+        
+        if (isEmpty) {
+            if (!emptyRow) {
+                emptyRow = document.createElement('tr');
+                emptyRow.className = 'empty-pagination-row';
+                emptyRow.innerHTML = `
+                    <td colspan="5" class="text-center py-4 text-muted">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Tidak ada user pada halaman ini
+                    </td>
+                `;
+                document.querySelector('tbody').appendChild(emptyRow);
+            }
+        } else {
+            if (emptyRow) {
+                emptyRow.remove();
+            }
+        }
+    }
+    
+    updatePaginationButtons() {
+        const paginationContainer = document.getElementById('userPagination');
+        if (!paginationContainer) return;
+        
+        let paginationHTML = '';
+        
+        // Previous button
+        paginationHTML += `
+            <li class="page-item ${this.currentPage === 1 ? 'disabled' : ''}">
+                <button class="page-link" onclick="userPagination.goToPage(${this.currentPage - 1})" ${this.currentPage === 1 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </li>
+        `;
+        
+        // Page numbers
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
+        
+        // Adjust start page if we're near the end
+        if (endPage - startPage < maxVisiblePages - 1) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+        
+        // First page
+        if (startPage > 1) {
+            paginationHTML += `
+                <li class="page-item">
+                    <button class="page-link" onclick="userPagination.goToPage(1)">1</button>
+                </li>
+            `;
+            if (startPage > 2) {
+                paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+            }
+        }
+        
+        // Page numbers in range
+        for (let i = startPage; i <= endPage; i++) {
+            paginationHTML += `
+                <li class="page-item ${i === this.currentPage ? 'active' : ''}">
+                    <button class="page-link" onclick="userPagination.goToPage(${i})">${i}</button>
+                </li>
+            `;
+        }
+        
+        // Last page
+        if (endPage < this.totalPages) {
+            if (endPage < this.totalPages - 1) {
+                paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+            }
+            paginationHTML += `
+                <li class="page-item">
+                    <button class="page-link" onclick="userPagination.goToPage(${this.totalPages})">${this.totalPages}</button>
+                </li>
+            `;
+        }
+        
+        // Next button
+        paginationHTML += `
+            <li class="page-item ${this.currentPage === this.totalPages ? 'disabled' : ''}">
+                <button class="page-link" onclick="userPagination.goToPage(${this.currentPage + 1})" ${this.currentPage === this.totalPages ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </li>
+        `;
+        
+        paginationContainer.innerHTML = paginationHTML;
+    }
+    
+    updateInfoText() {
+        const infoTextElement = document.getElementById('paginationInfoText');
+        if (!infoTextElement) return;
+        
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage + 1;
+        const endIndex = Math.min(this.currentPage * this.itemsPerPage, this.totalUsers);
+        
+        if (this.totalUsers === 0) {
+            infoTextElement.textContent = 'Tidak ada user';
+        } else {
+            infoTextElement.textContent = `Menampilkan ${startIndex} - ${endIndex} dari ${this.totalUsers} user`;
+        }
+    }
+    
+    goToPage(page) {
+        if (page < 1 || page > this.totalPages) return;
+        
+        this.currentPage = page;
+        this.updateDisplay();
+        
+        // Scroll to top of table
+        document.querySelector('.card').scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+    }
+    
+    refresh() {
+        // Re-extract user data after add/delete operations
+        this.extractUserData();
+        
+        // Adjust current page if necessary
+        if (this.currentPage > this.totalPages) {
+            this.currentPage = Math.max(1, this.totalPages);
+        }
+        
+        this.calculateTotalPages();
+        this.updateDisplay();
+    }
+    
+    addUser(userElement) {
+        // Add new user to the list
+        this.allUsers.push(userElement);
+        this.totalUsers++;
+        this.calculateTotalPages();
+        
+        // Go to the page where the new user would be
+        const newUserPage = Math.ceil(this.totalUsers / this.itemsPerPage);
+        this.goToPage(newUserPage);
+    }
+    
+    removeUser(userId) {
+        // Remove user from the list
+        this.allUsers = this.allUsers.filter(userRow => 
+            userRow.getAttribute('data-user-id') !== userId.toString()
+        );
+        this.totalUsers--;
+        this.calculateTotalPages();
+        
+        // Adjust current page if necessary
+        if (this.currentPage > this.totalPages) {
+            this.currentPage = Math.max(1, this.totalPages);
+        }
+        
+        this.updateDisplay();
+    }
+}
+
+// Initialize pagination when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if there are users before initializing pagination
+    const userRows = document.querySelectorAll('.user-row');
+    
+    if (userRows.length > 0) {
+        window.userPagination = new UserPagination();
+    }
+});
+
+// Refresh pagination after user operations
+const originalAddUserSuccess = window.addUserSuccess || function() {};
+window.addUserSuccess = function(response) {
+    originalAddUserSuccess(response);
+    
+    if (window.userPagination) {
+        // Wait for DOM to update then refresh pagination
+        setTimeout(() => {
+            window.userPagination.refresh();
+        }, 100);
+    }
+};
+
+const originalDeleteUserSuccess = window.deleteUserSuccess || function() {};
+window.deleteUserSuccess = function(userId) {
+    originalDeleteUserSuccess(userId);
+    
+    if (window.userPagination) {
+        window.userPagination.removeUser(userId);
+    }
+};
+
+// Initialize pagination if users are added dynamically
+function initializePaginationIfNeeded() {
+    const userRows = document.querySelectorAll('.user-row');
+    
+    if (userRows.length > 0 && !window.userPagination) {
+        window.userPagination = new UserPagination();
+    } else if (userRows.length === 0 && window.userPagination) {
+        // Remove pagination if no users
+        const paginationContainer = document.getElementById('userPaginationContainer');
+        if (paginationContainer) {
+            paginationContainer.remove();
+        }
+        window.userPagination = null;
+    }
+}
+
+// Monitor for dynamic changes
+const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList') {
+            const hasUserChanges = Array.from(mutation.addedNodes).some(node => 
+                node.classList && node.classList.contains('user-row')
+            ) || Array.from(mutation.removedNodes).some(node => 
+                node.classList && node.classList.contains('user-row')
+            );
+            
+            if (hasUserChanges) {
+                setTimeout(initializePaginationIfNeeded, 100);
+            }
+        }
+    });
+});
+
+// Start observing
+const tbody = document.querySelector('tbody');
+if (tbody) {
+    observer.observe(tbody, { childList: true });
+}

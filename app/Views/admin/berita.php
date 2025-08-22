@@ -6,6 +6,7 @@
 
 <?= $this->section('styles') ?>
 <link href="<?= base_url('css/berita-management-new.css') ?>" rel="stylesheet">
+<link href="<?= base_url('css/admin/components/pagination.css') ?>" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <?= $this->endSection() ?>
 
@@ -67,7 +68,7 @@ if (!isset($berita)) {
         <div class="card">
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0" id="beritaTable">
+                    <table class="table table-hover align-middle mb-0" id="beritaAdminTable">
                         <thead style="background-color: #f8f9fa;">
                             <tr>
                                 <th width="15%">Gambar</th>
@@ -141,6 +142,29 @@ if (!isset($berita)) {
             </div>
         </div>
         <?php endif; ?>
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <div class="text-muted">
+                <?php
+                $count = count($berita);
+                $start = $count > 0 ? 1 : 0;
+                echo "Menampilkan {$start}-{$count} dari {$count} data";
+                ?>
+            </div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                    <li class="page-item active">
+                        <span class="page-link">1</span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </div>
 

@@ -139,6 +139,30 @@ Pengajuan Kerjasama
                 <h5 class="text-muted">Tidak ada pengajuan</h5>
                 <p class="text-muted">Belum ada pengajuan kerjasama yang masuk.</p>
             </div>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div class="text-muted">
+                    <?php
+                    $count = isset($permohonanData) ? count($permohonanData) : 0;
+                    $start = $count > 0 ? 1 : 0;
+                    echo "Menampilkan {$start}-{$count} dari {$count} data";
+                    ?>
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                        <li class="page-item active">
+                            <span class="page-link">1</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
 </div>
