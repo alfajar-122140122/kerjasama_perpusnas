@@ -6,6 +6,7 @@
 
 <?= $this->section('styles') ?>
 <link href="<?= base_url('css/admin/user-management.css') ?>" rel="stylesheet">
+<link href="<?= base_url('css/components/pagination.css') ?>" rel="stylesheet">
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -14,6 +15,7 @@
 <script>
     window.BASE_URL = '<?= base_url() ?>';
 </script>
+<script src="<?= base_url('js/components/pagination.js') ?>"></script>
 
 <!-- Alerts -->
 <?php if (session()->getFlashdata('success')): ?>
@@ -44,7 +46,7 @@
     <div class="card-body p-0">
         <!-- User Table -->
         <div class="table-responsive">
-            <table class="table table-hover mb-0">
+            <table class="table table-hover mb-0 table-paginate">
                 <thead class="table-header">
                     <tr>
                         <th style="width: 40px;">
@@ -134,6 +136,7 @@
                     <?php endif; ?>
                 </tbody>
             </table>
+            <div class="pagination-container"></div>
         </div>
     </div>
 </div>
