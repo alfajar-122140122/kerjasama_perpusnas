@@ -5,6 +5,9 @@ Pengajuan Kerjasama
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+<link href="<?= base_url('css/components/pagination.css') ?>" rel="stylesheet">
+<script src="<?= base_url('js/components/pagination.js') ?>"></script>
+
 <div class="container-fluid">
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -115,7 +118,7 @@ Pengajuan Kerjasama
 
             <!-- Data Table -->
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover table-paginate">
                     <thead class="table-light">
                         <tr>
                             <th>No</th>
@@ -131,6 +134,7 @@ Pengajuan Kerjasama
                         <!-- Data will be loaded here -->
                     </tbody>
                 </table>
+                <div class="pagination-container"></div>
             </div>
 
             <!-- Empty State -->

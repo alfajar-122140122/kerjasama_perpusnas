@@ -11,11 +11,11 @@
 
 <?= $this->section('content') ?>
 
+<script src="<?= base_url('js/components/pagination.js') ?>"></script>
 <!-- Base URL untuk JavaScript -->
 <script>
     window.BASE_URL = '<?= base_url() ?>';
 </script>
-<script src="<?= base_url('js/components/pagination.js') ?>"></script>
 
 <!-- Alerts -->
 <?php if (session()->getFlashdata('success')): ?>

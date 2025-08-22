@@ -5,6 +5,9 @@ Data Kerjasama
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+<link href="<?= base_url('css/components/pagination.css') ?>" rel="stylesheet">
+<script src="<?= base_url('js/components/pagination.js') ?>"></script>
+
 <div class="container-fluid">
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -45,7 +48,7 @@ Data Kerjasama
 
             <!-- Data Table -->
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover table-paginate">
                     <thead class="table-light">
                         <tr>
                             <th width="40">
@@ -100,30 +103,7 @@ Data Kerjasama
                         <?php endif; ?>
                     </tbody>
                 </table>
-            </div>
-
-            <!-- Pagination -->
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                <div class="text-muted">
-                    <?php
-                    $count = count($kerjasamaData);
-                    $start = $count > 0 ? 1 : 0;
-                    echo "Menampilkan {$start}-{$count} dari {$count} data";
-                    ?>
-                </div>
-                <nav>
-                    <ul class="pagination pagination-sm mb-0">
-                        <li class="page-item disabled">
-                            <span class="page-link">Previous</span>
-                        </li>
-                        <li class="page-item active">
-                            <span class="page-link">1</span>
-                        </li>
-                        <li class="page-item disabled">
-                            <span class="page-link">Next</span>
-                        </li>
-                    </ul>
-                </nav>
+                <div class="pagination-container"></div>
             </div>
         </div>
     </div>

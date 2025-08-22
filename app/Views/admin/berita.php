@@ -7,6 +7,7 @@
 <?= $this->section('styles') ?>
 <link href="<?= base_url('css/berita-management-new.css') ?>" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="<?= base_url('css/components/pagination.css') ?>" rel="stylesheet">
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -67,7 +68,7 @@ if (!isset($berita)) {
         <div class="card">
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0" id="beritaTable">
+                    <table class="table table-hover table-paginate align-middle mb-0" id="beritaTable">
                         <thead style="background-color: #f8f9fa;">
                             <tr>
                                 <th width="15%">Gambar</th>
@@ -130,6 +131,7 @@ if (!isset($berita)) {
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    <div class="pagination-container"></div>
                 </div>
             </div>
         </div>
@@ -331,14 +333,14 @@ if (!isset($berita)) {
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
+<script src="<?= base_url('js/berita-management.js') ?>"></script>
+<script src="<?= base_url('js/components/pagination.js') ?>"></script>
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Base URL for AJAX calls -->
 <script>
     const base_url = '<?= base_url() ?>';
 </script>
-<!-- Berita Management JS -->
-<script src="<?= base_url('js/berita-management.js') ?>"></script>
 <!-- CKEditor for rich text editing -->
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <script>
