@@ -55,7 +55,7 @@
                         </div>
                         <h3 class="news-title"><?= esc($item['judul']) ?></h3>
                         <p class="news-excerpt"><?= substr(strip_tags($item['isi_berita']), 0, 200) ?>...</p>
-                        <a href="<?= base_url('aktivitas/detail/' . $item['id_berita']) ?>" class="btn-read-more">Baca Selengkapnya</a>
+                        <a href="<?= base_url('aktivitas/detail/' . $item['id']) ?>" class="btn-read-more">Baca Selengkapnya</a>
                     </div>
                 </article>
                 <?php endforeach; ?>

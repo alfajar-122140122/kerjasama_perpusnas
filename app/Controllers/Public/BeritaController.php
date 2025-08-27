@@ -23,9 +23,6 @@ class BeritaController extends BaseController
             // Current date and time for comparison
             $currentDateTime = date('Y-m-d H:i:s');
             
-            // Log for debugging
-            log_message('debug', 'Current date time: ' . $currentDateTime);
-            
             // Build the query for published berita
             $this->beritaModel->where('status', 'published');
             
@@ -50,13 +47,15 @@ class BeritaController extends BaseController
                 'pager' => $pager
             ];
             
-            // Determine which view to use based on the current URL
-            $currentURL = current_url();
-            if (strpos($currentURL, '/aktivitas') !== false) {
-                // If accessed via 'aktivitas' route
+            // Determine which view to use based on the route being called
+            $uriString = uri_string();
+            
+            // Check if this is aktivitas route by checking the actual route
+            if (strpos($uriString, 'aktivitas') === 0) {
+                // This is aktivitas route
                 return view('public/aktivitas', $data);
             } else {
-                // If accessed via 'berita' route
+                // This is berita route  
                 return view('public/berita/index', $data);
             }
         } catch (\Exception $e) {
@@ -93,7 +92,7 @@ class BeritaController extends BaseController
             $relatedBerita = $this->beritaModel
                 ->where('status', 'published')
                 ->where('tanggal_publikasi <=', date('Y-m-d H:i:s'))
-                ->where('id_berita !=', $id)
+                ->where('id !=', $id) // Changed from id_berita to id
                 ->orderBy('tanggal_publikasi', 'DESC')
                 ->limit(3)
                 ->findAll();

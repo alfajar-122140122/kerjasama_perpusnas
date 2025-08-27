@@ -14,13 +14,15 @@ if (!function_exists('is_nav_active')) {
         // Remove leading slash from route for consistent comparison
         $route = ltrim($route, '/');
         
+        // Handle empty URI (home page)
+        if (empty($currentUri) && empty($route)) {
+            return true;
+        }
+        
         // Special case for "aktivitas" which should be active even if we're on the exact route
         if ($route === 'aktivitas' && ($currentUri === 'aktivitas' || strpos($currentUri, 'aktivitas/') === 0)) {
             return true;
         }
-        
-        // Debug to check current URI
-        log_message('debug', 'Checking nav active: Current URI = ' . $currentUri . ', Route = ' . $route . ', Exact = ' . ($exact ? 'true' : 'false'));
         
         if ($exact) {
             return $currentUri === $route;

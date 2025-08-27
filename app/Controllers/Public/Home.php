@@ -10,58 +10,94 @@ class Home extends BaseController
 {
     public function index()
     {
-        // Statistik bulanan real dari database
         $kerjasamaModel = new KerjasamaModel();
-        $statistikBulanan = [];
-        for ($i = 11; $i >= 0; $i--) {
-            $start = date('Y-m-01 00:00:00', strtotime("-$i months"));
-            $end = date('Y-m-t 23:59:59', strtotime("-$i months"));
-            $count = $kerjasamaModel
-                ->where('created_at >=', $start)
-                ->where('created_at <=', $end)
-                ->countAllResults();
-            $statistikBulanan[] = [
-                'bulan' => date('Y-m', strtotime($start)),
-                'total' => $count
-            ];
-        }
-        // Statistik pertumbuhan kerjasama per tahun (6 tahun terakhir)
-        $statistikTahunan = [];
-        for ($i = 5; $i >= 0; $i--) {
-            $year = date('Y', strtotime("-$i years"));
-            $count = $kerjasamaModel
-                ->where('YEAR(created_at)', $year)
-                ->countAllResults();
-            $statistikTahunan[] = [
-                'tahun' => $year,
-                'total' => $count
-            ];
-        }
-        // Distribusi tipe mitra
-        $tipeMitra = ['Universitas', 'Pemerintah', 'Swasta', 'Internasional', 'Lainnya'];
-        $distribusiMitra = [];
-        foreach ($tipeMitra as $tipe) {
-            $count = $kerjasamaModel
-                ->like('ruang_lingkup', $tipe)
-                ->countAllResults();
-            $distribusiMitra[] = $count;
-        }
-        // Data statistik untuk homepage
         $beritaModel = new BeritaModel();
-        $now = date('Y-m-d H:i:s');
+
+        // 1. Statistik Jenis Identitas Mitra (berdasarkan kolom jenis_mitra)
+        $jenisMitra = $kerjasamaModel
+            ->select('jenis_mitra, COUNT(*) as jumlah')
+            ->where('status', 'aktif')
+            ->groupBy('jenis_mitra')
+            ->findAll();
+
+        // Initialize dengan default 0 untuk semua jenis mitra
+        $jenisMitraData = [
+            'PTS' => 0,
+            'PTN' => 0,
+            'K/L' => 0,
+            'Swasta' => 0,
+            'Luar Negeri' => 0
+        ];
+        
+        // Update dengan data real dari database
+        $totalMitra = 0;
+        foreach ($jenisMitra as $item) {
+            $jenisMitraData[$item['jenis_mitra']] = (int)$item['jumlah'];
+            $totalMitra += (int)$item['jumlah'];
+        }
+
+        // 2. Statistik Per Tahun (berdasarkan tanggal_mulai) - dari 2019 sampai sekarang
+        $perTahun = $kerjasamaModel
+            ->select('YEAR(tanggal_mulai) as tahun, COUNT(*) as jumlah')
+            ->where('YEAR(tanggal_mulai) >=', 2019)
+            ->where('YEAR(tanggal_mulai) <=', 2025)
+            ->groupBy('YEAR(tanggal_mulai)')
+            ->orderBy('tahun', 'ASC')
+            ->findAll();
+            
+        // Lengkapi data tahun yang kosong dari 2019-2025
+        $perTahunLengkap = [];
+        $dataPerTahun = [];
+        
+        // Convert hasil query ke array dengan key tahun
+        foreach ($perTahun as $item) {
+            $dataPerTahun[(int)$item['tahun']] = (int)$item['jumlah'];
+        }
+        
+        // Buat array lengkap dari 2019-2025
+        for ($tahun = 2019; $tahun <= 2025; $tahun++) {
+            $perTahunLengkap[] = [
+                'tahun' => $tahun,
+                'jumlah' => $dataPerTahun[$tahun] ?? 0
+            ];
+        }
+
+        // 3. Statistik Per Bulan untuk tahun terbaru (2025)
+        $tahunTerbaru = 2025;
+        $perBulan = $kerjasamaModel
+            ->select('MONTH(tanggal_mulai) as bulan, COUNT(*) as jumlah')
+            ->where('YEAR(tanggal_mulai)', $tahunTerbaru)
+            ->groupBy('MONTH(tanggal_mulai)')
+            ->orderBy('bulan', 'ASC')
+            ->findAll();
+
+        // Convert ke format array dengan nama bulan
+        $namaBulan = [
+            1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+            5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+            9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
+        ];
+        
+        $perBulanData = [];
+        $totalBulan = 0;
+        foreach ($perBulan as $item) {
+            $bulanNama = $namaBulan[(int)$item['bulan']];
+            $perBulanData[$bulanNama] = (int)$item['jumlah'];
+            $totalBulan += (int)$item['jumlah'];
+        }
+
+        // 4. Get recent activities/berita
         $recent_activities = $beritaModel
             ->where('status', 'published')
-            ->groupStart()
-                ->where('tanggal_publikasi <=', $now)
-                ->orWhere('tanggal_publikasi IS NULL', null, false)
-            ->groupEnd()
+            ->where('tanggal_publikasi <=', date('Y-m-d H:i:s'))
             ->orderBy('tanggal_publikasi', 'DESC')
-            ->limit(3)
+            ->limit(6)
             ->findAll();
+
         $data = [
             'stats' => [
-                'total_kerjasama' => 150,
-                'mitra_aktif' => 85,
+                'total_kerjasama' => $totalMitra,
+                'mitra_aktif' => $totalMitra,
                 'provinsi' => 34,
                 'negara' => 12
             ],
@@ -74,12 +110,71 @@ class Home extends BaseController
                 ['name' => 'Institut Pertanian Bogor', 'logo' => 'ipb.png'],
                 ['name' => 'Universitas Bina Nusantara', 'logo' => 'binus.png']
             ],
-            'statistikBulanan' => $statistikBulanan,
-            'statistikTahunan' => $statistikTahunan,
-            'distribusiMitra' => $distribusiMitra
+            // Data statistik untuk chart
+            'statistik' => [
+                'jenis_mitra' => $jenisMitraData,
+                'tren_tahun' => $perTahunLengkap,
+                'tren_bulanan' => $perBulanData,
+                'per_tahun' => $perTahunLengkap,
+                'per_bulan' => $perBulanData,
+                'total_mitra' => $totalMitra,
+                'total_bulan' => $totalBulan,
+                'tahun_terbaru' => $tahunTerbaru
+            ]
         ];
         
         return view('public/home', $data);
+    }
+
+    public function getMonthlyData($year = 2025)
+    {
+        $kerjasamaModel = new \App\Models\KerjasamaModel();
+        
+        // Validate year
+        $year = (int)$year;
+        if ($year < 2019 || $year > 2025) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Invalid year range'
+            ]);
+        }
+        
+        // Query data bulanan untuk tahun yang dipilih
+        $perBulan = $kerjasamaModel
+            ->select('MONTH(tanggal_mulai) as bulan, COUNT(*) as jumlah')
+            ->where('YEAR(tanggal_mulai)', $year)
+            ->groupBy('MONTH(tanggal_mulai)')
+            ->orderBy('bulan', 'ASC')
+            ->findAll();
+
+        // Convert ke format array dengan nama bulan
+        $namaBulan = [
+            1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+            5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+            9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
+        ];
+        
+        $perBulanData = [];
+        $totalBulan = 0;
+        
+        // Initialize all months with 0
+        foreach ($namaBulan as $bulanNama) {
+            $perBulanData[$bulanNama] = 0;
+        }
+        
+        // Fill with actual data
+        foreach ($perBulan as $item) {
+            $bulanNama = $namaBulan[(int)$item['bulan']];
+            $perBulanData[$bulanNama] = (int)$item['jumlah'];
+            $totalBulan += (int)$item['jumlah'];
+        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'year' => $year,
+            'monthlyData' => $perBulanData,
+            'total' => $totalBulan
+        ]);
     }
     
     public function tentang()

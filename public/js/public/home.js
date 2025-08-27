@@ -1,22 +1,10 @@
-// Data from controller - sesuai dengan tabel dari gambar
-let jenisLembagaData = {
-    'PTS': 529,
-    'K/L': 38,
-    'PTN': 24,
-    'Swasta': 12,
-    'Luar Negeri': 6
-};
+// Data from controller - will be updated from window.statistikData if available
+let jenisLembagaData = {};
+let originalJenisLembagaData = {};
+let yearlyData = {};
+let monthlyData2025 = {};
 
-// Data original untuk backup
-let originalJenisLembagaData = {
-    'PTS': 529,
-    'K/L': 38,
-    'PTN': 24,
-    'Swasta': 12,
-    'Luar Negeri': 6
-};
-
-// Data yang bisa difilter berdasarkan kriteria mitra
+// Data yang bisa difilter berdasarkan kriteria mitra (static fallback)
 let jenisIdentitasMitraData = {
     'PTS': {
         'Universitas': 350,
@@ -44,16 +32,6 @@ let jenisIdentitasMitraData = {
     }
 };
 
-let yearlyData = {
-    '2013': 5, '2014': 4, '2015': 14, '2016': 47, '2017': 65,
-    '2018': 76, '2019': 267, '2020': 25, '2021': 121
-};
-
-let monthlyData2022 = {
-    'January': 2, 'February': 1, 'March': 45, 'April': 0, 'May': 1, 'June': 0,
-    'July': 0, 'August': 0, 'September': 9, 'October': 105, 'November': 60, 'December': 44
-};
-
 // Slider functionality
 let currentSlideIndex = 0;
 const slides = document.querySelectorAll('.hero-slide');
@@ -63,8 +41,31 @@ let slideInterval;
 // Chart instances
 let pieChart, yearlyChart, monthlyChart;
 
-// Initialize charts when page loads
+// Initialize data from PHP if available
 document.addEventListener('DOMContentLoaded', function() {
+    if (window.statistikData) {
+        // Update with real data from PHP
+        jenisLembagaData = window.statistikData.jenis_mitra || {
+            'PTS': 0, 'K/L': 0, 'PTN': 0, 'Swasta': 0, 'Luar Negeri': 0
+        };
+        originalJenisLembagaData = {...jenisLembagaData};
+        yearlyData = window.statistikData.tren_tahun || window.statistikData.per_tahun || {};
+        monthlyData2025 = window.statistikData.tren_bulanan || window.statistikData.per_bulan || {};
+    } else {
+        // Fallback to static data
+        jenisLembagaData = {
+            'PTS': 529, 'K/L': 38, 'PTN': 24, 'Swasta': 12, 'Luar Negeri': 6
+        };
+        originalJenisLembagaData = {...jenisLembagaData};
+        yearlyData = {
+            '2019': 0, '2020': 0, '2021': 0, '2022': 0, '2023': 0, '2024': 0, '2025': 0
+        };
+        monthlyData2025 = {
+            'January': 2, 'February': 1, 'March': 45, 'April': 0, 'May': 1, 'June': 0,
+            'July': 0, 'August': 0, 'September': 9, 'October': 105, 'November': 60, 'December': 44
+        };
+    }
+    
     initializeSlider();
     initializeCharts();
     updateAllLegends();
@@ -231,17 +232,32 @@ function initializeCharts() {
         }
     });
 
-    // Bar Chart for Yearly Data
+    // Bar Chart for Yearly Data - menggunakan data real
     const yearlyCtx = document.getElementById('yearlyChart').getContext('2d');
+    
+    // Convert array of objects to simple arrays for Chart.js
+    let yearlyLabels = [];
+    let yearlyValues = [];
+    
+    if (Array.isArray(yearlyData)) {
+        // If yearlyData is array of objects from database
+        yearlyLabels = yearlyData.map(item => item.tahun);
+        yearlyValues = yearlyData.map(item => parseInt(item.jumlah));
+    } else {
+        // If yearlyData is plain object
+        yearlyLabels = Object.keys(yearlyData);
+        yearlyValues = Object.values(yearlyData).map(val => parseInt(val));
+    }
+    
     yearlyChart = new Chart(yearlyCtx, {
         type: 'bar',
         data: {
-            labels: Object.keys(yearlyData),
+            labels: yearlyLabels,
             datasets: [{
-                label: 'Jumlah MOU',
-                data: Object.values(yearlyData),
-                backgroundColor: '#f39c12',
-                borderColor: '#d68910',
+                label: 'Jumlah Kerjasama',
+                data: yearlyValues,
+                backgroundColor: '#4e73df',
+                borderColor: '#4e73df',
                 borderWidth: 1
             }]
         },
@@ -270,10 +286,10 @@ function initializeCharts() {
         }
     });
 
-    // Bar Chart for Monthly Data (2022)
+    // Bar Chart for Monthly Data (2025)
     const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
     const monthlyLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    const monthlyValues = monthlyLabels.map(month => monthlyData2022[month] || 0);
+    const monthlyValues = monthlyLabels.map(month => monthlyData2025[month] || 0);
     
     monthlyChart = new Chart(monthlyCtx, {
         type: 'bar',
@@ -330,13 +346,24 @@ function updateAllLegends() {
     const totalJenisLembaga = Object.values(jenisLembagaData).reduce((a, b) => a + b, 0);
     document.getElementById('pieChart_totalLembaga').textContent = totalJenisLembaga;
     
-    // Update Yearly Chart Legend
-    Object.keys(yearlyData).forEach(year => {
-        const element = document.getElementById(`year_${year}`);
-        if (element) {
-            element.textContent = yearlyData[year];
-        }
-    });
+    // Update Yearly Chart Legend - handle both array and object format
+    if (Array.isArray(yearlyData)) {
+        // If yearlyData is array of objects from database
+        yearlyData.forEach(item => {
+            const element = document.getElementById(`year_${item.tahun}`);
+            if (element) {
+                element.textContent = item.jumlah;
+            }
+        });
+    } else {
+        // If yearlyData is plain object
+        Object.keys(yearlyData).forEach(year => {
+            const element = document.getElementById(`year_${year}`);
+            if (element) {
+                element.textContent = yearlyData[year];
+            }
+        });
+    }
     
     // Update Monthly Chart Legend (hanya bulan yang ada data)
     const monthsWithData = ['january', 'february', 'march', 'may', 'september', 'october', 'november', 'december'];
@@ -344,12 +371,12 @@ function updateAllLegends() {
         const monthCapitalized = month.charAt(0).toUpperCase() + month.slice(1);
         const element = document.getElementById(`month_${month}`);
         if (element) {
-            element.textContent = monthlyData2022[monthCapitalized] || 0;
+            element.textContent = monthlyData2025[monthCapitalized] || 0;
         }
     });
     
     // Update monthly total
-    const monthlyTotal = Object.values(monthlyData2022).reduce((a, b) => a + b, 0);
+    const monthlyTotal = Object.values(monthlyData2025).reduce((a, b) => a + b, 0);
     document.getElementById('monthly_total').textContent = monthlyTotal;
 }
 
@@ -474,7 +501,7 @@ function updateStatistics() {
     const statusFilter = document.getElementById('statusFilter').value;
     
     // Update monthly chart title
-    const title = yearFilter ? `Tahun ${yearFilter}` : 'Tahun 2022';
+    const title = yearFilter ? `Tahun ${yearFilter}` : 'Tahun 2025';
     document.getElementById('monthlyChartTitle').textContent = title;
     
     // Build query parameters
@@ -509,7 +536,7 @@ function updateStatistics() {
                 const monthlyValues = monthlyLabels.map(month => data.monthlyData[month] || 0);
                 monthlyChart.data.datasets[0].data = monthlyValues;
                 monthlyChart.update();
-                monthlyData2022 = data.monthlyData;
+                monthlyData2025 = data.monthlyData;
             }
             
             // Update all legends
@@ -538,9 +565,89 @@ function resetFilters() {
     updateStatistics();
 }
 
+// Function to update monthly chart based on selected year
+function updateMonthlyChart() {
+    const selectedYear = document.getElementById('yearFilter').value;
+    
+    // Update chart title
+    document.getElementById('monthlyChartTitle').textContent = `Bulanan ${selectedYear}`;
+    
+    // Fetch data for selected year via AJAX
+    fetch(`${window.location.origin}/ajax/monthly-data/${selectedYear}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update monthlyData2025 with new data
+                const monthlyData = data.monthlyData || {};
+                
+                // Update chart
+                if (monthlyChart) {
+                    const monthlyLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                    const monthlyValues = monthlyLabels.map(month => monthlyData[month] || 0);
+                    
+                    monthlyChart.data.datasets[0].data = monthlyValues;
+                    monthlyChart.update();
+                }
+                
+                // Update legend
+                const monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+                monthNames.forEach(month => {
+                    const monthCapitalized = month.charAt(0).toUpperCase() + month.slice(1);
+                    const element = document.getElementById(`month_${month}`);
+                    if (element) {
+                        element.textContent = monthlyData[monthCapitalized] || 0;
+                    }
+                });
+                
+                // Update total
+                const total = Object.values(monthlyData).reduce((a, b) => a + b, 0);
+                document.getElementById('monthly_total').textContent = total;
+            }
+        })
+        .catch(error => {
+            console.log('Using fallback data for year:', selectedYear);
+            // Fallback: update with empty data for now
+            updateMonthlyChartFallback(selectedYear);
+        });
+}
+
+// Fallback function when AJAX fails
+function updateMonthlyChartFallback(year) {
+    // Update chart title
+    document.getElementById('monthlyChartTitle').textContent = `Bulanan ${year}`;
+    
+    // Set all months to 0 for years without data
+    const emptyData = {};
+    const monthLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    
+    monthLabels.forEach(month => {
+        emptyData[month] = 0;
+    });
+    
+    // Update chart
+    if (monthlyChart) {
+        const monthlyValues = monthLabels.map(month => emptyData[month] || 0);
+        monthlyChart.data.datasets[0].data = monthlyValues;
+        monthlyChart.update();
+    }
+    
+    // Update legend
+    const monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+    monthNames.forEach(month => {
+        const element = document.getElementById(`month_${month}`);
+        if (element) {
+            element.textContent = 0;
+        }
+    });
+    
+    // Update total
+    document.getElementById('monthly_total').textContent = 0;
+}
+
 // Export functions for global access
 window.changeSlide = changeSlide;
 window.currentSlide = currentSlide;
 window.updateStatistics = updateStatistics;
 window.updatePieChart = updatePieChart;
+window.updateMonthlyChart = updateMonthlyChart;
 window.resetFilters = resetFilters;

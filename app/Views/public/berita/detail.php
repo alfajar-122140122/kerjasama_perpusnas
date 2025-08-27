@@ -272,7 +272,7 @@
                     <div class="related-content">
                         <div class="related-date"><?= date('d F Y', strtotime($item['tanggal_publikasi'] ?? $item['created_at'])) ?></div>
                         <h3 class="related-title"><?= esc($item['judul']) ?></h3>
-                        <a href="<?= base_url((isset($sourcePage) && $sourcePage == 'aktivitas' ? 'aktivitas' : 'berita') . '/detail/' . $item['id_berita']) ?>" class="related-link">
+                        <a href="<?= base_url((isset($sourcePage) && $sourcePage == 'aktivitas' ? 'aktivitas' : 'berita') . '/detail/' . $item['id']) ?>" class="related-link">
                             Baca Selengkapnya <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>

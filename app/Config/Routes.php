@@ -11,6 +11,9 @@ $routes->group('', function($routes) {
     // Landing page
     $routes->get('/', 'Public\Home::index');
 
+    // AJAX endpoints
+    $routes->get('ajax/monthly-data/(:num)', 'Public\Home::getMonthlyData/$1');
+
     // Public routes
     $routes->get('tentang', 'Public\Home::tentang');
     $routes->get('aktivitas', 'Public\BeritaController::index'); // Using BeritaController to handle aktivitas

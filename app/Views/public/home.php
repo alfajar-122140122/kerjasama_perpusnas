@@ -119,37 +119,6 @@
         <section class="bg-white rounded-3 p-4 shadow-sm mb-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fs-5 fw-semibold text-dark mb-0">Statistik Kerja Sama</h2>
-                
-                <!-- Filter Controls -->
-                <div class="filter-section">
-                    <div class="d-flex gap-3 align-items-center flex-wrap">
-                        <label class="form-label mb-0 fw-semibold">Filter:</label>
-                        <select class="form-select form-select-sm" id="yearFilter" onchange="updateStatistics()" style="width: 140px;">
-                            <option value="">Semua Tahun</option>
-                            <option value="2024">2024</option>
-                            <option value="2023">2023</option>
-                            <option value="2022">2022</option>
-                            <option value="2021">2021</option>
-                            <option value="2020">2020</option>
-                            <option value="2019">2019</option>
-                        </select>
-                        <select class="form-select form-select-sm" id="jenisFilter" onchange="updateStatistics()" style="width: 120px;">
-                            <option value="">Semua Jenis</option>
-                            <option value="MOU">MOU</option>
-                            <option value="MOA">MOA</option>
-                            <option value="PKS">PKS</option>
-                        </select>
-                        <select class="form-select form-select-sm" id="statusFilter" onchange="updateStatistics()" style="width: 130px;">
-                            <option value="">Semua Status</option>
-                            <option value="aktif">Aktif</option>
-                            <option value="berakhir">Berakhir</option>
-                            <option value="draft">Draft</option>
-                        </select>
-                        <button class="btn btn-outline-primary btn-sm" onclick="resetFilters()">
-                            <i class="fas fa-refresh"></i> Reset
-                        </button>
-                    </div>
-                </div>
             </div>
             
             <div class="row g-4 mb-4">
@@ -181,31 +150,27 @@
                                 </div>
                                 <div class="legend-item">
                                     <span><span class="legend-color legend-color-pts">●</span> PTS</span>
-                                    <span id="pieChart_ptsCount">529</span>
+                                    <span id="pieChart_ptsCount"><?= $statistik['jenis_mitra']['PTS'] ?? 0 ?></span>
                                 </div>
                                 <div class="legend-item">
                                     <span><span class="legend-color legend-color-kl">●</span> K/L</span>
-                                    <span id="pieChart_klCount">38</span>
+                                    <span id="pieChart_klCount"><?= $statistik['jenis_mitra']['K/L'] ?? 0 ?></span>
                                 </div>
                                 <div class="legend-item">
                                     <span><span class="legend-color legend-color-ptn">●</span> PTN</span>
-                                    <span id="pieChart_ptnCount">24</span>
+                                    <span id="pieChart_ptnCount"><?= $statistik['jenis_mitra']['PTN'] ?? 0 ?></span>
                                 </div>
                                 <div class="legend-item">
                                     <span><span class="legend-color legend-color-swasta">●</span> Swasta</span>
-                                    <span id="pieChart_swastaCount">12</span>
+                                    <span id="pieChart_swastaCount"><?= $statistik['jenis_mitra']['Swasta'] ?? 0 ?></span>
                                 </div>
                                 <div class="legend-item">
                                     <span><span class="legend-color legend-color-luar-negeri">●</span> Luar Negeri</span>
-                                    <span id="pieChart_luarNegeriCount">6</span>
+                                    <span id="pieChart_luarNegeriCount"><?= $statistik['jenis_mitra']['Luar Negeri'] ?? 0 ?></span>
                                 </div>
                                 <div class="legend-item legend-total">
                                     <span>Total</span>
-                                    <span id="pieChart_totalLembaga">609</span>
-                                </div>
-                                <!-- Filter Info -->
-                                <div class="filter-info mt-2">
-                                    <small class="text-muted" id="pieChartFilterInfo">Menampilkan: Semua Jenis Identitas Mitra</small>
+                                    <span id="pieChart_totalLembaga"><?= $statistik['total_mitra'] ?? 0 ?></span>
                                 </div>
                             </div>
                         </div>
@@ -226,42 +191,22 @@
                                     <span>Tahun</span>
                                     <span>Jumlah</span>
                                 </div>
-                                <div class="legend-item">
-                                    <span>2013</span>
-                                    <span id="year_2013">5</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>2014</span>
-                                    <span id="year_2014">4</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>2015</span>
-                                    <span id="year_2015">14</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>2016</span>
-                                    <span id="year_2016">47</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>2017</span>
-                                    <span id="year_2017">65</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>2018</span>
-                                    <span id="year_2018">76</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>2019</span>
-                                    <span id="year_2019">267</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>2020</span>
-                                    <span id="year_2020">25</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>2021</span>
-                                    <span id="year_2021">121</span>
-                                </div>
+                                <?php if (!empty($statistik['per_tahun'])): ?>
+                                    <?php foreach ($statistik['per_tahun'] as $tahun): ?>
+                                    <div class="legend-item">
+                                        <span><?= $tahun['tahun'] ?></span>
+                                        <span id="year_<?= $tahun['tahun'] ?>"><?= $tahun['jumlah'] ?></span>
+                                    </div>
+                                    <?php endforeach; ?>
+                                    <div class="legend-item legend-total">
+                                        <span>Total</span>
+                                        <span id="yearly_total"><?= $statistik['total_mitra'] ?? 0 ?></span>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="legend-item">
+                                        <span colspan="2">Tidak ada data</span>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -271,7 +216,22 @@
                 <div class="col-lg-4 mb-4">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body">
-                            <h3 class="chart-title" id="monthlyChartTitle">Tahun 2022</h3>
+                            <div class="chart-header d-flex justify-content-between align-items-center">
+                                <h3 class="chart-title mb-0" id="monthlyChartTitle">Bulanan</h3>
+                                <!-- Mini filter untuk tahun -->
+                                <div class="monthly-chart-filter">
+                                    <select class="form-select form-select-sm" id="yearFilter" onchange="updateMonthlyChart()" 
+                                            style="width: 100px; font-size: 0.8rem; border: 1px solid #e3e6f0; border-radius: 0.35rem;">
+                                        <option value="2019">2019</option>
+                                        <option value="2020">2020</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2025" selected>2025</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="chart-container">
                                 <canvas id="monthlyChart"></canvas>
                             </div>
@@ -283,39 +243,55 @@
                                 </div>
                                 <div class="legend-item">
                                     <span>January</span>
-                                    <span id="month_january">2</span>
+                                    <span id="month_january"><?= $statistik['per_bulan']['January'] ?? 0 ?></span>
                                 </div>
                                 <div class="legend-item">
                                     <span>February</span>
-                                    <span id="month_february">1</span>
+                                    <span id="month_february"><?= $statistik['per_bulan']['February'] ?? 0 ?></span>
                                 </div>
                                 <div class="legend-item">
                                     <span>March</span>
-                                    <span id="month_march">45</span>
+                                    <span id="month_march"><?= $statistik['per_bulan']['March'] ?? 0 ?></span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>April</span>
+                                    <span id="month_april"><?= $statistik['per_bulan']['April'] ?? 0 ?></span>
                                 </div>
                                 <div class="legend-item">
                                     <span>May</span>
-                                    <span id="month_may">1</span>
+                                    <span id="month_may"><?= $statistik['per_bulan']['May'] ?? 0 ?></span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>June</span>
+                                    <span id="month_june"><?= $statistik['per_bulan']['June'] ?? 0 ?></span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>July</span>
+                                    <span id="month_july"><?= $statistik['per_bulan']['July'] ?? 0 ?></span>
+                                </div>
+                                <div class="legend-item">
+                                    <span>August</span>
+                                    <span id="month_august"><?= $statistik['per_bulan']['August'] ?? 0 ?></span>
                                 </div>
                                 <div class="legend-item">
                                     <span>September</span>
-                                    <span id="month_september">9</span>
+                                    <span id="month_september"><?= $statistik['per_bulan']['September'] ?? 0 ?></span>
                                 </div>
                                 <div class="legend-item">
                                     <span>October</span>
-                                    <span id="month_october">105</span>
+                                    <span id="month_october"><?= $statistik['per_bulan']['October'] ?? 0 ?></span>
                                 </div>
                                 <div class="legend-item">
                                     <span>November</span>
-                                    <span id="month_november">60</span>
+                                    <span id="month_november"><?= $statistik['per_bulan']['November'] ?? 0 ?></span>
                                 </div>
                                 <div class="legend-item">
                                     <span>December</span>
-                                    <span id="month_december">44</span>
+                                    <span id="month_december"><?= $statistik['per_bulan']['December'] ?? 0 ?></span>
                                 </div>
                                 <div class="legend-item legend-total">
                                     <span>Total</span>
-                                    <span id="monthly_total">267</span>
+                                    <span id="monthly_total"><?= $statistik['total_bulan'] ?? 0 ?></span>
                                 </div>
                             </div>
                         </div>
@@ -400,5 +376,9 @@
 
 <?= $this->section('scripts') ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Pass data from PHP to JavaScript
+    window.statistikData = <?= json_encode($statistik) ?>;
+</script>
 <script src="<?= base_url('js/public/home.js') ?>"></script>
 <?= $this->endSection() ?>
