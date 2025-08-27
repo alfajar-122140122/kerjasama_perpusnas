@@ -56,6 +56,7 @@ class CreatePermohonanKerjasamaTable extends Migration
             'reviewed_by' => [
                 'type' => 'INT',
                 'constraint' => 11,
+                'unsigned' => true,
                 'null' => true,
             ],
             'reviewed_at' => [
@@ -73,6 +74,7 @@ class CreatePermohonanKerjasamaTable extends Migration
         ]);
 
         $this->forge->addPrimaryKey('id');
+        $this->forge->addForeignKey('reviewed_by', 'users', 'id', 'SET NULL', 'SET NULL');
         $this->forge->createTable('permohonan_kerjasama', true);
     }
 

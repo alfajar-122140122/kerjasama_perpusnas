@@ -11,7 +11,7 @@ class UserSeeder extends Seeder
     {
         $faker = Factory::create('id_ID');
         
-        // Define users (2 admin, 3 staff)
+        // Define users (2 admin, 4 staff)
         $users = [
             // Admin users
             [
@@ -60,6 +60,15 @@ class UserSeeder extends Seeder
                 'created_at'    => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d H:i:s'),
                 'updated_at'    => $faker->dateTimeBetween('-6 months', 'now')->format('Y-m-d H:i:s'),
             ],
+            [
+                'username'      => 'staff4',
+                'email'         => $faker->unique()->email,
+                'password_hash' => password_hash('staff123', PASSWORD_DEFAULT),
+                'role'          => 'staff',
+                'last_active'   => date('Y-m-d H:i:s'),
+                'created_at'    => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d H:i:s'),
+                'updated_at'    => $faker->dateTimeBetween('-6 months', 'now')->format('Y-m-d H:i:s'),
+            ]
         ];
 
         // Insert data to table

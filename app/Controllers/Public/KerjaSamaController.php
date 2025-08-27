@@ -136,11 +136,11 @@ class KerjaSamaController extends BaseController
                 'date' => $date->format('d M Y'),
                 'institution' => $item['lembaga'],
                 'type' => strtolower($item['jenis']),
-                'progress' => $item['progress']
+                'progress' => $item['status']
             ];
         }
         
-        // Statistics for progress
+        // Statistics for progress 
         $stats = $this->progressModel->getProgressStats();
         
         $data = [

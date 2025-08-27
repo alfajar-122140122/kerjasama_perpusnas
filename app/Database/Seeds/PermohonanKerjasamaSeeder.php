@@ -11,84 +11,54 @@ class PermohonanKerjasamaSeeder extends Seeder
     {
         $faker = Factory::create('id_ID');
         
+        // Ambil ID user
+        $userIds = $this->db->table('users')
+                       ->select('id')
+                       ->get()
+                       ->getResultArray();
+        
+        // Status options
+        $statusOptions = ['pending', 'review', 'approved', 'rejected'];
+        
         // Prepare data
-        $data = [
-            [
-                'jenis_permohonan'      => 'baru',
-                'lembaga'               => 'PT Sumber Jaya',
-                'alamat'                => 'Jl. Mawar No. 1',
-                'telepon'               => '08123456789',
-                'email'                 => 'info@sumberjaya.com',
-                'kontak_dapat_dihubungi'=> 'Budi Santoso',
-                'file_formulir'         => 'formulir_1001.pdf',
-                'tanggal_pengajuan'     => date('Y-m-d', strtotime('-10 days')),
-                'status'                => 'pending',
-                'reviewed_by'           => null,
-                'reviewed_at'           => null,
-                'created_at'            => date('Y-m-d H:i:s', strtotime('-10 days')),
-                'updated_at'            => date('Y-m-d H:i:s', strtotime('-10 days')),
-            ],
-            [
-                'jenis_permohonan'      => 'baru',
-                'lembaga'               => 'CV Maju Bersama',
-                'alamat'                => 'Jl. Melati No. 2',
-                'telepon'               => '08129876543',
-                'email'                 => 'admin@majubersama.com',
-                'kontak_dapat_dihubungi'=> 'Siti Aminah',
-                'file_formulir'         => 'formulir_1002.pdf',
-                'tanggal_pengajuan'     => date('Y-m-d', strtotime('-8 days')),
-                'status'                => 'pending',
-                'reviewed_by'           => null,
-                'reviewed_at'           => null,
-                'created_at'            => date('Y-m-d H:i:s', strtotime('-8 days')),
-                'updated_at'            => date('Y-m-d H:i:s', strtotime('-8 days')),
-            ],
-            [
-                'jenis_permohonan'      => 'baru',
-                'lembaga'               => 'Yayasan Cerdas Bangsa',
-                'alamat'                => 'Jl. Kenanga No. 3',
-                'telepon'               => '08121234567',
-                'email'                 => 'contact@cerdasbangsa.org',
-                'kontak_dapat_dihubungi'=> 'Andi Wijaya',
-                'file_formulir'         => 'formulir_1003.pdf',
-                'tanggal_pengajuan'     => date('Y-m-d', strtotime('-6 days')),
-                'status'                => 'pending',
-                'reviewed_by'           => null,
-                'reviewed_at'           => null,
-                'created_at'            => date('Y-m-d H:i:s', strtotime('-6 days')),
-                'updated_at'            => date('Y-m-d H:i:s', strtotime('-6 days')),
-            ],
-            [
-                'jenis_permohonan'      => 'perpanjangan',
-                'lembaga'               => 'Universitas Nusantara',
-                'alamat'                => 'Jl. Anggrek No. 4',
-                'telepon'               => '08122334455',
-                'email'                 => 'kerjasama@unusantara.ac.id',
-                'kontak_dapat_dihubungi'=> 'Rina Dewi',
-                'file_formulir'         => 'formulir_1004.pdf',
-                'tanggal_pengajuan'     => date('Y-m-d', strtotime('-4 days')),
-                'status'                => 'pending',
-                'reviewed_by'           => null,
-                'reviewed_at'           => null,
-                'created_at'            => date('Y-m-d H:i:s', strtotime('-4 days')),
-                'updated_at'            => date('Y-m-d H:i:s', strtotime('-4 days')),
-            ],
-            [
-                'jenis_permohonan'      => 'perpanjangan',
-                'lembaga'               => 'SMK Negeri 1',
-                'alamat'                => 'Jl. Dahlia No. 5',
-                'telepon'               => '08125556677',
-                'email'                 => 'info@smkn1.sch.id',
-                'kontak_dapat_dihubungi'=> 'Dewi Lestari',
-                'file_formulir'         => 'formulir_1005.pdf',
-                'tanggal_pengajuan'     => date('Y-m-d', strtotime('-2 days')),
-                'status'                => 'pending',
-                'reviewed_by'           => null,
-                'reviewed_at'           => null,
-                'created_at'            => date('Y-m-d H:i:s', strtotime('-2 days')),
-                'updated_at'            => date('Y-m-d H:i:s', strtotime('-2 days')),
-            ],
-        ];
+        $data = [];
+        
+        // Generate 20 permohonan kerjasama dengan status bervariasi
+        for ($i = 0; $i < 20; $i++) {
+            $status = $faker->randomElement($statusOptions);
+            $createdDate = $faker->dateTimeBetween('-3 months', 'now');
+            
+            // Jika status bukan pending, set reviewer
+            $reviewedBy = null;
+            $reviewedAt = null;
+            
+            if ($status !== 'pending') {
+                $reviewedBy = $faker->randomElement($userIds)['id'];
+                $reviewedAt = $faker->dateTimeBetween($createdDate, 'now')->format('Y-m-d H:i:s');
+            }
+            
+            // Institusi
+            $institusiTypes = ['Universitas', 'Perpustakaan', 'Dinas', 'PT', 'Yayasan', 'Pusat', 'Institut', 'Balai'];
+            $institusiNames = ['Nusantara', 'Indonesia', 'Pendidikan', 'Teknologi', 'Informasi', 'Digital', 'Nasional', 'Merdeka', 'Budaya', 'Karya'];
+            
+            $lembaga = $faker->randomElement($institusiTypes) . ' ' . $faker->randomElement($institusiNames) . ' ' . $faker->city;
+            
+            $data[] = [
+                'jenis_permohonan'      => $faker->randomElement(['baru', 'perpanjangan']),
+                'lembaga'               => $lembaga,
+                'alamat'                => $faker->address,
+                'telepon'               => $faker->phoneNumber,
+                'email'                 => $faker->companyEmail,
+                'kontak_dapat_dihubungi'=> $faker->name,
+                'file_formulir'         => 'formulir_' . $faker->unique()->numberBetween(1000, 9999) . '.pdf',
+                'tanggal_pengajuan'     => $createdDate->format('Y-m-d H:i:s'),
+                'status'                => $status,
+                'reviewed_by'           => $reviewedBy,
+                'reviewed_at'           => $reviewedAt,
+                'created_at'            => $createdDate->format('Y-m-d H:i:s'),
+                'updated_at'            => $faker->dateTimeBetween($createdDate, 'now')->format('Y-m-d H:i:s'),
+            ];
+        }
         
         // Insert data to table
         $this->db->table('permohonan_kerjasama')->insertBatch($data);

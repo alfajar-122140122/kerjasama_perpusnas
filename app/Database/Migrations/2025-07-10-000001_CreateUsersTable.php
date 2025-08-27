@@ -31,7 +31,7 @@ class CreateUsersTable extends Migration
             ],
             'role' => [
                 'type'       => 'ENUM',
-                'constraint' => ['admin', 'staff'],
+                'constraint' => ['superadmin', 'admin', 'staff'],
                 'default'    => 'staff',
             ],
             'last_active' => [
@@ -49,7 +49,7 @@ class CreateUsersTable extends Migration
         ]);
 
         $this->forge->addPrimaryKey('id');
-        $this->forge->createTable('users', true); // If table exists, drop it first
+        $this->forge->createTable('users', true); 
     }
 
     public function down()

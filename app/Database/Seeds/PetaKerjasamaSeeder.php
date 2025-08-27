@@ -25,12 +25,6 @@ class PetaKerjasamaSeeder extends Seeder
         // Prepare data
         $data = [];
         
-        // Indonesia's coordinates boundaries (approximate)
-        $minLat = -11.0;
-        $maxLat = 6.0;
-        $minLng = 95.0;
-        $maxLng = 141.0;
-        
         // Major cities in Indonesia with coordinates
         $indonesianCities = [
             ['Jakarta', -6.2088, 106.8456],
@@ -47,23 +41,25 @@ class PetaKerjasamaSeeder extends Seeder
             ['Pontianak', 0.0263, 109.3425]
         ];
         
-        // Generate 5 random locations
-        $randomCities = $faker->randomElements($indonesianCities, 5);
-        $selectedKerjasamaIds = array_slice($kerjasamaIds, 0, 5);
-        
-        foreach (array_keys($selectedKerjasamaIds) as $i) {
-            $city = $randomCities[$i];
+        // Create one map entry for each kerjasama
+        foreach ($kerjasamaIds as $index => $kerjasama) {
+            // Cycle through cities or pick random if more kerjasama than cities
+            $cityIndex = $index % count($indonesianCities);
+            $city = $indonesianCities[$cityIndex];
             
             // Add some randomization to the coordinates
             $latitude = $city[1] + $faker->randomFloat(6, -0.05, 0.05);
             $longitude = $city[2] + $faker->randomFloat(6, -0.05, 0.05);
             
+            $createdDate = $faker->dateTimeBetween('-1 year', 'now');
+            
             $data[] = [
-                'kerjasama_id'     => $selectedKerjasamaIds[$i]['id'],
+                'kerjasama_id'     => $kerjasama['id'],
                 'latitude'         => $latitude,
                 'longitude'        => $longitude,
                 'deskripsi_lokasi' => 'Lokasi Kerjasama di ' . $city[0] . ', ' . $faker->streetAddress,
-                'created_at'       => date('Y-m-d H:i:s'),
+                'created_at'       => $createdDate->format('Y-m-d H:i:s'),
+                'updated_at'       => $faker->dateTimeBetween($createdDate, 'now')->format('Y-m-d H:i:s'),
             ];
         }
         

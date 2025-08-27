@@ -15,6 +15,11 @@ class CreateProgressKerjasamaTable extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
+            'permohonan_id' => [
+                'type'           => 'INT',
+                'constraint'     => 11,
+                'unsigned'       => true,
+            ],
             'tanggal_pengajuan' => [
                 'type' => 'DATE',
             ],
@@ -26,9 +31,18 @@ class CreateProgressKerjasamaTable extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
             ],
-            'progress' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 100,
+            'status' => [
+                'type'       => 'ENUM',
+                'constraint' => ['approved', 'review', 'rejected'],
+            ],
+            'catatan' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
+            'created_by' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -37,6 +51,8 @@ class CreateProgressKerjasamaTable extends Migration
         ]);
 
         $this->forge->addPrimaryKey('id');
+        $this->forge->addForeignKey('permohonan_id', 'permohonan_kerjasama', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('created_by', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('progress_kerjasama', true);
     }
 

@@ -331,7 +331,7 @@
                 <?php foreach ($recent_activities as $activity): ?>
                 <div class="col-lg-4 col-md-6">
                     <article class="activity-card">
-                        <a href="<?= base_url('aktivitas/detail/' . $activity['id_berita']) ?>" class="activity-image d-block" style="text-decoration:none;">
+                        <a href="<?= base_url('aktivitas/detail/' . $activity['id']) ?>" class="activity-image d-block" style="text-decoration:none;">
                             <?php
                                 $image = !empty($activity['gambar']) ? $activity['gambar'] : null;
                                 $imagePath = FCPATH . 'uploads/berita/' . $image;
@@ -350,7 +350,7 @@
                                 </time>
                             </div>
                             <h3 class="activity-title mb-2">
-                                <a href="<?= base_url('aktivitas/detail/' . $activity['id_berita']) ?>" style="text-decoration:none; color:inherit;">
+                                <a href="<?= base_url('aktivitas/detail/' . $activity['id']) ?>" style="text-decoration:none; color:inherit;">
                                     <?= esc($activity['judul'] ?? $activity['title']) ?>
                                 </a>
                             </h3>

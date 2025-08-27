@@ -9,7 +9,7 @@ class CreateBeritaTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id_berita'          => [
+            'id'          => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'unsigned'       => true,
@@ -37,6 +37,11 @@ class CreateBeritaTable extends Migration
                 'unsigned'   => true,
                 'null'       => true,
             ],
+            'status'      => [
+                'type'       => 'ENUM',
+                'constraint' => ['draft', 'published', 'archived'],
+                'default'    => 'draft',
+            ],
             'created_at'  => [
                 'type'       => 'DATETIME',
                 'null'       => true,
@@ -45,14 +50,9 @@ class CreateBeritaTable extends Migration
                 'type'       => 'DATETIME',
                 'null'       => true,
             ],
-            'status'      => [
-                'type'       => 'VARCHAR',
-                'constraint' => 20,
-                'default'    => 'draft',
-            ],
         ]);
 
-        $this->forge->addPrimaryKey('id_berita');
+        $this->forge->addPrimaryKey('id');
         $this->forge->addForeignKey('created_by_user_id', 'users', 'id', 'SET NULL', 'SET NULL');
         $this->forge->createTable('berita');
     }

@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateKerjasamaTable extends Migration
+class CreateImplementasiKerjasamaTable extends Migration
 {
     public function up()
     {
@@ -15,18 +15,20 @@ class CreateKerjasamaTable extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'nama_mitra' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 255,
+            'kerjasama_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
             ],
-            'ruang_lingkup' => [
+            'masa_berlaku' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
+            ],
+            'implementasi' => [
                 'type' => 'TEXT',
             ],
-            'tanggal_mulai' => [
-                'type' => 'DATE',
-            ],
-            'tanggal_berakhir' => [
-                'type' => 'DATE',
+            'lingkup' => [
+                'type' => 'TEXT',
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -39,11 +41,12 @@ class CreateKerjasamaTable extends Migration
         ]);
 
         $this->forge->addPrimaryKey('id');
-        $this->forge->createTable('kerjasama', true);
+        $this->forge->addForeignKey('kerjasama_id', 'kerjasama', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->createTable('implementasi_kerjasama', true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('kerjasama');
+        $this->forge->dropTable('implementasi_kerjasama');
     }
 }
