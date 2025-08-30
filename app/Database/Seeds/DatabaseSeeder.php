@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
         echo "2. Permohonan Kerjasama seeded successfully\n";
         
         // 3. Progress Kerjasama (depends on permohonan and users)
-        $this->call('ProgressKerjasamaSeeder');
-        echo "3. Progress Kerjasama seeded successfully\n";
+        // $this->call('ProgressKerjasamaSeeder');
+        // echo "3. Progress Kerjasama seeded successfully\n";
         
         // 4. Kerjasama (depends on permohonan and users)
         $this->call('KerjasamaSeeder');
