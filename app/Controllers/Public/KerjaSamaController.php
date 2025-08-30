@@ -233,7 +233,7 @@ class KerjaSamaController extends BaseController
         $transformedData = [];
         foreach ($implementasiData as $item) {
             // Gunakan masa_berlaku dari database jika ada, atau hitung dari tanggal jika diperlukan
-            $period = !empty($item['masa_berlaku']) ? $item['masa_berlaku'] : '';
+            $period = !empty($item['masa_berlaku']) && $item['masa_berlaku'] !== 'null' ? $item['masa_berlaku'] : '';
             
             // Jika masa_berlaku kosong tetapi tanggal ada, format seperti admin view
             if (empty($period) && !empty($item['tanggal_mulai']) && !empty($item['tanggal_berakhir'])) {
@@ -249,12 +249,17 @@ class KerjaSamaController extends BaseController
                 $period = $duration;
             }
             
+            // Clean up data and handle null values
+            $partner = !empty($item['nama_mitra']) && $item['nama_mitra'] !== 'null' ? $item['nama_mitra'] : 'Tidak diketahui';
+            $implementation = !empty($item['implementasi']) && $item['implementasi'] !== 'null' ? $item['implementasi'] : 'Belum ada implementasi';
+            $scope = !empty($item['lingkup']) && $item['lingkup'] !== 'null' ? $item['lingkup'] : 'Tidak diketahui';
+            
             $transformedData[] = [
-                'id' => $item['id'],
-                'partner' => $item['nama_mitra'],
-                'period' => $period,
-                'implementation' => $item['implementasi'],
-                'scope' => $item['lingkup'],
+                'id' => $item['id'] ?? 0,
+                'partner' => $partner,
+                'period' => $period ?: 'Tidak diketahui',
+                'implementation' => $implementation,
+                'scope' => $scope,
             ];
         }
         

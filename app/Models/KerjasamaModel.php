@@ -25,4 +25,18 @@ class KerjasamaModel extends Model
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+    
+    // Helper method to get consistent masa berlaku format
+    public function getMasaBerlaku($id)
+    {
+        $kerjasama = $this->find($id);
+        if (!$kerjasama) {
+            return null;
+        }
+        
+        $tanggalMulai = new \DateTime($kerjasama['tanggal_mulai']);
+        $tanggalBerakhir = new \DateTime($kerjasama['tanggal_berakhir']);
+        
+        return $tanggalMulai->format('d-m-Y') . ' s/d ' . $tanggalBerakhir->format('d-m-Y');
+    }
 }

@@ -130,8 +130,7 @@ class ImplementasiKerjasamaManager {
                 return (
                     item.partner.toLowerCase().includes(this.searchTerm) ||
                     item.implementation.toLowerCase().includes(this.searchTerm) ||
-                    item.scope.toLowerCase().includes(this.searchTerm) ||
-                    (item.unit && item.unit.toLowerCase().includes(this.searchTerm))
+                    item.scope.toLowerCase().includes(this.searchTerm)
                 );
             });
             
@@ -158,26 +157,42 @@ class ImplementasiKerjasamaManager {
         tbody.innerHTML = pageData.map(item => `
             <tr>
                 <td>
-                    <div class="implementasi-partner-name">${item.partner}</div>
+                    <div class="implementasi-partner-name">${this.sanitizeValue(item.partner, 'Tidak diketahui')}</div>
                 </td>
                 <td>
-                    <div class="implementasi-period-text">${item.period ? item.period : '<span class="implementasi-null-value">-</span>'}</div>
+                    <div class="implementasi-period-text">${this.sanitizeValue(item.period, 'Tidak diketahui')}</div>
                 </td>
                 <td>
-                    <div class="implementasi-detail-text">${item.implementation ? 
-                        (item.implementation.length > 100 ? 
-                            `${item.implementation.substring(0, 100)}... <a href="#" class="implementasi-read-more" data-id="${item.id}">Selengkapnya</a>` : 
-                            item.implementation) : 
-                        '<span class="implementasi-null-value">Belum ada implementasi</span>'}</div>
+                    <div class="implementasi-detail-text">${this.renderImplementationText(item.implementation, item.id)}</div>
                 </td>
                 <td>
-                    <div class="implementasi-scope-text">${item.scope}</div>
-                </td>
-                <td>
-                    <div class="implementasi-unit-text">${item.unit === 'null' || !item.unit ? '<span class="implementasi-null-value">null</span>' : item.unit}</div>
+                    <div class="implementasi-scope-text">${this.sanitizeValue(item.scope, 'Tidak diketahui')}</div>
                 </td>
             </tr>
         `).join('');
+    }
+    
+    sanitizeValue(value, defaultText = '-') {
+        if (!value || value === 'null' || value === null || value === undefined || value.trim() === '') {
+            return `<span class="implementasi-null-value">${defaultText}</span>`;
+        }
+        return value;
+    }
+    
+    renderImplementationText(implementation, id) {
+        const sanitized = this.sanitizeValue(implementation, 'Belum ada implementasi');
+        
+        // If it's a null value, return it as is
+        if (sanitized.includes('implementasi-null-value')) {
+            return sanitized;
+        }
+        
+        // If text is too long, truncate it
+        if (implementation && implementation.length > 100) {
+            return `${implementation.substring(0, 100)}... <a href="#" class="implementasi-read-more" data-id="${id}">Selengkapnya</a>`;
+        }
+        
+        return sanitized;
     }
     
     renderPagination() {

@@ -18,6 +18,8 @@ class ImplementasiKerjasamaModel extends Model
         'masa_berlaku',
         'implementasi',
         'lingkup',
+        'created_at',
+        'updated_at'
     ];
 
     // Dates
@@ -29,13 +31,35 @@ class ImplementasiKerjasamaModel extends Model
     public function getImplementasiWithKerjasama($id = null)
     {
         if ($id === null) {
-            return $this->select('implementasi_kerjasama.*, kerjasama.nama_mitra')
+            return $this->select('
+                implementasi_kerjasama.id, 
+                implementasi_kerjasama.kerjasama_id,
+                implementasi_kerjasama.masa_berlaku,
+                implementasi_kerjasama.implementasi,
+                implementasi_kerjasama.lingkup,
+                implementasi_kerjasama.created_at,
+                kerjasama.nama_mitra,
+                kerjasama.tanggal_mulai,
+                kerjasama.tanggal_berakhir,
+                kerjasama.ruang_lingkup
+            ')
                 ->join('kerjasama', 'kerjasama.id = implementasi_kerjasama.kerjasama_id')
                 ->orderBy('implementasi_kerjasama.id', 'DESC')
                 ->findAll();
         }
         
-        return $this->select('implementasi_kerjasama.*, kerjasama.nama_mitra')
+        return $this->select('
+            implementasi_kerjasama.id, 
+            implementasi_kerjasama.kerjasama_id,
+            implementasi_kerjasama.masa_berlaku,
+            implementasi_kerjasama.implementasi,
+            implementasi_kerjasama.lingkup,
+            implementasi_kerjasama.created_at,
+            kerjasama.nama_mitra,
+            kerjasama.tanggal_mulai,
+            kerjasama.tanggal_berakhir,
+            kerjasama.ruang_lingkup
+        ')
             ->join('kerjasama', 'kerjasama.id = implementasi_kerjasama.kerjasama_id')
             ->where('implementasi_kerjasama.id', $id)
             ->first();
@@ -46,7 +70,10 @@ class ImplementasiKerjasamaModel extends Model
     {
         if ($id === null) {
             return $this->select('
-                implementasi_kerjasama.*, 
+                implementasi_kerjasama.id, 
+                implementasi_kerjasama.masa_berlaku,
+                implementasi_kerjasama.implementasi,
+                implementasi_kerjasama.lingkup,
                 kerjasama.nama_mitra,
                 kerjasama.tanggal_mulai,
                 kerjasama.tanggal_berakhir
@@ -57,7 +84,10 @@ class ImplementasiKerjasamaModel extends Model
         }
         
         return $this->select('
-            implementasi_kerjasama.*, 
+            implementasi_kerjasama.id, 
+            implementasi_kerjasama.masa_berlaku,
+            implementasi_kerjasama.implementasi,
+            implementasi_kerjasama.lingkup,
             kerjasama.nama_mitra,
             kerjasama.tanggal_mulai,
             kerjasama.tanggal_berakhir

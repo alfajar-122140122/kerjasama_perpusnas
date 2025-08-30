@@ -85,7 +85,7 @@ Implementasi Kerjasama
                                     if (!empty($implementasi['masa_berlaku'])) {
                                         echo esc($implementasi['masa_berlaku']);
                                     }
-                                    // Otherwise calculate from dates if available
+                                    // Otherwise calculate from kerjasama dates if available
                                     else if (!empty($implementasi['tanggal_mulai']) && !empty($implementasi['tanggal_berakhir'])) {
                                         $startDate = new DateTime($implementasi['tanggal_mulai']);
                                         $endDate = new DateTime($implementasi['tanggal_berakhir']);
@@ -181,7 +181,12 @@ Implementasi Kerjasama
                                 $kerjasamaList = $kerjasamaModel->orderBy('nama_mitra', 'ASC')->findAll();
                                 
                                 foreach ($kerjasamaList as $kerjasama): ?>
-                                    <option value="<?= $kerjasama['id'] ?>"><?= esc($kerjasama['nama_mitra']) ?></option>
+                                    <option value="<?= $kerjasama['id'] ?>" 
+                                            data-tanggal-mulai="<?= $kerjasama['tanggal_mulai'] ?>" 
+                                            data-tanggal-berakhir="<?= $kerjasama['tanggal_berakhir'] ?>"
+                                            data-ruang-lingkup="<?= esc($kerjasama['ruang_lingkup']) ?>">
+                                        <?= esc($kerjasama['nama_mitra']) ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -196,21 +201,34 @@ Implementasi Kerjasama
                         <textarea class="form-control" id="implementasi" name="implementasi" rows="3" placeholder="Masukkan deskripsi implementasi..." required></textarea>
                     </div>
                     
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
-                            <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="tanggal_berakhir" class="form-label">Tanggal Berakhir</label>
-                            <input type="date" class="form-control" id="tanggal_berakhir" name="tanggal_berakhir" required>
-                            <small class="text-muted">Masa berlaku akan otomatis dihitung</small>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 mb-3" id="duration_preview_container" style="display: none;">
-                            <label class="form-label">Durasi Masa Berlaku:</label>
-                            <p class="text-primary fw-bold" id="duration_preview"></p>
+                    <!-- Info Kerjasama yang dipilih -->
+                    <div class="row" id="kerjasama_info" style="display: none;">
+                        <div class="col-md-12 mb-3">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title">Informasi Periode Kerjasama</h6>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <small class="text-muted">Tanggal Mulai:</small>
+                                            <p class="mb-1 fw-bold" id="info_tanggal_mulai">-</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <small class="text-muted">Tanggal Berakhir:</small>
+                                            <p class="mb-1 fw-bold" id="info_tanggal_berakhir">-</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <small class="text-muted">Masa Berlaku:</small>
+                                            <p class="mb-1 fw-bold text-primary" id="info_masa_berlaku">-</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <small class="text-muted">Ruang Lingkup Kerjasama:</small>
+                                            <p class="mb-0" id="info_ruang_lingkup">-</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -241,31 +259,38 @@ Implementasi Kerjasama
                 
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <label class="form-label fw-bold">Masa Berlaku</label>
+                        <label class="form-label fw-bold">Masa Berlaku Kerjasama</label>
                         <p id="view_masa_berlaku" class="border-bottom pb-2"></p>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Tanggal Mulai</label>
+                        <label class="form-label fw-bold">Tanggal Mulai Kerjasama</label>
                         <p id="view_tanggal_mulai" class="border-bottom pb-2"></p>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Tanggal Berakhir</label>
+                        <label class="form-label fw-bold">Tanggal Berakhir Kerjasama</label>
                         <p id="view_tanggal_berakhir" class="border-bottom pb-2"></p>
                     </div>
                 </div>
                 
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <label class="form-label fw-bold">Implementasi</label>
+                        <label class="form-label fw-bold">Ruang Lingkup Kerjasama</label>
+                        <p id="view_ruang_lingkup" class="border-bottom pb-2"></p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">Deskripsi Implementasi</label>
                         <p id="view_implementasi" class="border-bottom pb-2"></p>
                     </div>
                 </div>
                 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Lingkup</label>
+                        <label class="form-label fw-bold">Lingkup Implementasi</label>
                         <p id="view_lingkup" class="border-bottom pb-2"></p>
                     </div>
                 </div>
@@ -306,7 +331,12 @@ Implementasi Kerjasama
                                 $kerjasamaList = $kerjasamaModel->orderBy('nama_mitra', 'ASC')->findAll();
                                 
                                 foreach ($kerjasamaList as $kerjasama): ?>
-                                    <option value="<?= $kerjasama['id'] ?>"><?= esc($kerjasama['nama_mitra']) ?></option>
+                                    <option value="<?= $kerjasama['id'] ?>" 
+                                            data-tanggal-mulai="<?= $kerjasama['tanggal_mulai'] ?>" 
+                                            data-tanggal-berakhir="<?= $kerjasama['tanggal_berakhir'] ?>"
+                                            data-ruang-lingkup="<?= esc($kerjasama['ruang_lingkup']) ?>">
+                                        <?= esc($kerjasama['nama_mitra']) ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -321,21 +351,34 @@ Implementasi Kerjasama
                         <textarea class="form-control" id="edit_implementasi" name="implementasi" rows="3" placeholder="Masukkan deskripsi implementasi..." required></textarea>
                     </div>
                     
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="edit_tanggal_mulai" class="form-label">Tanggal Mulai</label>
-                            <input type="date" class="form-control" id="edit_tanggal_mulai" name="tanggal_mulai" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="edit_tanggal_berakhir" class="form-label">Tanggal Berakhir</label>
-                            <input type="date" class="form-control" id="edit_tanggal_berakhir" name="tanggal_berakhir" required>
-                            <small class="text-muted">Masa berlaku akan otomatis dihitung</small>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 mb-3" id="edit_duration_preview_container" style="display: none;">
-                            <label class="form-label">Durasi Masa Berlaku:</label>
-                            <p class="text-primary fw-bold" id="edit_duration_preview"></p>
+                    <!-- Info Kerjasama yang dipilih -->
+                    <div class="row" id="edit_kerjasama_info" style="display: none;">
+                        <div class="col-md-12 mb-3">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title">Informasi Periode Kerjasama</h6>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <small class="text-muted">Tanggal Mulai:</small>
+                                            <p class="mb-1 fw-bold" id="edit_info_tanggal_mulai">-</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <small class="text-muted">Tanggal Berakhir:</small>
+                                            <p class="mb-1 fw-bold" id="edit_info_tanggal_berakhir">-</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <small class="text-muted">Masa Berlaku:</small>
+                                            <p class="mb-1 fw-bold text-primary" id="edit_info_masa_berlaku">-</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <small class="text-muted">Ruang Lingkup Kerjasama:</small>
+                                            <p class="mb-0" id="edit_info_ruang_lingkup">-</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -391,55 +434,73 @@ function calculateDuration(startDate, endDate) {
     return duration.trim();
 }
 
-// Function to update the duration preview
-function updateDurationPreview(startId, endId, previewId) {
-    const startDate = document.getElementById(startId).value;
-    const endDate = document.getElementById(endId).value;
-    
+// Function to update the duration preview - no longer needed for form inputs
+// but kept for calculating duration display
+function updateDurationPreview(startDate, endDate) {
     if (startDate && endDate) {
-        const duration = calculateDuration(startDate, endDate);
-        if (document.getElementById(previewId)) {
-            document.getElementById(previewId).textContent = duration;
-            document.getElementById(previewId + '_container').style.display = '';
-        }
+        return calculateDuration(startDate, endDate);
     }
+    return '';
 }
 
 // Add event listeners for date changes
 document.addEventListener('DOMContentLoaded', function() {
-    // For Add form
-    const startDateInput = document.getElementById('tanggal_mulai');
-    const endDateInput = document.getElementById('tanggal_berakhir');
+    // Function to format date to Indonesian format
+    function formatDateIndonesian(dateString) {
+        if (!dateString) return '-';
+        const date = new Date(dateString);
+        const options = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        };
+        return date.toLocaleDateString('id-ID', options);
+    }
     
-    if (startDateInput && endDateInput) {
-        startDateInput.addEventListener('change', function() {
-            if (endDateInput.value) {
-                updateDurationPreview('tanggal_mulai', 'tanggal_berakhir', 'duration_preview');
-            }
-        });
+    // Function to show kerjasama information
+    function showKerjasamaInfo(selectElement, infoContainerId, prefix = '') {
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
         
-        endDateInput.addEventListener('change', function() {
-            if (startDateInput.value) {
-                updateDurationPreview('tanggal_mulai', 'tanggal_berakhir', 'duration_preview');
-            }
+        if (selectedOption.value) {
+            const tanggalMulai = selectedOption.dataset.tanggalMulai;
+            const tanggalBerakhir = selectedOption.dataset.tanggalBerakhir;
+            const ruangLingkup = selectedOption.dataset.ruangLingkup;
+            
+            // Calculate duration for preview display only (not saved to database)
+            const duration = calculateDuration(tanggalMulai, tanggalBerakhir);
+            
+            // Format masa berlaku preview sesuai format database 
+            const startDate = new Date(tanggalMulai);
+            const endDate = new Date(tanggalBerakhir);
+            const masaBerlakuFormatted = startDate.toLocaleDateString('id-ID').replace(/\//g, '-') + ' s/d ' + endDate.toLocaleDateString('id-ID').replace(/\//g, '-');
+            
+            // Update info display
+            document.getElementById(prefix + 'info_tanggal_mulai').textContent = formatDateIndonesian(tanggalMulai);
+            document.getElementById(prefix + 'info_tanggal_berakhir').textContent = formatDateIndonesian(tanggalBerakhir);
+            document.getElementById(prefix + 'info_masa_berlaku').textContent = masaBerlakuFormatted + ' (' + duration + ')';
+            document.getElementById(prefix + 'info_ruang_lingkup').textContent = ruangLingkup || '-';
+            
+            // Show info container
+            document.getElementById(infoContainerId).style.display = '';
+        } else {
+            // Hide info container
+            document.getElementById(infoContainerId).style.display = 'none';
+        }
+    }
+    
+    // For Add form - kerjasama selection change
+    const kerjasamaSelect = document.getElementById('kerjasama_id');
+    if (kerjasamaSelect) {
+        kerjasamaSelect.addEventListener('change', function() {
+            showKerjasamaInfo(this, 'kerjasama_info');
         });
     }
     
-    // For Edit form
-    const editStartDateInput = document.getElementById('edit_tanggal_mulai');
-    const editEndDateInput = document.getElementById('edit_tanggal_berakhir');
-    
-    if (editStartDateInput && editEndDateInput) {
-        editStartDateInput.addEventListener('change', function() {
-            if (editEndDateInput.value) {
-                updateDurationPreview('edit_tanggal_mulai', 'edit_tanggal_berakhir', 'edit_duration_preview');
-            }
-        });
-        
-        editEndDateInput.addEventListener('change', function() {
-            if (editStartDateInput.value) {
-                updateDurationPreview('edit_tanggal_mulai', 'edit_tanggal_berakhir', 'edit_duration_preview');
-            }
+    // For Edit form - kerjasama selection change
+    const editKerjasamaSelect = document.getElementById('edit_kerjasama_id');
+    if (editKerjasamaSelect) {
+        editKerjasamaSelect.addEventListener('change', function() {
+            showKerjasamaInfo(this, 'edit_kerjasama_info', 'edit_');
         });
     }
     
@@ -448,9 +509,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (tambahModal) {
         tambahModal.addEventListener('shown.bs.modal', function() {
             // Reset fields
-            document.getElementById('tanggal_mulai').value = '';
-            document.getElementById('tanggal_berakhir').value = '';
-            document.getElementById('duration_preview_container').style.display = 'none';
+            document.getElementById('kerjasama_id').value = '';
+            document.getElementById('lingkup').value = '';
+            document.getElementById('implementasi').value = '';
+            document.getElementById('kerjasama_info').style.display = 'none';
         });
     }
     
@@ -458,13 +520,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const editModal = document.getElementById('editImplementasiModal');
     if (editModal) {
         editModal.addEventListener('shown.bs.modal', function() {
-            const startDate = document.getElementById('edit_tanggal_mulai').value;
-            const endDate = document.getElementById('edit_tanggal_berakhir').value;
-            
-            if (startDate && endDate) {
-                updateDurationPreview('edit_tanggal_mulai', 'edit_tanggal_berakhir', 'edit_duration_preview');
+            // Check if kerjasama is already selected and show info
+            const selectedKerjasama = document.getElementById('edit_kerjasama_id');
+            if (selectedKerjasama && selectedKerjasama.value) {
+                showKerjasamaInfo(selectedKerjasama, 'edit_kerjasama_info', 'edit_');
             } else {
-                document.getElementById('edit_duration_preview_container').style.display = 'none';
+                document.getElementById('edit_kerjasama_info').style.display = 'none';
             }
         });
     }
@@ -564,12 +625,21 @@ document.getElementById('formTambahImplementasi').addEventListener('submit', fun
     // Get form data
     const formData = new FormData(this);
     
-    // Calculate and add masa_berlaku from date inputs
-    const startDate = document.getElementById('tanggal_mulai').value;
-    const endDate = document.getElementById('tanggal_berakhir').value;
-    if (startDate && endDate) {
-        const duration = calculateDuration(startDate, endDate);
-        formData.set('masa_berlaku', duration);
+    // Get masa_berlaku from selected kerjasama data (using consistent format from database)
+    const kerjasamaSelect = document.getElementById('kerjasama_id');
+    const selectedOption = kerjasamaSelect.options[kerjasamaSelect.selectedIndex];
+    
+    if (selectedOption.value) {
+        const tanggalMulai = selectedOption.dataset.tanggalMulai;
+        const tanggalBerakhir = selectedOption.dataset.tanggalBerakhir;
+        
+        if (tanggalMulai && tanggalBerakhir) {
+            // Format masa berlaku sesuai dengan format database: "dd-mm-yyyy s/d dd-mm-yyyy"
+            const startDate = new Date(tanggalMulai);
+            const endDate = new Date(tanggalBerakhir);
+            const masaBerlaku = startDate.toLocaleDateString('id-ID').replace(/\//g, '-') + ' s/d ' + endDate.toLocaleDateString('id-ID').replace(/\//g, '-');
+            formData.set('masa_berlaku', masaBerlaku);
+        }
     }
     
     // Submit via AJAX
@@ -588,6 +658,7 @@ document.getElementById('formTambahImplementasi').addEventListener('submit', fun
         
         // Reset form
         document.getElementById('formTambahImplementasi').reset();
+        document.getElementById('kerjasama_info').style.display = 'none';
         
         // Reset button
         submitBtn.innerHTML = originalText;
@@ -654,6 +725,7 @@ function viewImplementasi(id) {
             
             document.getElementById('view_implementasi').textContent = data.data.implementasi;
             document.getElementById('view_lingkup').textContent = data.data.lingkup;
+            document.getElementById('view_ruang_lingkup').textContent = data.data.ruang_lingkup || '-';
             document.getElementById('view_created_at').textContent = new Date(data.data.created_at).toLocaleString('id-ID');
             
             // Show modal
@@ -685,8 +757,10 @@ function editImplementasi(id) {
             document.getElementById('edit_kerjasama_id').value = data.data.kerjasama_id;
             document.getElementById('edit_lingkup').value = data.data.lingkup;
             document.getElementById('edit_implementasi').value = data.data.implementasi;
-            document.getElementById('edit_tanggal_mulai').value = data.data.tanggal_mulai || '';
-            document.getElementById('edit_tanggal_berakhir').value = data.data.tanggal_berakhir || '';
+            
+            // Trigger change event to show kerjasama info
+            const event = new Event('change');
+            document.getElementById('edit_kerjasama_id').dispatchEvent(event);
             
             // Show edit modal
             const modal = new bootstrap.Modal(document.getElementById('editImplementasiModal'));
@@ -740,12 +814,21 @@ document.getElementById('formEditImplementasi').addEventListener('submit', funct
     // Get form data
     const formData = new FormData(this);
     
-    // Calculate and add masa_berlaku from date inputs
-    const startDate = document.getElementById('edit_tanggal_mulai').value;
-    const endDate = document.getElementById('edit_tanggal_berakhir').value;
-    if (startDate && endDate) {
-        const duration = calculateDuration(startDate, endDate);
-        formData.set('masa_berlaku', duration);
+    // Get masa_berlaku from selected kerjasama data (using consistent format from database)
+    const editKerjasamaSelect = document.getElementById('edit_kerjasama_id');
+    const selectedOption = editKerjasamaSelect.options[editKerjasamaSelect.selectedIndex];
+    
+    if (selectedOption.value) {
+        const tanggalMulai = selectedOption.dataset.tanggalMulai;
+        const tanggalBerakhir = selectedOption.dataset.tanggalBerakhir;
+        
+        if (tanggalMulai && tanggalBerakhir) {
+            // Format masa berlaku sesuai dengan format database: "dd-mm-yyyy s/d dd-mm-yyyy"
+            const startDate = new Date(tanggalMulai);
+            const endDate = new Date(tanggalBerakhir);
+            const masaBerlaku = startDate.toLocaleDateString('id-ID').replace(/\//g, '-') + ' s/d ' + endDate.toLocaleDateString('id-ID').replace(/\//g, '-');
+            formData.set('masa_berlaku', masaBerlaku);
+        }
     }
     
     // Get the implementasi ID from the hidden field
@@ -764,6 +847,10 @@ document.getElementById('formEditImplementasi').addEventListener('submit', funct
         // Close modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('editImplementasiModal'));
         modal.hide();
+        
+        // Reset form
+        document.getElementById('formEditImplementasi').reset();
+        document.getElementById('edit_kerjasama_info').style.display = 'none';
         
         // Reset button
         submitBtn.innerHTML = originalText;

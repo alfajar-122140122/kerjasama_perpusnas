@@ -67,13 +67,11 @@ $routes->group('admin', function($routes) {
     $routes->get('kerjasama/data', 'Admin\KerjasamaController::data');
     $routes->get('kerjasama/get/(:num)', 'Admin\KerjasamaController::get/$1');
 
-    $routes->get('kerjasama/implementasi', 'Admin\KerjasamaController::implementasi');
-    $routes->get('kerjasama/implementasi/tambah', 'Admin\KerjasamaController::tambahImplementasi');
-    $routes->get('kerjasama/implementasi/edit/(:num)', 'Admin\KerjasamaController::editImplementasi/$1');
-    $routes->post('kerjasama/implementasi/store', 'Admin\KerjasamaController::storeImplementasi');
-    $routes->post('kerjasama/implementasi/update/(:num)', 'Admin\KerjasamaController::updateImplementasi/$1');
-    $routes->delete('kerjasama/implementasi/delete/(:num)', 'Admin\KerjasamaController::deleteImplementasi/$1');
-    $routes->get('kerjasama/implementasi/get/(:num)', 'Admin\KerjasamaController::getImplementasi/$1');
+    $routes->get('kerjasama/implementasi', 'Admin\ImplementasiKerjasamaController::index');
+    $routes->post('kerjasama/implementasi/store', 'Admin\ImplementasiKerjasamaController::store');
+    $routes->post('kerjasama/implementasi/update/(:num)', 'Admin\ImplementasiKerjasamaController::update/$1');
+    $routes->delete('kerjasama/implementasi/delete/(:num)', 'Admin\ImplementasiKerjasamaController::delete/$1');
+    $routes->get('kerjasama/implementasi/get/(:num)', 'Admin\ImplementasiKerjasamaController::get/$1');
 
     $routes->get('kerjasama/akan-berakhir', 'Admin\KerjasamaController::akanBerakhir');
 
