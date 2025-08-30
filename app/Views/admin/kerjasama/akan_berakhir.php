@@ -96,82 +96,69 @@ Kerjasama Akan Berakhir
                 <p class="text-muted">Semua kerjasama masih dalam masa berlaku yang aman.</p>
             </div>
             <?php endif; ?>
-
-            <!-- Pagination -->
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                <div class="text-muted" id="paginationInfo">
-                    <?php if (isset($pagination)): ?>
-                        Menampilkan <?= $pagination['startItem'] ?>-<?= $pagination['endItem'] ?> dari <?= $pagination['totalItems'] ?> data
-                    <?php else: ?>
-                        Menampilkan 0 dari 0 data
-                    <?php endif; ?>
-                </div>
-                <nav aria-label="Pagination Navigation">
-                    <ul class="pagination pagination-sm mb-0" id="paginationControls">
-                        <?php if (isset($pagination) && $pagination['totalPages'] > 1): ?>
-                            <!-- Previous Button -->
-                            <li class="page-item <?= $pagination['currentPage'] == 1 ? 'disabled' : '' ?>">
-                                <?php if ($pagination['currentPage'] == 1): ?>
-                                    <span class="page-link">Previous</span>
-                                <?php else: ?>
-                                    <a class="page-link" href="<?= current_url() ?>?page=<?= $pagination['currentPage'] - 1 ?>">Previous</a>
-                                <?php endif; ?>
-                            </li>
-                            
-                            <?php
-                            $startPage = max(1, $pagination['currentPage'] - 2);
-                            $endPage = min($pagination['totalPages'], $pagination['currentPage'] + 2);
-                            
-                            // Show first page if not in range
-                            if ($startPage > 1):
-                            ?>
-                                <li class="page-item">
-                                    <a class="page-link" href="<?= current_url() ?>?page=1">1</a>
-                                </li>
-                                <?php if ($startPage > 2): ?>
-                                    <li class="page-item disabled">
-                                        <span class="page-link">...</span>
-                                    </li>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                            
-                            <!-- Page Numbers -->
-                            <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
-                                <li class="page-item <?= $i == $pagination['currentPage'] ? 'active' : '' ?>">
-                                    <?php if ($i == $pagination['currentPage']): ?>
-                                        <span class="page-link"><?= $i ?></span>
-                                    <?php else: ?>
-                                        <a class="page-link" href="<?= current_url() ?>?page=<?= $i ?>"><?= $i ?></a>
-                                    <?php endif; ?>
-                                </li>
-                            <?php endfor; ?>
-                            
-                            <!-- Show last page if not in range -->
-                            <?php if ($endPage < $pagination['totalPages']): ?>
-                                <?php if ($endPage < $pagination['totalPages'] - 1): ?>
-                                    <li class="page-item disabled">
-                                        <span class="page-link">...</span>
-                                    </li>
-                                <?php endif; ?>
-                                <li class="page-item">
-                                    <a class="page-link" href="<?= current_url() ?>?page=<?= $pagination['totalPages'] ?>"><?= $pagination['totalPages'] ?></a>
-                                </li>
-                            <?php endif; ?>
-                            
-                            <!-- Next Button -->
-                            <li class="page-item <?= $pagination['currentPage'] == $pagination['totalPages'] ? 'disabled' : '' ?>">
-                                <?php if ($pagination['currentPage'] == $pagination['totalPages']): ?>
-                                    <span class="page-link">Next</span>
-                                <?php else: ?>
-                                    <a class="page-link" href="<?= current_url() ?>?page=<?= $pagination['currentPage'] + 1 ?>">Next</a>
-                                <?php endif; ?>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
-                </nav>
-            </div>
         </div>
     </div>
+</div>
+
+<!-- Pagination -->
+<div class="d-flex justify-content-between align-items-center mt-4">
+    <div class="text-muted" id="paginationInfo">
+        <?php if (isset($pagination)): ?>
+            Menampilkan <?= $pagination['startItem'] ?>-<?= $pagination['endItem'] ?> dari <?= $pagination['totalItems'] ?> data
+        <?php else: ?>
+            Menampilkan 0 dari 0 data
+        <?php endif; ?>
+    </div>
+    <nav aria-label="Pagination Navigation">
+        <ul class="pagination pagination-sm mb-0" id="paginationControls">
+            <?php if (isset($pagination) && $pagination['totalPages'] > 1): ?>
+                <!-- Previous Button -->
+                <li class="page-item <?= $pagination['currentPage'] == 1 ? 'disabled' : '' ?>">
+                    <?php if ($pagination['currentPage'] == 1): ?>
+                        <span class="page-link">Previous</span>
+                    <?php else: ?>
+                        <a class="page-link" href="<?= base_url('admin/kerjasama/akan-berakhir?page=' . ($pagination['currentPage'] - 1) . '&perPage=' . $pagination['perPage']) ?>">Previous</a>
+                    <?php endif; ?>
+                </li>
+                
+                <!-- Page Numbers -->
+                <?php 
+                $startPage = max(1, $pagination['currentPage'] - 2);
+                $endPage = min($pagination['totalPages'], $pagination['currentPage'] + 2);
+                ?>
+                
+                <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                    <li class="page-item <?= $i == $pagination['currentPage'] ? 'active' : '' ?>">
+                        <?php if ($i == $pagination['currentPage']): ?>
+                            <span class="page-link"><?= $i ?></span>
+                        <?php else: ?>
+                            <a class="page-link" href="<?= base_url('admin/kerjasama/akan-berakhir?page=' . $i . '&perPage=' . $pagination['perPage']) ?>"><?= $i ?></a>
+                        <?php endif; ?>
+                    </li>
+                <?php endfor; ?>
+                
+                <!-- Next Button -->
+                <li class="page-item <?= $pagination['currentPage'] == $pagination['totalPages'] ? 'disabled' : '' ?>">
+                    <?php if ($pagination['currentPage'] == $pagination['totalPages']): ?>
+                        <span class="page-link">Next</span>
+                    <?php else: ?>
+                        <a class="page-link" href="<?= base_url('admin/kerjasama/akan-berakhir?page=' . ($pagination['currentPage'] + 1) . '&perPage=' . $pagination['perPage']) ?>">Next</a>
+                    <?php endif; ?>
+                </li>
+            <?php else: ?>
+                <!-- Default single page view -->
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+                <li class="page-item active">
+                    <span class="page-link">1</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </nav>
 </div>
 
 <!-- Modal Lihat Kerjasama -->

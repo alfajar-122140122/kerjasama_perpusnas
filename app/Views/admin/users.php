@@ -159,94 +159,72 @@
                 </tbody>
             </table>
         </div>
-        
-        <!-- Pagination -->
-        <div class="d-flex justify-content-between align-items-center p-3 border-top">
-            <div class="text-muted">
-                <?php if(isset($pagination)): ?>
-                    Menampilkan <?= $pagination['startItem'] ?>-<?= $pagination['endItem'] ?> dari <?= $pagination['totalItems'] ?> user
-                <?php else: ?>
-                    <?php
-                    $count = isset($users) ? count($users) : 0;
-                    $start = $count > 0 ? 1 : 0;
-                    echo "Menampilkan {$start}-{$count} dari {$count} user";
-                    ?>
-                <?php endif; ?>
-            </div>
-            <nav>
-                <ul class="pagination pagination-sm mb-0">
-                    <?php if(isset($pagination) && $pagination['totalPages'] > 1): ?>
-                        <!-- Previous Button -->
-                        <li class="page-item <?= $pagination['currentPage'] == 1 ? 'disabled' : '' ?>">
-                            <?php if($pagination['currentPage'] == 1): ?>
-                                <span class="page-link">Previous</span>
-                            <?php else: ?>
-                                <a class="page-link" href="?page=<?= $pagination['currentPage'] - 1 ?>">Previous</a>
-                            <?php endif; ?>
-                        </li>
-                        
-                        <!-- Page Numbers -->
-                        <?php 
-                        $startPage = max(1, $pagination['currentPage'] - 2);
-                        $endPage = min($pagination['totalPages'], $pagination['currentPage'] + 2);
-                        ?>
-                        
-                        <?php if($startPage > 1): ?>
-                            <li class="page-item">
-                                <a class="page-link" href="?page=1">1</a>
-                            </li>
-                            <?php if($startPage > 2): ?>
-                                <li class="page-item disabled">
-                                    <span class="page-link">...</span>
-                                </li>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                        
-                        <?php for($i = $startPage; $i <= $endPage; $i++): ?>
-                            <li class="page-item <?= $i == $pagination['currentPage'] ? 'active' : '' ?>">
-                                <?php if($i == $pagination['currentPage']): ?>
-                                    <span class="page-link"><?= $i ?></span>
-                                <?php else: ?>
-                                    <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
-                                <?php endif; ?>
-                            </li>
-                        <?php endfor; ?>
-                        
-                        <?php if($endPage < $pagination['totalPages']): ?>
-                            <?php if($endPage < $pagination['totalPages'] - 1): ?>
-                                <li class="page-item disabled">
-                                    <span class="page-link">...</span>
-                                </li>
-                            <?php endif; ?>
-                            <li class="page-item">
-                                <a class="page-link" href="?page=<?= $pagination['totalPages'] ?>"><?= $pagination['totalPages'] ?></a>
-                            </li>
-                        <?php endif; ?>
-                        
-                        <!-- Next Button -->
-                        <li class="page-item <?= $pagination['currentPage'] == $pagination['totalPages'] ? 'disabled' : '' ?>">
-                            <?php if($pagination['currentPage'] == $pagination['totalPages']): ?>
-                                <span class="page-link">Next</span>
-                            <?php else: ?>
-                                <a class="page-link" href="?page=<?= $pagination['currentPage'] + 1 ?>">Next</a>
-                            <?php endif; ?>
-                        </li>
-                    <?php else: ?>
-                        <!-- Default single page view -->
-                        <li class="page-item disabled">
-                            <span class="page-link">Previous</span>
-                        </li>
-                        <li class="page-item active">
-                            <span class="page-link">1</span>
-                        </li>
-                        <li class="page-item disabled">
-                            <span class="page-link">Next</span>
-                        </li>
-                    <?php endif; ?>
-                </ul>
-            </nav>
-        </div>
     </div>
+</div>
+
+<!-- Pagination -->
+<div class="d-flex justify-content-between align-items-center mt-4">
+    <div class="text-muted">
+        <?php if(isset($pagination)): ?>
+            Menampilkan <?= $pagination['startItem'] ?>-<?= $pagination['endItem'] ?> dari <?= $pagination['totalItems'] ?> user
+        <?php else: ?>
+            <?php
+            $count = isset($users) ? count($users) : 0;
+            $start = $count > 0 ? 1 : 0;
+            echo "Menampilkan {$start}-{$count} dari {$count} user";
+            ?>
+        <?php endif; ?>
+    </div>
+    <nav>
+        <ul class="pagination pagination-sm mb-0">
+            <?php if(isset($pagination) && $pagination['totalPages'] > 1): ?>
+                <!-- Previous Button -->
+                <li class="page-item <?= $pagination['currentPage'] == 1 ? 'disabled' : '' ?>">
+                    <?php if($pagination['currentPage'] == 1): ?>
+                        <span class="page-link">Previous</span>
+                    <?php else: ?>
+                        <a class="page-link" href="<?= base_url('admin/users?page=' . ($pagination['currentPage'] - 1) . '&perPage=' . $pagination['perPage']) ?>">Previous</a>
+                    <?php endif; ?>
+                </li>
+                
+                <!-- Page Numbers -->
+                <?php 
+                $startPage = max(1, $pagination['currentPage'] - 2);
+                $endPage = min($pagination['totalPages'], $pagination['currentPage'] + 2);
+                ?>
+                
+                <?php for($i = $startPage; $i <= $endPage; $i++): ?>
+                    <li class="page-item <?= $i == $pagination['currentPage'] ? 'active' : '' ?>">
+                        <?php if($i == $pagination['currentPage']): ?>
+                            <span class="page-link"><?= $i ?></span>
+                        <?php else: ?>
+                            <a class="page-link" href="<?= base_url('admin/users?page=' . $i . '&perPage=' . $pagination['perPage']) ?>"><?= $i ?></a>
+                        <?php endif; ?>
+                    </li>
+                <?php endfor; ?>
+                
+                <!-- Next Button -->
+                <li class="page-item <?= $pagination['currentPage'] == $pagination['totalPages'] ? 'disabled' : '' ?>">
+                    <?php if($pagination['currentPage'] == $pagination['totalPages']): ?>
+                        <span class="page-link">Next</span>
+                    <?php else: ?>
+                        <a class="page-link" href="<?= base_url('admin/users?page=' . ($pagination['currentPage'] + 1) . '&perPage=' . $pagination['perPage']) ?>">Next</a>
+                    <?php endif; ?>
+                </li>
+            <?php else: ?>
+                <!-- Default single page view -->
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+                <li class="page-item active">
+                    <span class="page-link">1</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </nav>
 </div>
 
 <!-- Add User Modal -->
@@ -376,190 +354,5 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-a<script>
-// Pagination variables
-let currentPage = 1;
-let currentFilter = 'all';
-let currentSearch = '';
-const itemsPerPage = 10;
-
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    setupPaginationListeners();
-    // Small delay to ensure all DOM elements are ready
-    setTimeout(() => {
-        displayPage(1);
-    }, 100);
-});
-
-function setupPaginationListeners() {
-    // Search functionality with pagination
-    document.getElementById('searchInput').addEventListener('keyup', function() {
-        currentSearch = this.value.toLowerCase();
-        currentPage = 1; // Reset to first page
-        displayPage(currentPage);
-    });
-
-    // Filter functionality with pagination
-    document.querySelectorAll('[data-filter]').forEach(filterBtn => {
-        filterBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            currentFilter = this.dataset.filter;
-            currentPage = 1; // Reset to first page
-            displayPage(currentPage);
-            
-            // Update filter button text
-            document.getElementById('filterDropdown').innerHTML = `<i class="fas fa-filter me-2"></i>${this.textContent}`;
-        });
-    });
-}
-
-// Function to get all visible rows based on current search and filter
-function getFilteredRows() {
-    const tableRows = document.querySelectorAll('tbody tr.user-row');
-    const filteredRows = [];
-    
-    tableRows.forEach(row => {
-        let showRow = true;
-        
-        // Apply search filter
-        if (currentSearch) {
-            const username = row.querySelector('.user-name')?.textContent.toLowerCase() || '';
-            const email = row.getAttribute('data-email')?.toLowerCase() || '';
-            
-            if (!username.includes(currentSearch) && !email.includes(currentSearch)) {
-                showRow = false;
-            }
-        }
-        
-        // Apply role filter
-        if (currentFilter !== 'all' && showRow) {
-            const roleElement = row.querySelector('.user-role-badge');
-            const role = roleElement?.textContent.toLowerCase().trim();
-            if (role !== currentFilter) {
-                showRow = false;
-            }
-        }
-        
-        if (showRow) {
-            filteredRows.push(row);
-        }
-    });
-    
-    return filteredRows;
-}
-
-// Function to display current page
-function displayPage(page) {
-    const filteredRows = getFilteredRows();
-    const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
-    
-    // Validate page number
-    if (page < 1) page = 1;
-    if (page > totalPages && totalPages > 0) page = totalPages;
-    if (totalPages === 0) page = 1;
-    
-    currentPage = page;
-    
-    // Hide all rows first
-    const allRows = document.querySelectorAll('tbody tr');
-    allRows.forEach(row => row.style.display = 'none');
-    
-    // Show rows for current page
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const pageRows = filteredRows.slice(startIndex, endIndex);
-    
-    pageRows.forEach(row => row.style.display = '');
-    
-    // Show empty state if no filtered results
-    const emptyRow = document.querySelector('tbody tr:not(.user-row)');
-    if (filteredRows.length === 0 && emptyRow) {
-        emptyRow.style.display = '';
-    }
-    
-    // Update pagination controls
-    updatePaginationControls(totalPages, filteredRows.length);
-    
-    return totalPages;
-}
-
-// Function to update pagination controls
-function updatePaginationControls(totalPages, totalItems) {
-    const paginationContainer = document.querySelector('.pagination');
-    if (!paginationContainer) return;
-    
-    paginationContainer.innerHTML = '';
-    
-    if (totalPages <= 1) {
-        paginationContainer.style.display = 'none';
-        return;
-    }
-    
-    paginationContainer.style.display = 'flex';
-    
-    // Previous button
-    const prevLi = document.createElement('li');
-    prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
-    prevLi.innerHTML = `<a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a>`;
-    paginationContainer.appendChild(prevLi);
-    
-    // Page numbers
-    const startPage = Math.max(1, currentPage - 2);
-    const endPage = Math.min(totalPages, currentPage + 2);
-    
-    if (startPage > 1) {
-        const firstLi = document.createElement('li');
-        firstLi.className = 'page-item';
-        firstLi.innerHTML = `<a class="page-link" href="#" data-page="1">1</a>`;
-        paginationContainer.appendChild(firstLi);
-        
-        if (startPage > 2) {
-            const dotsLi = document.createElement('li');
-            dotsLi.className = 'page-item disabled';
-            dotsLi.innerHTML = `<span class="page-link">...</span>`;
-            paginationContainer.appendChild(dotsLi);
-        }
-    }
-    
-    for (let i = startPage; i <= endPage; i++) {
-        const li = document.createElement('li');
-        li.className = `page-item ${i === currentPage ? 'active' : ''}`;
-        li.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
-        paginationContainer.appendChild(li);
-    }
-    
-    if (endPage < totalPages) {
-        if (endPage < totalPages - 1) {
-            const dotsLi = document.createElement('li');
-            dotsLi.className = 'page-item disabled';
-            dotsLi.innerHTML = `<span class="page-link">...</span>`;
-            paginationContainer.appendChild(dotsLi);
-        }
-        
-        const lastLi = document.createElement('li');
-        lastLi.className = 'page-item';
-        lastLi.innerHTML = `<a class="page-link" href="#" data-page="${totalPages}">${totalPages}</a>`;
-        paginationContainer.appendChild(lastLi);
-    }
-    
-    // Next button
-    const nextLi = document.createElement('li');
-    nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
-    nextLi.innerHTML = `<a class="page-link" href="#" data-page="${currentPage + 1}">Next</a>`;
-    paginationContainer.appendChild(nextLi);
-    
-    // Add click events to pagination links
-    paginationContainer.addEventListener('click', function(e) {
-        e.preventDefault();
-        if (e.target.classList.contains('page-link') && e.target.hasAttribute('data-page')) {
-            const page = parseInt(e.target.getAttribute('data-page'));
-            if (page !== currentPage && page >= 1 && page <= totalPages) {
-                displayPage(page);
-            }
-        }
-    });
-}
-</script>
 <script src="<?= base_url('js/admin/user-management.js') ?>"></script>
 <?= $this->endSection() ?>
