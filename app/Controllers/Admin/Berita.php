@@ -35,12 +35,41 @@ class Berita extends BaseController
         if ($authCheck) return $authCheck;
         
         try {
-            // Get all berita from database
-            $berita = $this->beritaModel->orderBy('created_at', 'DESC')->findAll();
+            // Get pagination parameters
+            $page = $this->request->getGet('page') ?? 1;
+            $perPage = 10; // 10 items per page
+            
+            // Get total count for pagination
+            $totalBerita = $this->beritaModel->countAllResults();
+            
+            // Calculate total pages
+            $totalPages = ceil($totalBerita / $perPage);
+            
+            // Ensure valid page number
+            $page = max(1, min($page, $totalPages));
+            
+            // Calculate offset
+            $offset = ($page - 1) * $perPage;
+            
+            // Get berita data with pagination
+            $berita = $this->beritaModel->orderBy('created_at', 'DESC')
+                                       ->limit($perPage, $offset)
+                                       ->findAll();
+            
+            // Calculate pagination info
+            $paginationInfo = [
+                'currentPage' => $page,
+                'totalPages' => $totalPages,
+                'perPage' => $perPage,
+                'totalItems' => $totalBerita,
+                'startItem' => $totalBerita > 0 ? $offset + 1 : 0,
+                'endItem' => min($offset + $perPage, $totalBerita)
+            ];
             
             $data = [
                 'title' => 'Manajemen Berita',
-                'berita' => $berita
+                'berita' => $berita,
+                'pagination' => $paginationInfo
             ];
             
             return view('admin/berita', $data);

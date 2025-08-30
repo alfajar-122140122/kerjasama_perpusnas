@@ -28,10 +28,10 @@ class ImplementasiKerjasamaModel extends Model
     protected $createdField  = 'created_at';
     
     // Mendapatkan data implementasi kerjasama dengan informasi mitra
-    public function getImplementasiWithKerjasama($id = null)
+    public function getImplementasiWithKerjasama($limit = null, $offset = null, $id = null)
     {
         if ($id === null) {
-            return $this->select('
+            $builder = $this->select('
                 implementasi_kerjasama.id, 
                 implementasi_kerjasama.kerjasama_id,
                 implementasi_kerjasama.masa_berlaku,
@@ -44,8 +44,14 @@ class ImplementasiKerjasamaModel extends Model
                 kerjasama.ruang_lingkup
             ')
                 ->join('kerjasama', 'kerjasama.id = implementasi_kerjasama.kerjasama_id')
-                ->orderBy('implementasi_kerjasama.id', 'DESC')
-                ->findAll();
+                ->orderBy('implementasi_kerjasama.id', 'DESC');
+            
+            // Apply pagination if provided
+            if ($limit !== null && $offset !== null) {
+                $builder->limit($limit, $offset);
+            }
+                
+            return $builder->findAll();
         }
         
         return $this->select('

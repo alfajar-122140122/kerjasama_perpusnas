@@ -17,11 +17,42 @@ class ProgressKerjasamaController extends BaseController
     
     public function index()
     {
-        $progressData = $this->progressKerjasamaModel->orderBy('tanggal_pengajuan', 'DESC')->findAll();
+        // Get pagination parameters
+        $page = $this->request->getGet('page') ?? 1;
+        $perPage = 10; // 10 items per page
+        
+        // Get total count for pagination
+        $totalProgress = $this->progressKerjasamaModel->countAllResults();
+        
+        // Calculate total pages
+        $totalPages = ceil($totalProgress / $perPage);
+        
+        // Ensure valid page number
+        $page = max(1, min($page, $totalPages));
+        
+        // Calculate offset
+        $offset = ($page - 1) * $perPage;
+        
+        // Get progress data with pagination
+        $progressData = $this->progressKerjasamaModel
+            ->orderBy('tanggal_pengajuan', 'DESC')
+            ->limit($perPage, $offset)
+            ->findAll();
+        
+        // Calculate pagination info
+        $paginationInfo = [
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'perPage' => $perPage,
+            'totalItems' => $totalProgress,
+            'startItem' => $totalProgress > 0 ? $offset + 1 : 0,
+            'endItem' => min($offset + $perPage, $totalProgress)
+        ];
         
         $data = [
             'title' => 'Progress Kerjasama',
-            'progressData' => $progressData
+            'progressData' => $progressData,
+            'pagination' => $paginationInfo
         ];
         
         return view('admin/kerjasama/progress', $data);

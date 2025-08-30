@@ -21,7 +21,7 @@ Pengajuan Kerjasama
                     <div class="d-flex justify-content-between">
                         <div>
                             <div class="small">Pending</div>
-                            <div class="h5" id="pendingCount">0</div>
+                            <div class="h5" id="pendingCount"><?= isset($summary) ? $summary['pending'] : 0 ?></div>
                         </div>
                         <div><i class="fas fa-clock fa-2x"></i></div>
                     </div>
@@ -34,7 +34,7 @@ Pengajuan Kerjasama
                     <div class="d-flex justify-content-between">
                         <div>
                             <div class="small">Review</div>
-                            <div class="h5" id="reviewCount">0</div>
+                            <div class="h5" id="reviewCount"><?= isset($summary) ? $summary['review'] : 0 ?></div>
                         </div>
                         <div><i class="fas fa-search fa-2x"></i></div>
                     </div>
@@ -47,7 +47,7 @@ Pengajuan Kerjasama
                     <div class="d-flex justify-content-between">
                         <div>
                             <div class="small">Approved</div>
-                            <div class="h5" id="approvedCount">0</div>
+                            <div class="h5" id="approvedCount"><?= isset($summary) ? $summary['approved'] : 0 ?></div>
                         </div>
                         <div><i class="fas fa-check fa-2x"></i></div>
                     </div>
@@ -60,7 +60,7 @@ Pengajuan Kerjasama
                     <div class="d-flex justify-content-between">
                         <div>
                             <div class="small">Rejected</div>
-                            <div class="h5" id="rejectedCount">0</div>
+                            <div class="h5" id="rejectedCount"><?= isset($summary) ? $summary['rejected'] : 0 ?></div>
                         </div>
                         <div><i class="fas fa-times fa-2x"></i></div>
                     </div>
@@ -124,11 +124,92 @@ Pengajuan Kerjasama
                             <th>Kontak</th>
                             <th>Status</th>
                             <th>Tanggal Pengajuan</th>
-                            <th width="150" class="text-center">Aksi</th>
+                            <th width="200" class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="permohonanTableBody">
-                        <!-- Data will be loaded here -->
+                        <?php if (isset($pengajuanData) && !empty($pengajuanData)): ?>
+                            <?php foreach ($pengajuanData as $index => $permohonan): ?>
+                            <tr data-status="<?= esc($permohonan['status']) ?>">
+                                <td><?= isset($pagination) ? (($pagination['currentPage'] - 1) * $pagination['perPage']) + $index + 1 : $index + 1 ?></td>
+                                <td>
+                                    <span class="badge bg-primary">
+                                        <?= ucfirst(esc($permohonan['jenis_permohonan'])) ?>
+                                    </span>
+                                </td>
+                                <td><?= esc($permohonan['lembaga']) ?></td>
+                                <td>
+                                    <div>
+                                        <div><i class="fas fa-phone me-1"></i><?= esc($permohonan['telepon']) ?></div>
+                                        <div><i class="fas fa-envelope me-1"></i><?= esc($permohonan['email']) ?></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <?php
+                                    $statusClass = match($permohonan['status']) {
+                                        'pending' => 'bg-warning text-dark',
+                                        'review' => 'bg-info',
+                                        'approved' => 'bg-success',
+                                        'rejected' => 'bg-danger',
+                                        default => 'bg-secondary'
+                                    };
+                                    $statusIcon = match($permohonan['status']) {
+                                        'pending' => 'clock',
+                                        'review' => 'search',
+                                        'approved' => 'check',
+                                        'rejected' => 'times',
+                                        default => 'question'
+                                    };
+                                    ?>
+                                    <span class="badge <?= $statusClass ?>">
+                                        <i class="fas fa-<?= $statusIcon ?> me-1"></i>
+                                        <?= ucfirst($permohonan['status']) ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <small class="text-muted">
+                                        <?= date('d/m/Y H:i', strtotime($permohonan['tanggal_pengajuan'])) ?>
+                                    </small>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-1 flex-wrap">
+                                        <!-- View Detail Button - Always visible -->
+                                        <button type="button" class="btn btn-info btn-sm" title="Lihat Detail" 
+                                                onclick="showDetail(<?= $permohonan['id'] ?>)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        
+                                        <!-- Status-based buttons -->
+                                        <?php if ($permohonan['status'] === 'pending'): ?>
+                                            <button type="button" class="btn btn-warning btn-sm" title="Set Review" 
+                                                    onclick="changeStatus(<?= $permohonan['id'] ?>, 'review')">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        <?php elseif ($permohonan['status'] === 'review'): ?>
+                                            <button type="button" class="btn btn-success btn-sm" title="Approve" 
+                                                    onclick="changeStatus(<?= $permohonan['id'] ?>, 'approved')">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm" title="Reject" 
+                                                    onclick="changeStatus(<?= $permohonan['id'] ?>, 'rejected')">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                        
+                                        <!-- Delete button - Always visible -->
+                                        <button type="button" class="btn btn-danger btn-sm" title="Hapus" 
+                                                onclick="confirmDelete(<?= $permohonan['id'] ?>)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="7" class="text-center py-3">Tidak ada data pengajuan</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -141,25 +222,66 @@ Pengajuan Kerjasama
             </div>
 
             <!-- Pagination -->
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                <div class="text-muted">
-                    <?php
-                    $count = isset($permohonanData) ? count($permohonanData) : 0;
-                    $start = $count > 0 ? 1 : 0;
-                    echo "Menampilkan {$start}-{$count} dari {$count} data";
-                    ?>
+            <div class="d-flex justify-content-between align-items-center mt-4" id="paginationSection">
+                <div class="text-muted" id="paginationInfo">
+                    <?php if(isset($paginationInfo)): ?>
+                        Menampilkan <?= $paginationInfo['start'] ?>-<?= $paginationInfo['end'] ?> dari <?= $paginationInfo['total'] ?> data
+                    <?php else: ?>
+                        <?php
+                        $count = isset($pengajuanData) ? count($pengajuanData) : 0;
+                        $start = $count > 0 ? 1 : 0;
+                        echo "Menampilkan {$start}-{$count} dari {$count} data";
+                        ?>
+                    <?php endif; ?>
                 </div>
                 <nav>
-                    <ul class="pagination pagination-sm mb-0">
-                        <li class="page-item disabled">
-                            <span class="page-link">Previous</span>
-                        </li>
-                        <li class="page-item active">
-                            <span class="page-link">1</span>
-                        </li>
-                        <li class="page-item disabled">
-                            <span class="page-link">Next</span>
-                        </li>
+                    <ul class="pagination pagination-sm mb-0" id="paginationControls">
+                        <?php if(isset($paginationInfo) && $paginationInfo['totalPages'] > 1): ?>
+                            <!-- Previous Button -->
+                            <li class="page-item <?= $paginationInfo['currentPage'] == 1 ? 'disabled' : '' ?>">
+                                <?php if($paginationInfo['currentPage'] == 1): ?>
+                                    <span class="page-link">Previous</span>
+                                <?php else: ?>
+                                    <a class="page-link" href="<?= base_url('admin/kerjasama/pengajuan?page=' . ($paginationInfo['currentPage'] - 1) . '&perPage=' . $paginationInfo['perPage']) ?>">Previous</a>
+                                <?php endif; ?>
+                            </li>
+                            
+                            <!-- Page Numbers -->
+                            <?php 
+                            $startPage = max(1, $paginationInfo['currentPage'] - 2);
+                            $endPage = min($paginationInfo['totalPages'], $paginationInfo['currentPage'] + 2);
+                            ?>
+                            
+                            <?php for($i = $startPage; $i <= $endPage; $i++): ?>
+                                <li class="page-item <?= $i == $paginationInfo['currentPage'] ? 'active' : '' ?>">
+                                    <?php if($i == $paginationInfo['currentPage']): ?>
+                                        <span class="page-link"><?= $i ?></span>
+                                    <?php else: ?>
+                                        <a class="page-link" href="<?= base_url('admin/kerjasama/pengajuan?page=' . $i . '&perPage=' . $paginationInfo['perPage']) ?>"><?= $i ?></a>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endfor; ?>
+                            
+                            <!-- Next Button -->
+                            <li class="page-item <?= $paginationInfo['currentPage'] == $paginationInfo['totalPages'] ? 'disabled' : '' ?>">
+                                <?php if($paginationInfo['currentPage'] == $paginationInfo['totalPages']): ?>
+                                    <span class="page-link">Next</span>
+                                <?php else: ?>
+                                    <a class="page-link" href="<?= base_url('admin/kerjasama/pengajuan?page=' . ($paginationInfo['currentPage'] + 1) . '&perPage=' . $paginationInfo['perPage']) ?>">Next</a>
+                                <?php endif; ?>
+                            </li>
+                        <?php else: ?>
+                            <!-- Default single page view -->
+                            <li class="page-item disabled">
+                                <span class="page-link">Previous</span>
+                            </li>
+                            <li class="page-item active">
+                                <span class="page-link">1</span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">Next</span>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </nav>
             </div>
@@ -235,163 +357,126 @@ Pengajuan Kerjasama
 
 <?= $this->section('scripts') ?>
 <script>
+// Pagination variables
+let currentPage = 1;
 let currentFilter = 'all';
-let permohonanData = [];
+let currentSearch = '';
+const itemsPerPage = 10;
+
+// Load data from PHP
+let permohonanData = <?= json_encode($pengajuanData ?? []) ?>;
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    loadPermohonanData();
     setupEventListeners();
+    // Don't auto-call displayPage to preserve server pagination
+    // setTimeout(() => {
+    //     displayPage(1);
+    // }, 100);
 });
 
 function setupEventListeners() {
-    // Search functionality
+    // Search functionality with pagination
     document.getElementById('searchInput').addEventListener('keyup', function() {
-        filterTable();
+        currentSearch = this.value.toLowerCase();
+        currentPage = 1; // Reset to first page
+        displayPage(currentPage);
     });
 
-    // Filter tabs
+    // Filter tabs with pagination
     document.querySelectorAll('[data-filter]').forEach(tab => {
         tab.addEventListener('click', function(e) {
             e.preventDefault();
             currentFilter = this.dataset.filter;
+            currentPage = 1; // Reset to first page
             
             // Update active tab
             document.querySelectorAll('[data-filter]').forEach(t => t.classList.remove('active'));
             this.classList.add('active');
             
-            filterTable();
+            displayPage(currentPage);
         });
     });
 }
 
-function loadPermohonanData() {
-    fetch('<?= base_url('admin/permohonan') ?>', {
-        method: 'GET',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
+// Function to get all visible rows based on current search and filter
+function getFilteredRows() {
+    const tableRows = document.querySelectorAll('#permohonanTableBody tr');
+    const filteredRows = [];
+    
+    tableRows.forEach(row => {
+        let showRow = true;
+        
+        // Skip empty message row
+        if (row.cells.length < 7) {
+            return;
         }
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.status) {
-            permohonanData = result.data;
-            updateSummary(result.summary);
-            renderTable();
-        } else {
-            showAlert('danger', 'Gagal memuat data permohonan');
+        
+        // Apply search filter
+        if (currentSearch) {
+            const lembaga = row.cells[2].textContent.toLowerCase();
+            const kontak = row.cells[3].textContent.toLowerCase();
+            
+            if (!lembaga.includes(currentSearch) && !kontak.includes(currentSearch)) {
+                showRow = false;
+            }
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('danger', 'Terjadi kesalahan saat memuat data');
-    });
-}
-
-function updateSummary(summary) {
-    document.getElementById('pendingCount').textContent = summary.pending;
-    document.getElementById('reviewCount').textContent = summary.review;
-    document.getElementById('approvedCount').textContent = summary.approved;
-    document.getElementById('rejectedCount').textContent = summary.rejected;
-}
-
-function renderTable() {
-    const tbody = document.getElementById('permohonanTableBody');
-    const emptyState = document.getElementById('emptyState');
-    
-    if (permohonanData.length === 0) {
-        tbody.innerHTML = '';
-        emptyState.style.display = 'block';
-        return;
-    }
-    
-    emptyState.style.display = 'none';
-    
-    let html = '';
-    permohonanData.forEach((item, index) => {
-        const statusClass = getStatusClass(item.status);
-        const statusIcon = getStatusIcon(item.status);
         
-        html += `
-            <tr data-status="${item.status}">
-                <td>${index + 1}</td>
-                <td>
-                    <span class="badge bg-primary">
-                        ${item.jenis_permohonan.charAt(0).toUpperCase() + item.jenis_permohonan.slice(1)}
-                    </span>
-                </td>
-                <td>${escapeHtml(item.lembaga)}</td>
-                <td>
-                    <div>
-                        <div><i class="fas fa-phone me-1"></i>${escapeHtml(item.telepon)}</div>
-                        <div><i class="fas fa-envelope me-1"></i>${escapeHtml(item.email)}</div>
-                    </div>
-                </td>
-                <td>
-                    <span class="badge ${statusClass}">
-                        <i class="fas fa-${statusIcon} me-1"></i>
-                        ${item.status.charAt(0).toUpperCase() + item.status.slice(1)}
-                    </span>
-                </td>
-                <td>
-                    <small class="text-muted">
-                        ${formatDate(item.tanggal_pengajuan)}
-                    </small>
-                </td>
-                <td class="text-center">
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-info btn-sm" title="Lihat Detail" 
-                                onclick="viewDetail(${item.id})">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        ${item.status === 'pending' ? `
-                        <button type="button" class="btn btn-warning btn-sm" title="Set Review" 
-                                onclick="updateStatus(${item.id}, 'review')">
-                            <i class="fas fa-search"></i>
-                        </button>
-                        ` : ''}
-                        ${['pending', 'review'].includes(item.status) ? `
-                        <button type="button" class="btn btn-success btn-sm" title="Approve" 
-                                onclick="updateStatus(${item.id}, 'approved')">
-                            <i class="fas fa-check"></i>
-                        </button>
-                        <button type="button" class="btn btn-danger btn-sm" title="Reject" 
-                                onclick="updateStatus(${item.id}, 'rejected')">
-                            <i class="fas fa-times"></i>
-                        </button>
-                        ` : ''}
-                        <button type="button" class="btn btn-outline-danger btn-sm" title="Delete" 
-                                onclick="deletePermohonan(${item.id})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        `;
+        // Apply status filter
+        if (currentFilter !== 'all' && showRow) {
+            const status = row.dataset.status;
+            if (status !== currentFilter) {
+                showRow = false;
+            }
+        }
+        
+        if (showRow) {
+            filteredRows.push(row);
+        }
     });
     
-    tbody.innerHTML = html;
+    return filteredRows;
 }
 
-function filterTable() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const rows = document.querySelectorAll('#permohonanTableBody tr');
+// Function to display current page
+function displayPage(page) {
+    const filteredRows = getFilteredRows();
+    const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
     
-    rows.forEach(row => {
-        const status = row.dataset.status;
-        const lembaga = row.cells[2]?.textContent.toLowerCase() || '';
-        const kontak = row.cells[3]?.textContent.toLowerCase() || '';
-        
-        const matchesFilter = currentFilter === 'all' || status === currentFilter;
-        const matchesSearch = lembaga.includes(searchTerm) || kontak.includes(searchTerm);
-        
-        row.style.display = matchesFilter && matchesSearch ? '' : 'none';
-    });
+    // Validate page number
+    if (page < 1) page = 1;
+    if (page > totalPages && totalPages > 0) page = totalPages;
+    if (totalPages === 0) page = 1;
+    
+    currentPage = page;
+    
+    // Hide all rows first
+    const allRows = document.querySelectorAll('#permohonanTableBody tr');
+    allRows.forEach(row => row.style.display = 'none');
+    
+    // Show rows for current page
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageRows = filteredRows.slice(startIndex, endIndex);
+    
+    pageRows.forEach(row => row.style.display = '');
+    
+    // Update pagination controls
+    updatePaginationControls(totalPages, filteredRows.length);
+    
+    return totalPages;
 }
 
+// Function to update pagination controls - disabled to preserve server pagination
+function updatePaginationControls(totalPages, totalItems) {
+    // Keep server-side pagination intact
+    return;
+}
+
+// Helper functions
 function getStatusClass(status) {
     switch(status) {
-        case 'pending': return 'bg-warning';
+        case 'pending': return 'bg-warning text-dark';
         case 'review': return 'bg-info';
         case 'approved': return 'bg-success';
         case 'rejected': return 'bg-danger';
@@ -453,8 +538,8 @@ function downloadCurrentFile() {
     document.body.removeChild(link);
 }
 
-// View Detail
-function viewDetail(id) {
+// View Detail - Fixed function name
+function showDetail(id) {
     const permohonan = permohonanData.find(item => item.id == id);
     if (!permohonan) return;
     
@@ -511,6 +596,71 @@ function viewDetail(id) {
     
     const modal = new bootstrap.Modal(document.getElementById('detailModal'));
     modal.show();
+}
+
+// Change Status - Simple implementation
+function changeStatus(id, status) {
+    const confirmMessage = `Apakah Anda yakin ingin mengubah status menjadi ${status}?`;
+    if (confirm(confirmMessage)) {
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('status', status);
+        
+        fetch('<?= base_url('admin/permohonan/update-status') ?>', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status) {
+                showAlert('success', result.message);
+                location.reload(); // Reload page to show updated data
+            } else {
+                showAlert('danger', result.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('danger', 'Terjadi kesalahan saat memperbarui status');
+        });
+    }
+}
+
+// Confirm Delete
+function confirmDelete(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus permohonan ini?')) {
+        const formData = new FormData();
+        formData.append('id', id);
+        
+        fetch('<?= base_url('admin/permohonan/delete') ?>', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status) {
+                showAlert('success', result.message);
+                location.reload(); // Reload page to show updated data
+            } else {
+                showAlert('danger', result.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('danger', 'Terjadi kesalahan saat menghapus permohonan');
+        });
+    }
+}
+
+// View Detail - Keep old function for compatibility
+function viewDetail(id) {
+    showDetail(id);
 }
 
 // Update Status

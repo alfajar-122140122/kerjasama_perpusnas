@@ -99,24 +99,74 @@ Kerjasama Akan Berakhir
 
             <!-- Pagination -->
             <div class="d-flex justify-content-between align-items-center mt-4">
-                <div class="text-muted">
-                    <?php
-                    $count = count($akanBerakhirData);
-                    $start = $count > 0 ? 1 : 0;
-                    echo "Menampilkan {$start}-{$count} dari {$count} data";
-                    ?>
+                <div class="text-muted" id="paginationInfo">
+                    <?php if (isset($pagination)): ?>
+                        Menampilkan <?= $pagination['startItem'] ?>-<?= $pagination['endItem'] ?> dari <?= $pagination['totalItems'] ?> data
+                    <?php else: ?>
+                        Menampilkan 0 dari 0 data
+                    <?php endif; ?>
                 </div>
-                <nav>
-                    <ul class="pagination pagination-sm mb-0">
-                        <li class="page-item disabled">
-                            <span class="page-link">Previous</span>
-                        </li>
-                        <li class="page-item active">
-                            <span class="page-link">1</span>
-                        </li>
-                        <li class="page-item disabled">
-                            <span class="page-link">Next</span>
-                        </li>
+                <nav aria-label="Pagination Navigation">
+                    <ul class="pagination pagination-sm mb-0" id="paginationControls">
+                        <?php if (isset($pagination) && $pagination['totalPages'] > 1): ?>
+                            <!-- Previous Button -->
+                            <li class="page-item <?= $pagination['currentPage'] == 1 ? 'disabled' : '' ?>">
+                                <?php if ($pagination['currentPage'] == 1): ?>
+                                    <span class="page-link">Previous</span>
+                                <?php else: ?>
+                                    <a class="page-link" href="<?= current_url() ?>?page=<?= $pagination['currentPage'] - 1 ?>">Previous</a>
+                                <?php endif; ?>
+                            </li>
+                            
+                            <?php
+                            $startPage = max(1, $pagination['currentPage'] - 2);
+                            $endPage = min($pagination['totalPages'], $pagination['currentPage'] + 2);
+                            
+                            // Show first page if not in range
+                            if ($startPage > 1):
+                            ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="<?= current_url() ?>?page=1">1</a>
+                                </li>
+                                <?php if ($startPage > 2): ?>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            
+                            <!-- Page Numbers -->
+                            <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                                <li class="page-item <?= $i == $pagination['currentPage'] ? 'active' : '' ?>">
+                                    <?php if ($i == $pagination['currentPage']): ?>
+                                        <span class="page-link"><?= $i ?></span>
+                                    <?php else: ?>
+                                        <a class="page-link" href="<?= current_url() ?>?page=<?= $i ?>"><?= $i ?></a>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endfor; ?>
+                            
+                            <!-- Show last page if not in range -->
+                            <?php if ($endPage < $pagination['totalPages']): ?>
+                                <?php if ($endPage < $pagination['totalPages'] - 1): ?>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                <?php endif; ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="<?= current_url() ?>?page=<?= $pagination['totalPages'] ?>"><?= $pagination['totalPages'] ?></a>
+                                </li>
+                            <?php endif; ?>
+                            
+                            <!-- Next Button -->
+                            <li class="page-item <?= $pagination['currentPage'] == $pagination['totalPages'] ? 'disabled' : '' ?>">
+                                <?php if ($pagination['currentPage'] == $pagination['totalPages']): ?>
+                                    <span class="page-link">Next</span>
+                                <?php else: ?>
+                                    <a class="page-link" href="<?= current_url() ?>?page=<?= $pagination['currentPage'] + 1 ?>">Next</a>
+                                <?php endif; ?>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </nav>
             </div>
@@ -182,50 +232,249 @@ Kerjasama Akan Berakhir
 
 <?= $this->section('scripts') ?>
 <script>
-// Search functionality
-document.getElementById('searchInput').addEventListener('keyup', function() {
-    const searchTerm = this.value.toLowerCase();
+// Global variables for pagination
+let allData = [];
+let filteredData = [];
+let currentPage = 1;
+let itemsPerPage = 10;
+let currentFilter = 'all';
+let currentSearch = '';
+
+// Initialize data from PHP
+document.addEventListener('DOMContentLoaded', function() {
+    // Store all table rows as data
     const tableRows = document.querySelectorAll('tbody tr');
+    allData = Array.from(tableRows).map(row => ({
+        element: row,
+        namaMitra: row.cells[0].textContent.toLowerCase(),
+        lingkup: row.cells[1].textContent.toLowerCase(),
+        sisaHari: parseInt(row.dataset.sisaHari || 0),
+        id: row.dataset.id
+    }));
     
-    tableRows.forEach(row => {
-        const namaMitra = row.cells[0].textContent.toLowerCase();
-        const lingkup = row.cells[1].textContent.toLowerCase();
-        
-        if (namaMitra.includes(searchTerm) || lingkup.includes(searchTerm)) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    });
+    filteredData = [...allData];
+    
+    // Only add client-side pagination if there are more than 10 items on current server page
+    if (allData.length === 10) {
+        // This might be a full page, check if there are more pages from server
+        updateClientPagination();
+    }
+    
+    // Auto highlight rows based on remaining days
+    highlightRowsByDays();
 });
 
-// Filter functionality
+// Search functionality with pagination
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    currentSearch = this.value.toLowerCase();
+    filterAndPaginate();
+});
+
+// Filter functionality with pagination
 document.querySelectorAll('[data-filter]').forEach(filterBtn => {
     filterBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        const filter = this.dataset.filter;
-        const tableRows = document.querySelectorAll('tbody tr');
-        
-        tableRows.forEach(row => {
-            const sisaHari = parseInt(row.dataset.sisaHari);
-            
-            if (filter === 'all') {
-                row.style.display = '';
-            } else if (filter === '30-hari' && sisaHari <= 30) {
-                row.style.display = '';
-            } else if (filter === '60-hari' && sisaHari <= 60) {
-                row.style.display = '';
-            } else if (filter === '90-hari' && sisaHari <= 90) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
+        currentFilter = this.dataset.filter;
         
         // Update filter button text
         document.getElementById('filterDropdown').innerHTML = `<i class="fas fa-filter me-2"></i>${this.textContent}`;
+        
+        filterAndPaginate();
     });
 });
+
+function filterAndPaginate() {
+    // Filter data based on search and filter criteria
+    filteredData = allData.filter(item => {
+        // Search filter
+        const matchesSearch = !currentSearch || 
+            item.namaMitra.includes(currentSearch) || 
+            item.lingkup.includes(currentSearch);
+        
+        // Category filter
+        let matchesFilter = true;
+        if (currentFilter === '30-hari') {
+            matchesFilter = item.sisaHari <= 30;
+        } else if (currentFilter === '60-hari') {
+            matchesFilter = item.sisaHari <= 60;
+        } else if (currentFilter === '90-hari') {
+            matchesFilter = item.sisaHari <= 90;
+        }
+        
+        return matchesSearch && matchesFilter;
+    });
+    
+    // Reset to first page
+    currentPage = 1;
+    
+    // Update display
+    updateClientPagination();
+    renderFilteredData();
+}
+
+function renderFilteredData() {
+    const tbody = document.querySelector('tbody');
+    
+    // Hide all rows first
+    allData.forEach(item => {
+        item.element.style.display = 'none';
+    });
+    
+    // Calculate which items to show
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageData = filteredData.slice(startIndex, endIndex);
+    
+    // Show filtered rows
+    pageData.forEach(item => {
+        item.element.style.display = '';
+    });
+    
+    // Update pagination info
+    updatePaginationInfo();
+}
+
+function updateClientPagination() {
+    const totalItems = filteredData.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    
+    // Only show pagination if there's filtering/searching happening
+    if (currentSearch || currentFilter !== 'all') {
+        renderClientPaginationControls(totalPages);
+        renderFilteredData();
+    } else {
+        // Remove client pagination controls if no filtering
+        const existingClientPagination = document.getElementById('clientPaginationControls');
+        if (existingClientPagination) {
+            existingClientPagination.remove();
+        }
+    }
+}
+
+function renderClientPaginationControls(totalPages) {
+    if (totalPages <= 1) return;
+    
+    // Remove existing client pagination
+    const existingClientPagination = document.getElementById('clientPaginationControls');
+    if (existingClientPagination) {
+        existingClientPagination.remove();
+    }
+    
+    // Create new pagination controls
+    const paginationContainer = document.querySelector('.mt-4');
+    const clientPaginationDiv = document.createElement('div');
+    clientPaginationDiv.id = 'clientPaginationControls';
+    clientPaginationDiv.className = 'd-flex justify-content-between align-items-center mt-2 border-top pt-2';
+    
+    const startItem = filteredData.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
+    const endItem = Math.min(currentPage * itemsPerPage, filteredData.length);
+    
+    clientPaginationDiv.innerHTML = `
+        <div class="text-muted">
+            <small>Hasil filter: ${startItem}-${endItem} dari ${filteredData.length} data</small>
+        </div>
+        <nav aria-label="Client Pagination">
+            <ul class="pagination pagination-sm mb-0" id="clientPagination">
+                ${generateClientPaginationHTML(totalPages)}
+            </ul>
+        </nav>
+    `;
+    
+    paginationContainer.appendChild(clientPaginationDiv);
+    
+    // Bind pagination events
+    bindClientPaginationEvents();
+}
+
+function generateClientPaginationHTML(totalPages) {
+    let html = '';
+    
+    // Previous button
+    html += `
+        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+            <a class="page-link client-page-link" href="#" data-page="${currentPage - 1}" ${currentPage === 1 ? 'tabindex="-1"' : ''}>
+                Previous
+            </a>
+        </li>
+    `;
+    
+    // Page numbers
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+    
+    if (startPage > 1) {
+        html += `<li class="page-item"><a class="page-link client-page-link" href="#" data-page="1">1</a></li>`;
+        if (startPage > 2) {
+            html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        }
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+        html += `
+            <li class="page-item ${i === currentPage ? 'active' : ''}">
+                <a class="page-link client-page-link" href="#" data-page="${i}">${i}</a>
+            </li>
+        `;
+    }
+    
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        }
+        html += `<li class="page-item"><a class="page-link client-page-link" href="#" data-page="${totalPages}">${totalPages}</a></li>`;
+    }
+    
+    // Next button
+    html += `
+        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+            <a class="page-link client-page-link" href="#" data-page="${currentPage + 1}" ${currentPage === totalPages ? 'tabindex="-1"' : ''}>
+                Next
+            </a>
+        </li>
+    `;
+    
+    return html;
+}
+
+function bindClientPaginationEvents() {
+    document.querySelectorAll('.client-page-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (this.parentElement.classList.contains('disabled')) return;
+            
+            const page = parseInt(this.dataset.page);
+            if (page > 0 && page <= Math.ceil(filteredData.length / itemsPerPage)) {
+                currentPage = page;
+                updateClientPagination();
+            }
+        });
+    });
+}
+
+function updatePaginationInfo() {
+    const totalItems = filteredData.length;
+    const startItem = totalItems > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
+    const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+    
+    const infoElement = document.getElementById('paginationInfo');
+    if (currentSearch || currentFilter !== 'all') {
+        infoElement.innerHTML = `Menampilkan ${startItem}-${endItem} dari ${totalItems} data yang difilter`;
+    }
+}
+
+function highlightRowsByDays() {
+    const tableRows = document.querySelectorAll('tbody tr');
+    
+    tableRows.forEach(row => {
+        const sisaHari = parseInt(row.dataset.sisaHari);
+        
+        if (sisaHari <= 30) {
+            row.classList.add('table-danger');
+        } else if (sisaHari <= 60) {
+            row.classList.add('table-warning');
+        }
+    });
+}
 
 // View function
 function viewKerjasama(id) {
@@ -315,20 +564,5 @@ function deleteKerjasama(id) {
         });
     }
 }
-
-// Auto highlight rows berdasarkan sisa hari
-document.addEventListener('DOMContentLoaded', function() {
-    const tableRows = document.querySelectorAll('tbody tr');
-    
-    tableRows.forEach(row => {
-        const sisaHari = parseInt(row.dataset.sisaHari);
-        
-        if (sisaHari <= 30) {
-            row.classList.add('table-danger');
-        } else if (sisaHari <= 60) {
-            row.classList.add('table-warning');
-        }
-    });
-});
 </script>
 <?= $this->endSection() ?>

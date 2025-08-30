@@ -23,10 +23,41 @@ class UserController extends BaseController
 
     public function index()
     {
-        // Semua role bisa akses index (read)
+        // Get pagination parameters
+        $page = $this->request->getGet('page') ?? 1;
+        $perPage = 10; // 10 items per page
+        
+        // Get total count for pagination
+        $totalUsers = $this->userModel->countAllResults();
+        
+        // Calculate total pages
+        $totalPages = ceil($totalUsers / $perPage);
+        
+        // Ensure valid page number
+        $page = max(1, min($page, $totalPages));
+        
+        // Calculate offset
+        $offset = ($page - 1) * $perPage;
+        
+        // Get users data with pagination
+        $users = $this->userModel->orderBy('id', 'DESC')
+                                 ->limit($perPage, $offset)
+                                 ->findAll();
+        
+        // Calculate pagination info
+        $paginationInfo = [
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'perPage' => $perPage,
+            'totalItems' => $totalUsers,
+            'startItem' => $totalUsers > 0 ? $offset + 1 : 0,
+            'endItem' => min($offset + $perPage, $totalUsers)
+        ];
+        
         $data = [
             'title' => 'Manajemen User',
-            'users' => $this->userModel->findAll()
+            'users' => $users,
+            'pagination' => $paginationInfo
         ];
         return view('admin/users', $data);
     }

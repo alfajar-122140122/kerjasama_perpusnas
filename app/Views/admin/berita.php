@@ -61,6 +61,18 @@ if (!isset($berita)) {
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="#" onclick="resetFilters()"><i class="fas fa-times"></i> Reset Filter</a></li>
             </ul>
+            
+            <!-- Entries per page selector -->
+            <div class="d-flex align-items-center ms-auto">
+                <label for="entriesPerPage" class="form-label me-2 mb-0 text-muted">Tampilkan:</label>
+                <select class="form-select form-select-sm" id="entriesPerPage" style="width: auto;" onchange="changeEntriesPerPage()">
+                    <option value="10" <?= (isset($perPage) && $perPage == 10) ? 'selected' : '' ?>>10</option>
+                    <option value="25" <?= (isset($perPage) && $perPage == 25) ? 'selected' : '' ?>>25</option>
+                    <option value="50" <?= (isset($perPage) && $perPage == 50) ? 'selected' : '' ?>>50</option>
+                    <option value="100" <?= (isset($perPage) && $perPage == 100) ? 'selected' : '' ?>>100</option>
+                </select>
+                <span class="text-muted ms-2">entri</span>
+            </div>
         </div>
 
         <!-- Berita Table -->
@@ -80,7 +92,7 @@ if (!isset($berita)) {
                         </thead>
                         <tbody>
                             <?php foreach ($berita as $item): ?>
-                            <tr data-berita-id="<?= $item['id_berita'] ?>" class="berita-row">
+                            <tr data-berita-id="<?= $item['id'] ?>" class="berita-row">
                                 <td class="p-3">
                                     <div class="berita-image" style="width: 80px; height: 60px;">
                                         <?php if ($item['gambar']): ?>
@@ -116,13 +128,13 @@ if (!isset($berita)) {
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-success btn-sm" title="Lihat" onclick="viewBerita(<?= $item['id_berita'] ?>)">
+                                        <button type="button" class="btn btn-success btn-sm" title="Lihat" onclick="viewBerita(<?= $item['id'] ?>)">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button type="button" class="btn btn-primary btn-sm" title="Edit" onclick="editBerita(<?= $item['id_berita'] ?>)">
+                                        <button type="button" class="btn btn-primary btn-sm" title="Edit" onclick="editBerita(<?= $item['id'] ?>)">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button type="button" class="btn btn-danger btn-sm" title="Hapus" onclick="deleteBerita(<?= $item['id_berita'] ?>)">
+                                        <button type="button" class="btn btn-danger btn-sm" title="Hapus" onclick="deleteBerita(<?= $item['id'] ?>)">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
@@ -143,28 +155,47 @@ if (!isset($berita)) {
         </div>
         <?php endif; ?>
         <!-- Pagination -->
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="text-muted">
-                <?php
-                $count = count($berita);
-                $start = $count > 0 ? 1 : 0;
-                echo "Menampilkan {$start}-{$count} dari {$count} data";
-                ?>
+        <?php if (isset($paginationInfo)): ?>
+        <div class="d-flex justify-content-between align-items-center mt-4" id="paginationContainer">
+            <div class="text-muted" id="paginationInfo">
+                Menampilkan <?= $paginationInfo['start'] ?>-<?= $paginationInfo['end'] ?> dari <?= $paginationInfo['total'] ?> data
             </div>
             <nav>
-                <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item disabled">
-                        <span class="page-link">Previous</span>
+                <ul class="pagination pagination-sm mb-0" id="paginationControls">
+                    <!-- Previous Button -->
+                    <li class="page-item <?= $paginationInfo['currentPage'] <= 1 ? 'disabled' : '' ?>">
+                        <?php if ($paginationInfo['currentPage'] <= 1): ?>
+                            <span class="page-link">Previous</span>
+                        <?php else: ?>
+                            <a class="page-link" href="<?= base_url('admin/berita?page=' . ($paginationInfo['currentPage'] - 1) . '&perPage=' . $paginationInfo['perPage']) ?>">Previous</a>
+                        <?php endif; ?>
                     </li>
-                    <li class="page-item active">
-                        <span class="page-link">1</span>
-                    </li>
-                    <li class="page-item disabled">
-                        <span class="page-link">Next</span>
+
+                    <!-- Page Numbers -->
+                    <?php for ($i = 1; $i <= $paginationInfo['totalPages']; $i++): ?>
+                        <?php if ($i == $paginationInfo['currentPage']): ?>
+                            <li class="page-item active">
+                                <span class="page-link"><?= $i ?></span>
+                            </li>
+                        <?php else: ?>
+                            <li class="page-item">
+                                <a class="page-link" href="<?= base_url('admin/berita?page=' . $i . '&perPage=' . $paginationInfo['perPage']) ?>"><?= $i ?></a>
+                            </li>
+                        <?php endif; ?>
+                    <?php endfor; ?>
+
+                    <!-- Next Button -->
+                    <li class="page-item <?= $paginationInfo['currentPage'] >= $paginationInfo['totalPages'] ? 'disabled' : '' ?>">
+                        <?php if ($paginationInfo['currentPage'] >= $paginationInfo['totalPages']): ?>
+                            <span class="page-link">Next</span>
+                        <?php else: ?>
+                            <a class="page-link" href="<?= base_url('admin/berita?page=' . ($paginationInfo['currentPage'] + 1) . '&perPage=' . $paginationInfo['perPage']) ?>">Next</a>
+                        <?php endif; ?>
                     </li>
                 </ul>
             </nav>
         </div>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -239,7 +270,7 @@ if (!isset($berita)) {
             </div>
             <form id="editBeritaForm" method="POST" action="" enctype="multipart/form-data">
                 <?= csrf_field() ?>
-                <input type="hidden" id="edit_id_berita" name="id_berita">
+                <input type="hidden" id="edit_id" name="id">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-8">
@@ -360,6 +391,181 @@ if (!isset($berita)) {
 <!-- Base URL for AJAX calls -->
 <script>
     const base_url = '<?= base_url() ?>';
+    
+    // Global variables for pagination
+    let currentServerPage = <?= isset($paginationInfo) ? $paginationInfo['currentPage'] : 1 ?>;
+    let currentServerPerPage = <?= isset($paginationInfo) ? $paginationInfo['perPage'] : 10 ?>;
+    let totalServerData = <?= isset($paginationInfo) ? $paginationInfo['total'] : count($berita ?? []) ?>;
+    let currentStatusFilter = 'all';
+    let currentSearchTerm = '';
+    
+    // Store original server data
+    let serverBeritaData = [];
+    let filteredData = [];
+    let currentClientPage = 1;
+    let clientPerPage = 10;
+    
+    // Store server berita data on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        storeServerData();
+        initializeEventListeners();
+    });
+    
+    function storeServerData() {
+        const rows = document.querySelectorAll('#beritaAdminTable tbody tr.berita-row');
+        serverBeritaData = [];
+        
+        rows.forEach(row => {
+            const beritaData = {
+                id: row.dataset.beritaId,
+                title: row.querySelector('.berita-title').textContent.trim(),
+                excerpt: row.querySelector('.berita-excerpt').textContent.trim(),
+                status: row.querySelector('.badge').textContent.trim().toLowerCase(),
+                date: row.querySelector('td:nth-child(4) small').textContent.trim(),
+                html: row.outerHTML
+            };
+            serverBeritaData.push(beritaData);
+        });
+        
+        filteredData = [...serverBeritaData];
+        updateClientPagination();
+    }
+    
+    function initializeEventListeners() {
+        // Search functionality
+        const searchInput = document.getElementById('searchBerita');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                currentSearchTerm = this.value.toLowerCase();
+                applyFilters();
+            });
+        }
+    }
+    
+    // Filter by status
+    function filterByStatus(status) {
+        currentStatusFilter = status;
+        currentClientPage = 1; // Reset to first page
+        applyFilters();
+    }
+    
+    // Reset all filters
+    function resetFilters() {
+        currentStatusFilter = 'all';
+        currentSearchTerm = '';
+        currentClientPage = 1;
+        
+        const searchInput = document.getElementById('searchBerita');
+        if (searchInput) searchInput.value = '';
+        
+        applyFilters();
+    }
+    
+    // Apply all filters
+    function applyFilters() {
+        filteredData = serverBeritaData.filter(berita => {
+            const matchesSearch = berita.title.toLowerCase().includes(currentSearchTerm) || 
+                                berita.excerpt.toLowerCase().includes(currentSearchTerm);
+            const matchesStatus = currentStatusFilter === 'all' || berita.status === currentStatusFilter;
+            
+            return matchesSearch && matchesStatus;
+        });
+        
+        updateClientPagination();
+        displayFilteredData();
+    }
+    
+    // Update client-side pagination info
+    function updateClientPagination() {
+        const totalFiltered = filteredData.length;
+        const totalPages = Math.ceil(totalFiltered / clientPerPage);
+        
+        if (currentClientPage > totalPages && totalPages > 0) {
+            currentClientPage = totalPages;
+        }
+        
+        const start = totalFiltered > 0 ? ((currentClientPage - 1) * clientPerPage) + 1 : 0;
+        const end = Math.min(currentClientPage * clientPerPage, totalFiltered);
+        
+        updatePaginationDisplay(start, end, totalFiltered, currentClientPage, totalPages);
+    }
+    
+    // Display filtered data
+    function displayFilteredData() {
+        const tbody = document.querySelector('#beritaAdminTable tbody');
+        const startIndex = (currentClientPage - 1) * clientPerPage;
+        const endIndex = startIndex + clientPerPage;
+        const pageData = filteredData.slice(startIndex, endIndex);
+        
+        if (pageData.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4"><em>Tidak ada data yang sesuai dengan filter</em></td></tr>';
+        } else {
+            tbody.innerHTML = pageData.map(berita => berita.html).join('');
+        }
+    }
+    
+    // Update pagination display
+    function updatePaginationDisplay(start, end, total, currentPage, totalPages) {
+        const infoElement = document.getElementById('paginationInfo');
+        const controlsElement = document.getElementById('paginationControls');
+        
+        if (infoElement) {
+            infoElement.textContent = `Menampilkan ${start}-${end} dari ${total} data`;
+        }
+        
+        if (controlsElement) {
+            let paginationHTML = '';
+            
+            // Previous button
+            paginationHTML += `
+                <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="goToClientPage(${currentPage - 1}); return false;">Previous</a>
+                </li>
+            `;
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationHTML += `<li class="page-item active"><span class="page-link">${i}</span></li>`;
+                } else {
+                    paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="goToClientPage(${i}); return false;">${i}</a></li>`;
+                }
+            }
+            
+            // Next button
+            paginationHTML += `
+                <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="goToClientPage(${currentPage + 1}); return false;">Next</a>
+                </li>
+            `;
+            
+            controlsElement.innerHTML = paginationHTML;
+        }
+    }
+    
+    // Navigate to specific client page
+    function goToClientPage(page) {
+        const totalPages = Math.ceil(filteredData.length / clientPerPage);
+        if (page >= 1 && page <= totalPages) {
+            currentClientPage = page;
+            updateClientPagination();
+            displayFilteredData();
+        }
+    }
+    
+    // Change entries per page
+    function changeEntriesPerPage() {
+        const select = document.getElementById('entriesPerPage');
+        const newPerPage = parseInt(select.value);
+        
+        // Build URL with current page and new perPage
+        const currentUrl = new URL(window.location);
+        currentUrl.searchParams.set('page', '1'); // Reset to first page
+        currentUrl.searchParams.set('perPage', newPerPage);
+        
+        // Redirect to reload with new perPage
+        window.location.href = currentUrl.toString();
+    }
 </script>
 <!-- Berita Management JS -->
 <script src="<?= base_url('js/berita-management.js') ?>"></script>

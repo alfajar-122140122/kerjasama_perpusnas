@@ -19,11 +19,41 @@ class KerjasamaController extends BaseController
     
     public function data()
     {
-        $kerjasamaData = $this->kerjasamaModel->orderBy('id', 'DESC')->findAll();
+        // Get pagination parameters
+        $page = $this->request->getGet('page') ?? 1;
+        $perPage = 10; // 10 items per page
+        
+        // Get total count for pagination
+        $totalKerjasama = $this->kerjasamaModel->countAllResults();
+        
+        // Calculate total pages
+        $totalPages = ceil($totalKerjasama / $perPage);
+        
+        // Ensure valid page number
+        $page = max(1, min($page, $totalPages));
+        
+        // Calculate offset
+        $offset = ($page - 1) * $perPage;
+        
+        // Get kerjasama data with pagination
+        $kerjasamaData = $this->kerjasamaModel->orderBy('id', 'DESC')
+                                             ->limit($perPage, $offset)
+                                             ->findAll();
+        
+        // Calculate pagination info
+        $paginationInfo = [
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'perPage' => $perPage,
+            'totalItems' => $totalKerjasama,
+            'startItem' => $totalKerjasama > 0 ? $offset + 1 : 0,
+            'endItem' => min($offset + $perPage, $totalKerjasama)
+        ];
         
         $data = [
             'title' => 'Data Kerjasama',
-            'kerjasamaData' => $kerjasamaData
+            'kerjasamaData' => $kerjasamaData,
+            'pagination' => $paginationInfo
         ];
         
         return view('admin/kerjasama/data', $data);
@@ -31,12 +61,41 @@ class KerjasamaController extends BaseController
     
     public function implementasi()
     {
+        // Get pagination parameters
+        $page = $this->request->getGet('page') ?? 1;
+        $perPage = 10; // 10 items per page
+        
         $implementasiKerjasamaModel = new \App\Models\ImplementasiKerjasamaModel();
-        $implementasiData = $implementasiKerjasamaModel->getImplementasiWithKerjasama();
+        
+        // Get total count for pagination
+        $totalImplementasi = $implementasiKerjasamaModel->countAllResults();
+        
+        // Calculate total pages
+        $totalPages = ceil($totalImplementasi / $perPage);
+        
+        // Ensure valid page number
+        $page = max(1, min($page, $totalPages));
+        
+        // Calculate offset
+        $offset = ($page - 1) * $perPage;
+        
+        // Get implementasi data with pagination
+        $implementasiData = $implementasiKerjasamaModel->getImplementasiWithKerjasama($perPage, $offset);
+        
+        // Calculate pagination info
+        $paginationInfo = [
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'perPage' => $perPage,
+            'totalItems' => $totalImplementasi,
+            'startItem' => $totalImplementasi > 0 ? $offset + 1 : 0,
+            'endItem' => min($offset + $perPage, $totalImplementasi)
+        ];
         
         $data = [
             'title' => 'Implementasi Kerjasama',
-            'implementasiData' => $implementasiData
+            'implementasiData' => $implementasiData,
+            'pagination' => $paginationInfo
         ];
         
         return view('admin/kerjasama/implementasi', $data);
@@ -66,11 +125,31 @@ class KerjasamaController extends BaseController
         $today = date('Y-m-d');
         $threeMonthsLater = date('Y-m-d', strtotime('+3 months'));
         
-        // Ambil kerjasama yang akan berakhir dalam 90 hari ke depan
+        // Get pagination parameters
+        $page = $this->request->getGet('page') ?? 1;
+        $perPage = 10; // 10 items per page
+        
+        // Get total count for pagination
+        $totalKerjasama = $this->kerjasamaModel
+            ->where('tanggal_berakhir >=', $today)
+            ->where('tanggal_berakhir <=', $threeMonthsLater)
+            ->countAllResults();
+        
+        // Calculate total pages
+        $totalPages = ceil($totalKerjasama / $perPage);
+        
+        // Ensure valid page number
+        $page = max(1, min($page, $totalPages));
+        
+        // Calculate offset
+        $offset = ($page - 1) * $perPage;
+        
+        // Ambil kerjasama yang akan berakhir dalam 90 hari ke depan dengan pagination
         $akanBerakhirData = $this->kerjasamaModel
             ->where('tanggal_berakhir >=', $today)
             ->where('tanggal_berakhir <=', $threeMonthsLater)
             ->orderBy('tanggal_berakhir', 'ASC')
+            ->limit($perPage, $offset)
             ->findAll();
         
         // Hitung sisa hari untuk setiap kerjasama
@@ -85,9 +164,20 @@ class KerjasamaController extends BaseController
             $kerjasama['tanggal_berakhir_formatted'] = date('d/m/Y', strtotime($kerjasama['tanggal_berakhir']));
         }
         
+        // Calculate pagination info
+        $paginationInfo = [
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'perPage' => $perPage,
+            'totalItems' => $totalKerjasama,
+            'startItem' => $totalKerjasama > 0 ? $offset + 1 : 0,
+            'endItem' => min($offset + $perPage, $totalKerjasama)
+        ];
+        
         $data = [
             'title' => 'Kerjasama Akan Berakhir',
-            'akanBerakhirData' => $akanBerakhirData
+            'akanBerakhirData' => $akanBerakhirData,
+            'pagination' => $paginationInfo
         ];
         
         return view('admin/kerjasama/akan_berakhir', $data);
@@ -101,8 +191,52 @@ class KerjasamaController extends BaseController
     
     public function pengajuan()
     {
+        // Get pagination parameters
+        $page = $this->request->getGet('page') ?? 1;
+        $perPage = 10; // 10 items per page
+        
+        $permohonanKerjasamaModel = new \App\Models\PermohonanKerjasamaModel();
+        
+        // Get total count for pagination
+        $totalPermohonan = $permohonanKerjasamaModel->countAllResults();
+        
+        // Calculate total pages
+        $totalPages = ceil($totalPermohonan / $perPage);
+        
+        // Ensure valid page number
+        $page = max(1, min($page, $totalPages));
+        
+        // Calculate offset
+        $offset = ($page - 1) * $perPage;
+        
+        // Get pengajuan data with pagination
+        $pengajuanData = $permohonanKerjasamaModel->orderBy('created_at', 'DESC')
+                                                  ->limit($perPage, $offset)
+                                                  ->findAll();
+        
+        // Calculate summary counts
+        $summary = [
+            'pending' => $permohonanKerjasamaModel->where('status', 'pending')->countAllResults(),
+            'review' => $permohonanKerjasamaModel->where('status', 'review')->countAllResults(),
+            'approved' => $permohonanKerjasamaModel->where('status', 'approved')->countAllResults(),
+            'rejected' => $permohonanKerjasamaModel->where('status', 'rejected')->countAllResults()
+        ];
+        
+        // Calculate pagination info
+        $paginationInfo = [
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'perPage' => $perPage,
+            'totalItems' => $totalPermohonan,
+            'startItem' => $totalPermohonan > 0 ? $offset + 1 : 0,
+            'endItem' => min($offset + $perPage, $totalPermohonan)
+        ];
+        
         $data = [
-            'title' => 'Pengajuan Kerjasama'
+            'title' => 'Pengajuan Kerjasama',
+            'pengajuanData' => $pengajuanData,
+            'summary' => $summary,
+            'pagination' => $paginationInfo
         ];
         
         return view('admin/kerjasama/pengajuan', $data);
