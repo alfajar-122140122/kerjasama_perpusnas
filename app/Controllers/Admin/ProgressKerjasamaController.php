@@ -17,7 +17,7 @@ class ProgressKerjasamaController extends BaseController
     
     public function index()
     {
-        $progressData = $this->progressKerjasamaModel->orderBy('created_at', 'DESC')->findAll();
+        $progressData = $this->progressKerjasamaModel->orderBy('tanggal_pengajuan', 'DESC')->findAll();
         
         $data = [
             'title' => 'Progress Kerjasama',
@@ -64,7 +64,7 @@ class ProgressKerjasamaController extends BaseController
             'lembaga' => 'required',
             'tanggal_pengajuan' => 'required|valid_date',
             'jenis' => 'required',
-            'progress' => 'required'
+            'status' => 'required'
         ];
         
         if (!$this->validate($rules)) {
@@ -91,7 +91,7 @@ class ProgressKerjasamaController extends BaseController
             'tanggal_pengajuan' => $this->request->getPost('tanggal_pengajuan'),
             'lembaga' => $this->request->getPost('lembaga'),
             'jenis' => $this->request->getPost('jenis'),
-            'progress' => $this->request->getPost('progress')
+            'status' => $this->request->getPost('status')
         ];
         
         try {

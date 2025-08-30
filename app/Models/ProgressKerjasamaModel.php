@@ -14,17 +14,19 @@ class ProgressKerjasamaModel extends Model
 
     // Allowed fields for mass assignment
     protected $allowedFields    = [
+        'permohonan_id',
         'tanggal_pengajuan',
         'lembaga',
         'jenis',
-        'progress'
+        'status',
+        'catatan',
+        'created_by',
+        'created_at'
     ];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = false; // We handle created_at manually
     protected $dateFormat    = 'datetime';
-    // protected $createdField  = 'created_at';
-    // protected $updatedField  = null;
     
     // Get progress kerjasama with filtering options
     public function getProgressData($filter = null)
@@ -36,15 +38,15 @@ class ProgressKerjasamaModel extends Model
                 $builder->where('jenis', $filter['jenis']);
             }
             
-            if (isset($filter['progress']) && $filter['progress'] != 'all') {
-                $builder->where('progress', $filter['progress']);
+            if (isset($filter['status']) && $filter['status'] != 'all') {
+                $builder->where('status', $filter['status']);
             }
             
             if (isset($filter['search']) && !empty($filter['search'])) {
                 $builder->groupStart()
                     ->like('lembaga', $filter['search'])
                     ->orLike('jenis', $filter['search'])
-                    ->orLike('progress', $filter['search'])
+                    ->orLike('status', $filter['search'])
                     ->groupEnd();
             }
         }
@@ -62,15 +64,15 @@ class ProgressKerjasamaModel extends Model
                 $builder->where('jenis', $filter['jenis']);
             }
             
-            if (isset($filter['progress']) && $filter['progress'] != 'all') {
-                $builder->where('progress', $filter['progress']);
+            if (isset($filter['status']) && $filter['status'] != 'all') {
+                $builder->where('status', $filter['status']);
             }
             
             if (isset($filter['search']) && !empty($filter['search'])) {
                 $builder->groupStart()
                     ->like('lembaga', $filter['search'])
                     ->orLike('jenis', $filter['search'])
-                    ->orLike('progress', $filter['search'])
+                    ->orLike('status', $filter['search'])
                     ->groupEnd();
             }
         }
@@ -84,15 +86,17 @@ class ProgressKerjasamaModel extends Model
         $totalProgress = $this->countAllResults();
         $newProgress = $this->where('jenis', 'Baru')->countAllResults();
         $extensionProgress = $this->where('jenis', 'Perpanjangan')->countAllResults();
-        $documentationProgress = $this->where('progress', 'Dokumentasi')->countAllResults();
-        $finishingProgress = $this->where('progress', 'Finishing')->countAllResults();
+        $reviewProgress = $this->where('status', 'review')->countAllResults();
+        $approvedProgress = $this->where('status', 'approved')->countAllResults();
+        $rejectedProgress = $this->where('status', 'rejected')->countAllResults();
         
         return [
             'total' => $totalProgress,
             'new' => $newProgress,
             'extension' => $extensionProgress,
-            'documentation' => $documentationProgress,
-            'finishing' => $finishingProgress
+            'review' => $reviewProgress,
+            'approved' => $approvedProgress,
+            'rejected' => $rejectedProgress
         ];
     }
 }

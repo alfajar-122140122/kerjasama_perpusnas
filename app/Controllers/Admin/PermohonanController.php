@@ -187,13 +187,25 @@ class PermohonanController extends BaseController
         
         // Update status
         try {
-            $this->permohonanModel->updateStatus($id, $status, $catatan, $reviewedBy);
+            log_message('info', "Updating status for permohonan ID: $id to status: $status by user: $reviewedBy");
             
-            return $this->response->setJSON([
-                'status' => true,
-                'message' => 'Status permohonan berhasil diperbarui'
-            ]);
+            $updateResult = $this->permohonanModel->updateStatus($id, $status, $catatan, $reviewedBy);
+            
+            if ($updateResult) {
+                log_message('info', "Status update successful for permohonan ID: $id");
+                return $this->response->setJSON([
+                    'status' => true,
+                    'message' => 'Status permohonan berhasil diperbarui dan data masuk ke progress'
+                ]);
+            } else {
+                log_message('error', "Status update failed for permohonan ID: $id");
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Gagal memperbarui status permohonan'
+                ]);
+            }
         } catch (\Exception $e) {
+            log_message('error', "Exception in updateStatus: " . $e->getMessage());
             return $this->response->setJSON([
                 'status' => false,
                 'message' => 'Gagal memperbarui status permohonan: ' . $e->getMessage()

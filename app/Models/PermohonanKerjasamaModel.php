@@ -119,6 +119,7 @@ class PermohonanKerjasamaModel extends Model
      */
     public function updateStatus($id, $status, $catatan = null, $reviewedBy = null)
     {
+        // Update status permohonan
         $data = [
             'status'      => $status,
             'reviewed_by' => $reviewedBy,
@@ -128,23 +129,43 @@ class PermohonanKerjasamaModel extends Model
 
         // Ambil data permohonan untuk di-insert ke progress_kerjasama
         $permohonan = $this->find($id);
-        if ($permohonan) {
-            $progressModel = new \App\Models\ProgressKerjasamaModel();
-            $progressData = [
-                'tanggal_pengajuan' => !empty($permohonan['tanggal_pengajuan']) ? date('Y-m-d', strtotime($permohonan['tanggal_pengajuan'])) : null,
-                'lembaga'           => $permohonan['lembaga'] ?? null,
-                'jenis'             => isset($permohonan['jenis_permohonan']) ? ucfirst($permohonan['jenis_permohonan']) : null,
-                'progress'          => ucfirst($status),
-            ];
-            log_message('debug', 'Progress Data: ' . json_encode($progressData));
-            if (!in_array(null, $progressData, true) && !in_array('', $progressData, true)) {
+        if ($permohonan && $result) {
+            try {
+                $progressModel = new \App\Models\ProgressKerjasamaModel();
+                
+                // Prepare data untuk progress_kerjasama sesuai dengan schema migration
+                $progressData = [
+                    'permohonan_id'     => (int)$id,
+                    'tanggal_pengajuan' => !empty($permohonan['tanggal_pengajuan']) ? date('Y-m-d', strtotime($permohonan['tanggal_pengajuan'])) : date('Y-m-d'),
+                    'lembaga'           => $permohonan['lembaga'],
+                    'jenis'             => ucfirst($permohonan['jenis_permohonan']),
+                    'status'            => $status,
+                    'catatan'           => $catatan,
+                    'created_by'        => $reviewedBy ? (int)$reviewedBy : 1, // default to admin user id 1
+                    'created_at'        => date('Y-m-d H:i:s'),
+                ];
+                
+                log_message('info', 'Attempting to insert progress data: ' . json_encode($progressData));
+                
+                // Hapus data progress lama untuk permohonan yang sama (jika ada)
+                $progressModel->where('permohonan_id', $id)->delete();
+                
+                // Insert data baru
                 $insertResult = $progressModel->insert($progressData);
-                if ($insertResult === false) {
-                    log_message('error', 'Progress insert failed: ' . json_encode($progressModel->errors()));
+                
+                if ($insertResult) {
+                    log_message('info', 'Progress data inserted successfully for permohonan ID: ' . $id);
+                } else {
+                    log_message('error', 'Progress insert failed. Validation errors: ' . json_encode($progressModel->errors()));
+                    log_message('error', 'Data that failed to insert: ' . json_encode($progressData));
                 }
-            } else {
-                log_message('error', 'Progress Data NOT inserted due to missing field: ' . json_encode($progressData));
+                
+            } catch (\Exception $e) {
+                log_message('error', 'Exception during progress insert: ' . $e->getMessage());
+                log_message('error', 'Stack trace: ' . $e->getTraceAsString());
             }
+        } else {
+            log_message('error', 'Failed to update permohonan status or permohonan not found. ID: ' . $id);
         }
 
         return $result;
