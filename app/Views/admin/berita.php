@@ -6,7 +6,7 @@
 
 <?= $this->section('styles') ?>
 <link href="<?= base_url('css/berita-management-new.css') ?>" rel="stylesheet">
-<link href="<?= base_url('css/admin/components/pagination.css') ?>" rel="stylesheet">
+<link href="<?= base_url('css/components/pagination.css') ?>" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <?= $this->endSection() ?>
 
@@ -80,7 +80,7 @@ if (!isset($berita)) {
         <div class="card">
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0" id="beritaAdminTable">
+                    <table class="table table-hover table-paginate align-middle mb-0" id="beritaAdminTable">
                         <thead style="background-color: #f8f9fa;">
                             <tr>
                                 <th width="15%">Gambar</th>
@@ -143,6 +143,7 @@ if (!isset($berita)) {
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    <div class="pagination-container"></div>
                 </div>
             </div>
         </div>
@@ -156,69 +157,6 @@ if (!isset($berita)) {
         <?php endif; ?>
     </div>
 </div>
-
-<!-- Pagination -->
-<?php if (isset($paginationInfo)): ?>
-<div class="d-flex justify-content-between align-items-center mt-4" id="paginationContainer">
-    <div class="text-muted" id="paginationInfo">
-        Menampilkan <?= $paginationInfo['start'] ?>-<?= $paginationInfo['end'] ?> dari <?= $paginationInfo['total'] ?> data
-    </div>
-    <nav>
-        <ul class="pagination pagination-sm mb-0" id="paginationControls">
-            <!-- Previous Button -->
-            <li class="page-item <?= $paginationInfo['currentPage'] <= 1 ? 'disabled' : '' ?>">
-                <?php if ($paginationInfo['currentPage'] <= 1): ?>
-                    <span class="page-link">Previous</span>
-                <?php else: ?>
-                    <a class="page-link" href="<?= base_url('admin/berita?page=' . ($paginationInfo['currentPage'] - 1) . '&perPage=' . $paginationInfo['perPage']) ?>">Previous</a>
-                <?php endif; ?>
-            </li>
-
-            <!-- Page Numbers -->
-            <?php for ($i = 1; $i <= $paginationInfo['totalPages']; $i++): ?>
-                <?php if ($i == $paginationInfo['currentPage']): ?>
-                    <li class="page-item active">
-                        <span class="page-link"><?= $i ?></span>
-                    </li>
-                <?php else: ?>
-                    <li class="page-item">
-                        <a class="page-link" href="<?= base_url('admin/berita?page=' . $i . '&perPage=' . $paginationInfo['perPage']) ?>"><?= $i ?></a>
-                    </li>
-                <?php endif; ?>
-            <?php endfor; ?>
-
-            <!-- Next Button -->
-            <li class="page-item <?= $paginationInfo['currentPage'] >= $paginationInfo['totalPages'] ? 'disabled' : '' ?>">
-                <?php if ($paginationInfo['currentPage'] >= $paginationInfo['totalPages']): ?>
-                    <span class="page-link">Next</span>
-                <?php else: ?>
-                    <a class="page-link" href="<?= base_url('admin/berita?page=' . ($paginationInfo['currentPage'] + 1) . '&perPage=' . $paginationInfo['perPage']) ?>">Next</a>
-                <?php endif; ?>
-            </li>
-        </ul>
-    </nav>
-</div>
-<?php else: ?>
-<!-- Default single page view when no pagination data -->
-<div class="d-flex justify-content-between align-items-center mt-4" id="paginationContainer">
-    <div class="text-muted" id="paginationInfo">
-        Menampilkan data yang tersedia
-    </div>
-    <nav>
-        <ul class="pagination pagination-sm mb-0" id="paginationControls">
-            <li class="page-item disabled">
-                <span class="page-link">Previous</span>
-            </li>
-            <li class="page-item active">
-                <span class="page-link">1</span>
-            </li>
-            <li class="page-item disabled">
-                <span class="page-link">Next</span>
-            </li>
-        </ul>
-    </nav>
-</div>
-<?php endif; ?>
 
 <!-- Add Berita Modal -->
 <div class="modal fade" id="addBeritaModal" tabindex="-1" aria-labelledby="addBeritaModalLabel" aria-hidden="true">
@@ -653,4 +591,5 @@ if (!isset($berita)) {
         }
     });
 </script>
+<script src="<?= base_url('js/components/pagination.js') ?>"></script>
 <?= $this->endSection() ?>

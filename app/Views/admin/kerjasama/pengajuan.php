@@ -4,6 +4,10 @@
 Pengajuan Kerjasama
 <?= $this->endSection() ?>
 
+<?= $this->section('styles') ?>
+<link href="<?= base_url('css/components/pagination.css') ?>" rel="stylesheet">
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
 <div class="container-fluid">
     <!-- Page Header -->
@@ -115,7 +119,7 @@ Pengajuan Kerjasama
 
             <!-- Data Table -->
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover table-paginate">
                     <thead class="table-light">
                         <tr>
                             <th>No</th>
@@ -212,6 +216,7 @@ Pengajuan Kerjasama
                         <?php endif; ?>
                     </tbody>
                 </table>
+                <div class="pagination-container"></div>
             </div>
 
             <!-- Empty State -->
@@ -222,71 +227,6 @@ Pengajuan Kerjasama
             </div>
         </div>
     </div>
-</div>
-
-<!-- Pagination -->
-<div class="d-flex justify-content-between align-items-center mt-4" id="paginationSection">
-    <div class="text-muted" id="paginationInfo">
-        <?php if(isset($pagination)): ?>
-            Menampilkan <?= $pagination['startItem'] ?>-<?= $pagination['endItem'] ?> dari <?= $pagination['totalItems'] ?> data
-        <?php else: ?>
-            <?php
-            $count = isset($pengajuanData) ? count($pengajuanData) : 0;
-            $start = $count > 0 ? 1 : 0;
-            echo "Menampilkan {$start}-{$count} dari {$count} data";
-            ?>
-        <?php endif; ?>
-    </div>
-    <nav>
-        <ul class="pagination pagination-sm mb-0" id="paginationControls">
-            <?php if(isset($pagination) && $pagination['totalPages'] > 1): ?>
-                <!-- Previous Button -->
-                <li class="page-item <?= $pagination['currentPage'] == 1 ? 'disabled' : '' ?>">
-                    <?php if($pagination['currentPage'] == 1): ?>
-                        <span class="page-link">Previous</span>
-                    <?php else: ?>
-                        <a class="page-link" href="<?= base_url('admin/kerjasama/pengajuan?page=' . ($pagination['currentPage'] - 1) . '&perPage=' . $pagination['perPage']) ?>">Previous</a>
-                    <?php endif; ?>
-                </li>
-                
-                <!-- Page Numbers -->
-                <?php 
-                $startPage = max(1, $pagination['currentPage'] - 2);
-                $endPage = min($pagination['totalPages'], $pagination['currentPage'] + 2);
-                ?>
-                
-                <?php for($i = $startPage; $i <= $endPage; $i++): ?>
-                    <li class="page-item <?= $i == $pagination['currentPage'] ? 'active' : '' ?>">
-                        <?php if($i == $pagination['currentPage']): ?>
-                            <span class="page-link"><?= $i ?></span>
-                        <?php else: ?>
-                            <a class="page-link" href="<?= base_url('admin/kerjasama/pengajuan?page=' . $i . '&perPage=' . $pagination['perPage']) ?>"><?= $i ?></a>
-                        <?php endif; ?>
-                    </li>
-                <?php endfor; ?>
-                
-                <!-- Next Button -->
-                <li class="page-item <?= $pagination['currentPage'] == $pagination['totalPages'] ? 'disabled' : '' ?>">
-                    <?php if($pagination['currentPage'] == $pagination['totalPages']): ?>
-                        <span class="page-link">Next</span>
-                    <?php else: ?>
-                        <a class="page-link" href="<?= base_url('admin/kerjasama/pengajuan?page=' . ($pagination['currentPage'] + 1) . '&perPage=' . $pagination['perPage']) ?>">Next</a>
-                    <?php endif; ?>
-                </li>
-            <?php else: ?>
-                <!-- Default single page view -->
-                <li class="page-item disabled">
-                    <span class="page-link">Previous</span>
-                </li>
-                <li class="page-item active">
-                    <span class="page-link">1</span>
-                </li>
-                <li class="page-item disabled">
-                    <span class="page-link">Next</span>
-                </li>
-            <?php endif; ?>
-        </ul>
-    </nav>
 </div>
 
 <!-- View File Modal -->
@@ -762,4 +702,5 @@ function showAlert(type, message) {
     }, 5000);
 }
 </script>
+<script src="<?= base_url('js/components/pagination.js') ?>"></script>
 <?= $this->endSection() ?>

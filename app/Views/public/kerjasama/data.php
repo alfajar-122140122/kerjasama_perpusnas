@@ -10,6 +10,7 @@
 <link href="<?= base_url('css/public.css') ?>" rel="stylesheet">
 <link href="<?= base_url('css/public/kerjasama/data.css') ?>" rel="stylesheet">
 <link href="<?= base_url('css/public/components/filter.css') ?>" rel="stylesheet">
+<link href="<?= base_url('css/components/pagination.css') ?>" rel="stylesheet">
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <?= $this->endSection() ?>
 
@@ -50,7 +51,7 @@
         <!-- Data Table Section -->
         <div class="kerjasama-table-section" data-aos="fade-up" data-aos-delay="300">
                         <div class="kerjasama-table-container">
-                <table class="kerjasama-table" id="cooperationTable">
+                <table class="kerjasama-table table-paginate" id="cooperationTable">
                     <thead>
                         <tr>
                             <th class="kerjasama-col-partner">Nama Mitra</th>
@@ -182,4 +183,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+<script src="<?= base_url('js/components/pagination.js') ?>"></script>
 <?= $this->endSection() ?>

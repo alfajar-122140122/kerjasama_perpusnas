@@ -4,6 +4,10 @@
 Implementasi Kerjasama
 <?= $this->endSection() ?>
 
+<?= $this->section('styles') ?>
+<link href="<?= base_url('css/components/pagination.css') ?>" rel="stylesheet">
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
 <div class="container-fluid">
     <!-- Page Header -->
@@ -51,7 +55,7 @@ Implementasi Kerjasama
 
             <!-- Data Table -->
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover table-paginate">
                     <thead class="table-light">
                         <tr>
                             <th width="40">
@@ -131,84 +135,10 @@ Implementasi Kerjasama
                         <?php endif; ?>
                     </tbody>
                 </table>
+                <div class="pagination-container"></div>
             </div>
         </div>
     </div>
-</div>
-
-<!-- Pagination -->
-<div class="d-flex justify-content-between align-items-center mt-4">
-    <div class="text-muted" id="paginationInfo">
-        <?php if (isset($pagination)): ?>
-            Menampilkan <?= $pagination['startItem'] ?>-<?= $pagination['endItem'] ?> dari <?= $pagination['totalItems'] ?> data
-        <?php else: ?>
-            Menampilkan 0 dari 0 data
-        <?php endif; ?>
-    </div>
-    <nav aria-label="Implementasi Pagination Navigation">
-        <ul class="pagination pagination-sm mb-0" id="paginationControls">
-            <?php if (isset($pagination) && $pagination['totalPages'] > 1): ?>
-                <!-- Previous Button -->
-                <li class="page-item <?= $pagination['currentPage'] == 1 ? 'disabled' : '' ?>">
-                    <?php if ($pagination['currentPage'] == 1): ?>
-                        <span class="page-link">Previous</span>
-                    <?php else: ?>
-                        <a class="page-link" href="<?= current_url() ?>?page=<?= $pagination['currentPage'] - 1 ?>">Previous</a>
-                    <?php endif; ?>
-                </li>
-                
-                <?php
-                $startPage = max(1, $pagination['currentPage'] - 2);
-                $endPage = min($pagination['totalPages'], $pagination['currentPage'] + 2);
-                
-                // Show first page if not in range
-                if ($startPage > 1):
-                ?>
-                    <li class="page-item">
-                        <a class="page-link" href="<?= current_url() ?>?page=1">1</a>
-                    </li>
-                    <?php if ($startPage > 2): ?>
-                        <li class="page-item disabled">
-                            <span class="page-link">...</span>
-                        </li>
-                    <?php endif; ?>
-                <?php endif; ?>
-                
-                <!-- Page Numbers -->
-                <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
-                    <li class="page-item <?= $i == $pagination['currentPage'] ? 'active' : '' ?>">
-                        <?php if ($i == $pagination['currentPage']): ?>
-                            <span class="page-link"><?= $i ?></span>
-                        <?php else: ?>
-                            <a class="page-link" href="<?= current_url() ?>?page=<?= $i ?>"><?= $i ?></a>
-                        <?php endif; ?>
-                    </li>
-                <?php endfor; ?>
-                
-                <!-- Show last page if not in range -->
-                <?php if ($endPage < $pagination['totalPages']): ?>
-                    <?php if ($endPage < $pagination['totalPages'] - 1): ?>
-                        <li class="page-item disabled">
-                            <span class="page-link">...</span>
-                        </li>
-                    <?php endif; ?>
-                    <li class="page-item">
-                        <a class="page-link" href="<?= current_url() ?>?page=<?= $pagination['totalPages'] ?>"><?= $pagination['totalPages'] ?></a>
-                    </li>
-                <?php endif; ?>
-                
-                <!-- Next Button -->
-                <li class="page-item <?= $pagination['currentPage'] == $pagination['totalPages'] ? 'disabled' : '' ?>">
-                    <?php if ($pagination['currentPage'] == $pagination['totalPages']): ?>
-                        <span class="page-link">Next</span>
-                    <?php else: ?>
-                        <a class="page-link" href="<?= current_url() ?>?page=<?= $pagination['currentPage'] + 1 ?>">Next</a>
-                    <?php endif; ?>
-                </li>
-            <?php endif; ?>
-        </ul>
-    </nav>
-</div>
 </div>
 
 <!-- Modal Tambah Implementasi -->
@@ -1064,4 +994,5 @@ document.getElementById('formEditImplementasi').addEventListener('submit', funct
     });
 });
 </script>
+<script src="<?= base_url('js/components/pagination.js') ?>"></script>
 <?= $this->endSection() ?>

@@ -1,0 +1,63 @@
+/* Custom Pagination Styling */
+
+/* Container utama pagination */
+.pagination-container {
+    margin: 1.5rem 0;
+}
+
+/* Dropdown jumlah rows per page */
+.pagination-container .form-select-sm {
+    min-width: 70px;
+    margin-right: 10px;
+    border-radius: 4px;
+}
+
+/* Pagination links */
+.pagination-container .pagination .page-link {
+    color: #4e73df; /* Warna utama - sesuaikan dengan tema admin Anda */
+    border-color: #e3e6f0;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+/* Active page */
+.pagination-container .pagination .page-item.active .page-link {
+    background-color: #4e73df; /* Warna primary - sesuaikan dengan tema admin Anda */
+    border-color: #4e73df;
+    color: white;
+}
+
+/* Hover state */
+.pagination-container .pagination .page-link:hover {
+    background-color: #eaecf4;
+    border-color: #dddfeb;
+    color: #224abe;
+}
+
+/* Disabled state */
+.pagination-container .pagination .page-item.disabled .page-link {
+    color: #858796;
+    background-color: #f8f9fc;
+    border-color: #e3e6f0;
+}
+
+/* Info text */
+.pagination-container .text-muted {
+    color: #6c757d !important;
+}
+
+/* Responsif - memperbaiki tampilan pada layar kecil */
+@media (max-width: 768px) {
+    .pagination-container .d-flex {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .pagination-container nav {
+        margin-top: 1rem;
+    }
+    
+    .pagination-container .text-muted {
+        margin-top: 0.5rem;
+    }
+}
