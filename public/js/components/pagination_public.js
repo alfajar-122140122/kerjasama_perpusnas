@@ -58,13 +58,13 @@ function initPublicPagination() {
                 currentPage = 1; // Reset to first page
                 
                 // Update pagination based on visible rows
-                const totalPages = Math.ceil(totalVisibleRows / itemsPerPage);
+                const totalPages = Math.max(1, Math.ceil(totalVisibleRows / itemsPerPage));
                 updatePaginationUI(rows, currentPage, itemsPerPage, totalPages, totalVisibleRows);
             });
         }
         
         // Calculate total pages based on default items per page
-        const totalPages = Math.ceil(rows.length / itemsPerPage);
+        const totalPages = Math.max(1, Math.ceil(rows.length / itemsPerPage));
         
         // Initialize pagination UI
         updatePaginationUI(rows, currentPage, itemsPerPage, totalPages, rows.length);
@@ -148,11 +148,8 @@ function showPage(rows, page, itemsPerPage) {
         endElem.textContent = actualEnd;
     }
     
-    // Show/hide pagination container based on row count
-    const paginationWrapper = document.querySelector('.pagination-public-wrapper');
-    if (paginationWrapper) {
-        paginationWrapper.style.display = (rows.length <= itemsPerPage && !document.querySelector('tr[data-filtered]')) ? 'none' : 'flex';
-    }
+    // PAGINATION ALWAYS VISIBLE: Don't hide pagination container even if all data fits on one page
+    // The previous code that was hiding pagination has been removed
 }
 
 function updatePaginationInfo(currentPage, totalPages, itemsPerPage, totalRows) {
@@ -188,7 +185,7 @@ function renderPaginationButtons(currentPage, totalPages) {
     // Next button
     const nextBtn = document.getElementById('pagination-public-next');
     if (nextBtn) {
-        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.disabled = currentPage === totalPages || totalPages === 0;
     }
     
     // Generate page buttons
@@ -196,6 +193,16 @@ function renderPaginationButtons(currentPage, totalPages) {
         // Show all pages
         for (let i = 1; i <= totalPages; i++) {
             addPageButton(pagesContainer, i, currentPage);
+        }
+        
+        // If there are no pages (totalPages = 0), add a disabled "1" button
+        if (totalPages === 0) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'pagination-public-page active';
+            button.textContent = '1';
+            button.disabled = true;
+            pagesContainer.appendChild(button);
         }
     } else {
         // Show limited pages with ellipsis
