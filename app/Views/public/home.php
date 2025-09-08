@@ -121,11 +121,11 @@
                 <h2 class="fs-5 fw-semibold text-dark mb-0">Statistik Kerja Sama</h2>
             </div>
             
-            <div class="row g-4 mb-4">
+            <div class="row g-4">
                 <!-- Panel 1: Pie Chart Jenis Identitas Mitra -->
-                <div class="col-lg-4 mb-4">
+                <div class="col-md-4">
                     <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body">
+                        <div class="card-body d-flex flex-column">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h3 class="chart-title mb-0">Jenis Identitas Mitra</h3>
                                 <!-- Mini filter untuk pie chart -->
@@ -139,11 +139,11 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="chart-container">
+                            <div class="chart-container" style="height: 180px; position: relative;">
                                 <canvas id="pieChart"></canvas>
                             </div>
                             <!-- Legend Table untuk Jenis Identitas Mitra -->
-                            <div class="chart-legend">
+                            <div class="chart-legend mt-auto">
                                 <div class="legend-header">
                                     <span>Jenis Identitas Mitra</span>
                                     <span>Jumlah</span>
@@ -178,15 +178,23 @@
                 </div>
                 
                 <!-- Panel 2: Bar Chart Pertahun -->
-                <div class="col-lg-4 mb-4">
+                <div class="col-md-4">
                     <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body">
-                            <h3 class="chart-title">Pertahun</h3>
-                            <div class="chart-container">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="chart-title mb-0">Pertahun</h3>
+                                <!-- Dummy filter untuk menyeimbangkan tinggi header -->
+                                <div class="yearly-chart-filter">
+                                    <select class="form-select form-select-sm invisible" style="width: 100px; height: 31px; font-size: 0.8rem;">
+                                        <option value="">Dummy</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="chart-container" style="height: 180px; position: relative;">
                                 <canvas id="yearlyChart"></canvas>
                             </div>
                             <!-- Legend Table untuk Data Tahunan -->
-                            <div class="chart-legend">
+                            <div class="chart-legend mt-auto">
                                 <div class="legend-header">
                                     <span>Tahun</span>
                                     <span>Jumlah</span>
@@ -213,81 +221,83 @@
                 </div>
                 
                 <!-- Panel 3: Bar Chart Bulanan (untuk tahun tertentu) -->
-                <div class="col-lg-4 mb-4">
+                <div class="col-md-4">
                     <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body">
-                            <div class="chart-header d-flex justify-content-between align-items-center">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h3 class="chart-title mb-0" id="monthlyChartTitle">Bulanan</h3>
                                 <!-- Mini filter untuk tahun -->
                                 <div class="monthly-chart-filter">
                                     <select class="form-select form-select-sm" id="yearFilter" onchange="updateMonthlyChart()" 
                                             style="width: 100px; font-size: 0.8rem; border: 1px solid #e3e6f0; border-radius: 0.35rem;">
-                                        <option value="2019">2019</option>
-                                        <option value="2020">2020</option>
-                                        <option value="2021">2021</option>
-                                        <option value="2022">2022</option>
-                                        <option value="2023">2023</option>
-                                        <option value="2024">2024</option>
-                                        <option value="2025" selected>2025</option>
+                                        <option value="(2019)">2019</option>
+                                        <option value="(2020)">2020</option>
+                                        <option value="(2021)">2021</option>
+                                        <option value="(2022)">2022</option>
+                                        <option value="(2023)">2023</option>
+                                        <option value="(2024)">2024</option>
+                                        <option value="(2025)" selected>2025</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="chart-container">
+                            <div class="chart-container" style="height: 180px; position: relative;">
                                 <canvas id="monthlyChart"></canvas>
                             </div>
                             <!-- Legend Table untuk Data Bulanan -->
-                            <div class="chart-legend">
+                            <div class="chart-legend mt-auto">
                                 <div class="legend-header">
                                     <span>Bulan</span>
                                     <span>Jumlah</span>
                                 </div>
-                                <div class="legend-item">
-                                    <span>January</span>
-                                    <span id="month_january"><?= $statistik['per_bulan']['January'] ?? 0 ?></span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>February</span>
-                                    <span id="month_february"><?= $statistik['per_bulan']['February'] ?? 0 ?></span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>March</span>
-                                    <span id="month_march"><?= $statistik['per_bulan']['March'] ?? 0 ?></span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>April</span>
-                                    <span id="month_april"><?= $statistik['per_bulan']['April'] ?? 0 ?></span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>May</span>
-                                    <span id="month_may"><?= $statistik['per_bulan']['May'] ?? 0 ?></span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>June</span>
-                                    <span id="month_june"><?= $statistik['per_bulan']['June'] ?? 0 ?></span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>July</span>
-                                    <span id="month_july"><?= $statistik['per_bulan']['July'] ?? 0 ?></span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>August</span>
-                                    <span id="month_august"><?= $statistik['per_bulan']['August'] ?? 0 ?></span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>September</span>
-                                    <span id="month_september"><?= $statistik['per_bulan']['September'] ?? 0 ?></span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>October</span>
-                                    <span id="month_october"><?= $statistik['per_bulan']['October'] ?? 0 ?></span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>November</span>
-                                    <span id="month_november"><?= $statistik['per_bulan']['November'] ?? 0 ?></span>
-                                </div>
-                                <div class="legend-item">
-                                    <span>December</span>
-                                    <span id="month_december"><?= $statistik['per_bulan']['December'] ?? 0 ?></span>
+                                <div class="legend-content" style="max-height: 180px; overflow-y: auto;">
+                                    <div class="legend-item">
+                                        <span>January</span>
+                                        <span id="month_january"><?= $statistik['per_bulan']['January'] ?? 0 ?></span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span>February</span>
+                                        <span id="month_february"><?= $statistik['per_bulan']['February'] ?? 0 ?></span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span>March</span>
+                                        <span id="month_march"><?= $statistik['per_bulan']['March'] ?? 0 ?></span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span>April</span>
+                                        <span id="month_april"><?= $statistik['per_bulan']['April'] ?? 0 ?></span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span>May</span>
+                                        <span id="month_may"><?= $statistik['per_bulan']['May'] ?? 0 ?></span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span>June</span>
+                                        <span id="month_june"><?= $statistik['per_bulan']['June'] ?? 0 ?></span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span>July</span>
+                                        <span id="month_july"><?= $statistik['per_bulan']['July'] ?? 0 ?></span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span>August</span>
+                                        <span id="month_august"><?= $statistik['per_bulan']['August'] ?? 0 ?></span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span>September</span>
+                                        <span id="month_september"><?= $statistik['per_bulan']['September'] ?? 0 ?></span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span>October</span>
+                                        <span id="month_october"><?= $statistik['per_bulan']['October'] ?? 0 ?></span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span>November</span>
+                                        <span id="month_november"><?= $statistik['per_bulan']['November'] ?? 0 ?></span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span>December</span>
+                                        <span id="month_december"><?= $statistik['per_bulan']['December'] ?? 0 ?></span>
+                                    </div>
                                 </div>
                                 <div class="legend-item legend-total">
                                     <span>Total</span>
