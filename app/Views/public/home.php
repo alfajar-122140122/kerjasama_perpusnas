@@ -25,72 +25,24 @@
                     <!-- Slide 1 -->
                     <div class="hero-slide active">
                         <div class="hero-slide-image">
-                            <img src="<?= base_url('assets/berita/berita1.jpeg') ?>" alt="Berita Terbaru 1" class="img-fluid">
+                            <img src="<?= base_url('assets/berita/1.png') ?>" alt="Berita Terbaru 1" class="img-fluid">
                             <div class="hero-slide-overlay"></div>
-                        </div>
-                        <div class="hero-slide-content">
-                            <div class="hero-slide-category">
-                                <span class="badge bg-primary">Kerjasama Internasional</span>
-                            </div>
-                            <h2 class="hero-slide-title">Perpustakaan Nasional Tandatangani MOU dengan Universitas Terkemuka di Asia</h2>
-                            <p class="hero-slide-description">Kerjasama strategis ini akan membuka peluang pertukaran koleksi digital dan program literasi lintas negara untuk mendukung perkembangan pendidikan di Indonesia.</p>
-                            <div class="hero-slide-meta">
-                                <span class="hero-slide-date">
-                                    <i class="fas fa-calendar"></i>
-                                    15 Desember 2024
-                                </span>
-                                <a href="#" class="btn btn-light btn-sm hero-slide-btn">
-                                    Baca Selengkapnya <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
                         </div>
                     </div>
 
                     <!-- Slide 2 -->
                     <div class="hero-slide">
                         <div class="hero-slide-image">
-                            <img src="<?= base_url('assets/berita/berita2.jpeg') ?>" alt="Berita Terbaru 2" class="img-fluid">
+                            <img src="<?= base_url('assets/berita/4.png') ?>" alt="Berita Terbaru 2" class="img-fluid">
                             <div class="hero-slide-overlay"></div>
-                        </div>
-                        <div class="hero-slide-content">
-                            <div class="hero-slide-category">
-                                <span class="badge bg-success">Digitalisasi</span>
-                            </div>
-                            <h2 class="hero-slide-title">Peluncuran Platform Digital Baru untuk Akses Koleksi Perpustakaan</h2>
-                            <p class="hero-slide-description">Inovasi terbaru dalam layanan perpustakaan digital yang memungkinkan akses koleksi dari seluruh nusantara dengan teknologi AI dan machine learning.</p>
-                            <div class="hero-slide-meta">
-                                <span class="hero-slide-date">
-                                    <i class="fas fa-calendar"></i>
-                                    12 Desember 2024
-                                </span>
-                                <a href="#" class="btn btn-light btn-sm hero-slide-btn">
-                                    Baca Selengkapnya <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
                         </div>
                     </div>
 
                     <!-- Slide 3 -->
                     <div class="hero-slide">
                         <div class="hero-slide-image">
-                            <img src="<?= base_url('assets/berita/berita3.jpg') ?>" alt="Berita Terbaru 3" class="img-fluid">
+                            <img src="<?= base_url('assets/berita/6.jpg') ?>" alt="Berita Terbaru 3" class="img-fluid">
                             <div class="hero-slide-overlay"></div>
-                        </div>
-                        <div class="hero-slide-content">
-                            <div class="hero-slide-category">
-                                <span class="badge bg-warning">Program Literasi</span>
-                            </div>
-                            <h2 class="hero-slide-title">Gerakan Literasi Nasional Mencapai 1000 Perpustakaan Desa</h2>
-                            <p class="hero-slide-description">Program kerjasama dengan pemerintah daerah berhasil mendirikan dan mengembangkan perpustakaan desa di seluruh Indonesia sebagai upaya peningkatan literasi masyarakat.</p>
-                            <div class="hero-slide-meta">
-                                <span class="hero-slide-date">
-                                    <i class="fas fa-calendar"></i>
-                                    10 Desember 2024
-                                </span>
-                                <a href="#" class="btn btn-light btn-sm hero-slide-btn">
-                                    Baca Selengkapnya <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
                         </div>
                     </div>
 
