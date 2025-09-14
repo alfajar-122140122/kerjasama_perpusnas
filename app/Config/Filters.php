@@ -35,6 +35,7 @@ class Filters extends BaseFilters
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
         'lastactive'    => \App\Filters\LastActiveFilter::class,
+        'adminauth'     => \App\Filters\AdminAuth::class,
     ];
 
     /**
@@ -106,5 +107,6 @@ class Filters extends BaseFilters
      */
     public array $filters = [
         'lastactive' => ['before' => ['admin/*']],
+        'adminauth' => ['before' => ['admin/*']],
     ];
 }

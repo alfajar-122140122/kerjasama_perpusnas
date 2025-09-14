@@ -244,9 +244,7 @@ class KerjasamaController extends BaseController
     
     public function tambah()
     {
-        if (session()->get('role') !== 'admin') {
-            return redirect()->to('/admin/kerjasama')->with('error', 'Akses ditolak.');
-        }
+        // AdminAuth filter will handle authentication check
         $data = [
             'title' => 'Tambah Kerjasama'
         ];
@@ -256,12 +254,17 @@ class KerjasamaController extends BaseController
     
     public function edit($id)
     {
-        if (session()->get('role') !== 'admin') {
-            return redirect()->to('/admin/kerjasama')->with('error', 'Akses ditolak.');
-        }
+        // AdminAuth filter will handle authentication check
         $kerjasama = $this->kerjasamaModel->find($id);
         
         if (!$kerjasama) {
+            // Return 404 for AJAX requests
+            if ($this->request->hasHeader('X-Requested-With') && $this->request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest') {
+                return $this->response->setStatusCode(404)->setJSON([
+                    'status' => false,
+                    'message' => 'Data kerjasama tidak ditemukan.'
+                ]);
+            }
             return redirect()->to('/admin/kerjasama/data')->with('error', 'Data kerjasama tidak ditemukan.');
         }
         
@@ -275,9 +278,7 @@ class KerjasamaController extends BaseController
     
     public function store()
     {
-        if (session()->get('role') !== 'admin') {
-            return redirect()->to('/admin/kerjasama')->with('error', 'Akses ditolak.');
-        }
+        // AdminAuth filter will handle authentication check
         // Validasi input sesuai skema database
         $rules = [
             'nama_mitra' => 'required',
@@ -325,9 +326,7 @@ class KerjasamaController extends BaseController
     
     public function update($id)
     {
-        if (session()->get('role') !== 'admin') {
-            return redirect()->to('/admin/kerjasama')->with('error', 'Akses ditolak.');
-        }
+        // AdminAuth filter will handle authentication check
         // Validasi input sesuai skema database
         $rules = [
             'nama_mitra' => 'required',
@@ -402,9 +401,7 @@ class KerjasamaController extends BaseController
     
     public function delete($id)
     {
-        if (session()->get('role') !== 'admin') {
-            return redirect()->to('/admin/kerjasama')->with('error', 'Akses ditolak.');
-        }
+        // AdminAuth filter will handle authentication check
         try {
             // Check if record exists
             $kerjasama = $this->kerjasamaModel->find($id);

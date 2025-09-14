@@ -64,6 +64,7 @@ $routes->group('admin', function($routes) {
     $routes->post('settings/update-password', 'Admin\UserController::updatePassword');
     
     // Admin Kerjasama Routes
+    $routes->get('kerjasama', 'Admin\KerjasamaController::data'); // Main kerjasama page
     $routes->get('kerjasama/data', 'Admin\KerjasamaController::data');
     $routes->get('kerjasama/get/(:num)', 'Admin\KerjasamaController::get/$1');
 
